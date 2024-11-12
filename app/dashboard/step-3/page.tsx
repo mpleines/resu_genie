@@ -16,12 +16,14 @@ import { Database } from '@/types/supabase';
 import { useSession } from 'next-auth/react';
 import { useCallback, useEffect, useState } from 'react';
 import { X } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 type Skill = Database['public']['Tables']['skills']['Row'];
 
 const supabaseClient = createClient();
 
 export default function Home() {
+  const router = useRouter();
   const session = useSession();
   const userEmail = session?.data?.user?.email;
 
@@ -81,6 +83,11 @@ export default function Home() {
     setSkills((prevSkills) =>
       prevSkills.filter((skill) => skill.id != skillId)
     );
+  }
+
+  async function next() {
+    // redirect to step 4 using client side navigation
+    router.push('/dashboard/step-4');
   }
 
   return (
