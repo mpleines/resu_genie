@@ -1,4 +1,4 @@
-import WorkExperienceForm from '@/app/components/EducationForm';
+import EducationForm from '@/app/components/EducationForm';
 import { supabaseClientServer } from '@/app/layout';
 import { Button } from '@/components/ui/button';
 import {
@@ -22,32 +22,29 @@ export default async function Home() {
     throw new Error('User email not found');
   }
 
-  const { data: workExperiences } = await supabaseClientServer
-    .from('work_experience')
+  const { data: education } = await supabaseClientServer
+    .from('education')
     .select()
     .eq('user_id', userEmail);
 
-  async function addExperience(formData: FormData) {
+  async function addEducation(formData: FormData) {
     'use server';
-    // validate the form data and save into variables
 
-    const workExperience: Database['public']['Tables']['work_experience']['Insert'] =
-      {
-        organisation_name: formData.get('company') as string,
-        profile: formData.get('profile') as string,
-        start_date: formData.get('start_date') as string,
-        end_date: formData.get('end_date') as string,
-        user_id: userEmail,
-      };
+    const education: Database['public']['Tables']['education']['Insert'] = {
+      user_id: userEmail,
+      institute_name: formData.get('institute_name') as string,
+      start_date: formData.get('start_date') as string,
+      end_date: formData.get('end_date') as string,
+    };
 
-    await supabaseClientServer.from('work_experience').insert(workExperience);
+    await supabaseClientServer.from('education').insert(education);
 
     revalidatePath('/');
   }
 
   async function next() {
     'use server';
-    redirect('/dashboard/step-5');
+    redirect('/dashboard/step-6');
   }
 
   function formatDate(dateString: string) {
@@ -59,10 +56,10 @@ export default async function Home() {
     });
   }
 
-  async function deleteWorkExperience(formDate: FormData) {
+  async function deleteEducation(formDate: FormData) {
     'use server';
     const id = formDate.get('id') as string;
-    await supabaseClientServer.from('work_experience').delete().eq('id', id);
+    await supabaseClientServer.from('education').delete().eq('id', id);
     revalidatePath('/');
   }
 
@@ -70,48 +67,44 @@ export default async function Home() {
     <main className="py-16">
       <Card>
         <CardHeader>
-          <CardTitle>Add Work Experience</CardTitle>
-          <CardDescription>Add your previous work experience.</CardDescription>
+          <CardTitle>Add Education</CardTitle>
+          <CardDescription>Add your previous education.</CardDescription>
         </CardHeader>
         <CardContent>
-          <WorkExperienceForm addExperience={addExperience} />
+          <EducationForm addEducation={addEducation} />
         </CardContent>
       </Card>
       <Card className="mt-4">
         <CardHeader>
-          <CardTitle>Work Experience</CardTitle>
+          <CardTitle>Education</CardTitle>
         </CardHeader>
         <CardContent>
-          {workExperiences != null &&
-            workExperiences?.length > 0 &&
-            workExperiences
+          {education != null &&
+            education?.length > 0 &&
+            education
               ?.sort(
                 (a, b) =>
                   new Date(b.start_date!).getTime() -
                   new Date(a.start_date!).getTime()
               )
-              .map((workExperience) => (
-                <div key={workExperience.id}>
+              .map((education) => (
+                <div key={education.id}>
                   <div className="flex items-center">
                     <div className="flex-1 flex flex-col border-b border-b-border pb-4">
                       <p className="text-lg font-semibold">
-                        {workExperience.organisation_name}
+                        {education.institute_name}
                       </p>
                       <p className="text-sm opacity-70">
-                        {workExperience.profile}
+                        {/* {education.score} */}
                       </p>
                       <p className="text-sm opacity-70">
-                        {formatDate(workExperience.start_date!)} -{' '}
-                        {formatDate(workExperience.end_date!)}
+                        {formatDate(education.start_date!)} -{' '}
+                        {formatDate(education.end_date!)}
                       </p>
                     </div>
 
-                    <form action={deleteWorkExperience}>
-                      <input
-                        type="hidden"
-                        name="id"
-                        value={workExperience.id}
-                      />
+                    <form action={deleteEducation}>
+                      <input type="hidden" name="id" value={education.id} />
                       <Button variant="destructive" type="submit">
                         <Trash />
                       </Button>
@@ -120,8 +113,8 @@ export default async function Home() {
                 </div>
               ))}
 
-          {workExperiences?.length === 0 && (
-            <p className="text-sm opacity-70">No work experience added yet</p>
+          {education?.length === 0 && (
+            <p className="text-sm opacity-70">No Education added yet</p>
           )}
         </CardContent>
 
