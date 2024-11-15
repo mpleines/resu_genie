@@ -1,51 +1,224 @@
 'use client';
 
-import { useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { DatePicker } from '@/app/components/DatePicker';
 
-type Props = {
-  addExperience: (formData: FormData) => Promise<void>;
-};
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Database } from '@/types/supabase';
+import { Trash } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import { createClient } from '@/lib/supabase/client';
+import SubmitButton from './SubmitButton';
+import { useRouter } from 'next/navigation';
+import { formatDate } from 'date-fns';
 
-export default function WorkExperienceForm({ addExperience }: Props) {
-  const formRef = useRef<HTMLFormElement>(null);
+export default function WorkExperienceForm() {
+  const supabase = createClient();
+  const session = useSession();
+  const userEmail = session?.data?.user?.email;
+  const router = useRouter();
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    if (formRef.current == null) {
+  const [workExperiences, setWorkExperiences] = useState<
+    Database['public']['Tables']['work_experience']['Row'][]
+  >([]);
+
+  const [workExperience, setWorkExperience] = useState<{
+    organisation_name: string;
+    profile: string;
+    start_date?: Date;
+    end_date?: Date;
+  }>({
+    organisation_name: '',
+    profile: '',
+    start_date: new Date(),
+    end_date: new Date(),
+  });
+
+  const fetchWorkExperiences = async () => {
+    const { data } = await supabase
+      .from('work_experience')
+      .select()
+      .eq('resume_id', 1); // TODO: get resume id
+
+    setWorkExperiences(data ?? []);
+  };
+
+  useEffect(() => {
+    fetchWorkExperiences();
+  }, [supabase, userEmail]);
+
+  async function addExperience() {
+    const workExperienceToInsert: Database['public']['Tables']['work_experience']['Insert'] =
+      {
+        organisation_name: workExperience.organisation_name,
+        profile: workExperience.profile,
+        start_date: workExperience.start_date?.toISOString(),
+        end_date: workExperience.end_date?.toISOString(),
+        user_id: userEmail,
+        resume_id: 1, // TODO: get correct resume id
+      };
+
+    if (
+      !workExperience.organisation_name ||
+      !workExperience.profile ||
+      !workExperience.start_date ||
+      !workExperience.end_date
+    ) {
       return;
     }
 
-    event.preventDefault();
-    const formData = new FormData(formRef.current);
+    await supabase.from('work_experience').insert(workExperienceToInsert);
 
-    await addExperience(formData);
+    setWorkExperience({
+      organisation_name: '',
+      profile: '',
+      start_date: new Date(),
+      end_date: new Date(),
+    });
 
-    formRef.current.reset();
-  };
+    await fetchWorkExperiences();
+  }
+
+  async function deleteWorkExperience(id: number) {
+    await supabase.from('work_experience').delete().eq('id', id);
+    await fetchWorkExperiences();
+  }
+
+  async function submitWorkExperience() {
+    if (workExperiences.length < 1) {
+      return;
+    }
+
+    router.push('/education');
+  }
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit}>
-      <Label htmlFor="company">Company</Label>
-      <Input id="company" name="company" placeholder="Company Name" required />
-      <Label htmlFor="profile">Profile/Description</Label>
-      <Input id="profile" name="profile" placeholder="profile" required />
-      <div className="flex flex-col my-2">
-        <Label className="mb-1" htmlFor="start_date">
-          Start Date
-        </Label>
-        <DatePicker name="start_date" />
-      </div>
-      <div className="flex flex-col my-2">
-        <Label className="mb-1" htmlFor="end_date">
-          End Date
-        </Label>
-        <DatePicker name="end_date" />
-      </div>
-      <div className="flex justify-end mt-6">
-        <Button type="submit">Add Work Experience</Button>
+    <form action={submitWorkExperience}>
+      <Card>
+        <CardHeader>
+          <CardTitle>Add Work Experience</CardTitle>
+          <CardDescription>Add your previous work experience.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Label htmlFor="company">Company</Label>
+          <Input
+            id="company"
+            name="company"
+            placeholder="Company Name"
+            value={workExperience.organisation_name}
+            onChange={(event) =>
+              setWorkExperience((prev) => ({
+                ...prev,
+                organisation_name: event.target.value,
+              }))
+            }
+          />
+          <Label htmlFor="profile">Profile/Description</Label>
+          <Input
+            id="profile"
+            name="profile"
+            placeholder="profile"
+            value={workExperience.profile}
+            onChange={(event) =>
+              setWorkExperience((prev) => ({
+                ...prev,
+                profile: event.target.value,
+              }))
+            }
+          />
+          <div className="flex flex-col my-2">
+            <Label className="mb-1" htmlFor="start_date">
+              Start Date
+            </Label>
+            <DatePicker
+              name="start_date"
+              value={workExperience.start_date}
+              onSelect={(date) => {
+                setWorkExperience((prev) => ({
+                  ...prev,
+                  start_date: date,
+                }));
+              }}
+            />
+          </div>
+          <div className="flex flex-col my-2">
+            <Label className="mb-1" htmlFor="end_date">
+              End Date
+            </Label>
+            <DatePicker
+              name="end_date"
+              value={workExperience.end_date}
+              onSelect={(date) =>
+                setWorkExperience((prev) => ({
+                  ...prev,
+                  end_date: date,
+                }))
+              }
+            />
+          </div>
+          <div className="flex justify-end mt-6">
+            <Button type="button" onClick={addExperience}>
+              Add Work Experience
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+      <Card className="mt-4">
+        <CardHeader>
+          <CardTitle>Work Experience</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {workExperiences != null &&
+            workExperiences?.length > 0 &&
+            workExperiences
+              ?.sort(
+                (a, b) =>
+                  new Date(b.start_date!).getTime() -
+                  new Date(a.start_date!).getTime()
+              )
+              .map((workExperience) => (
+                <div key={workExperience.id}>
+                  <div className="flex items-center">
+                    <div className="flex-1 flex flex-col border-b border-b-border pb-4">
+                      <p className="text-lg font-semibold">
+                        {workExperience.organisation_name}
+                      </p>
+                      <p className="text-sm opacity-70">
+                        {workExperience.profile}
+                      </p>
+                      <p className="text-sm opacity-70">
+                        {formatDate(workExperience.start_date!, 'yyyy-MM-dd')} -{' '}
+                        {formatDate(workExperience.end_date!, 'yyyy-MM-dd')}
+                      </p>
+                    </div>
+
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      onClick={() => deleteWorkExperience(workExperience.id)}
+                    >
+                      <Trash />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+
+          {workExperiences?.length === 0 && (
+            <p className="text-sm opacity-70">No work experience added yet</p>
+          )}
+        </CardContent>
+      </Card>
+      <div className="flex justify-end py-2">
+        <SubmitButton text="Continue" />
       </div>
     </form>
   );

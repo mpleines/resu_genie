@@ -1,18 +1,18 @@
-"use client";
-import { buttonVariants } from "@/components/ui/button";
-import { FileText } from "lucide-react";
-import { useSession } from "next-auth/react";
-import Link from "next/link";
-import { FunctionComponent } from "react";
+'use client';
+import { buttonVariants } from '@/components/ui/button';
+import { FileText } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import Link from 'next/link';
+import { FunctionComponent } from 'react';
 
 interface HeaderProps {}
 
 const Header: FunctionComponent<HeaderProps> = () => {
   const session = useSession();
 
-  if (session.status === "authenticated") {
+  if (session.status === 'authenticated') {
     return (
-      <header className="p-4 flex justify-between items-center">
+      <header className="sticky top-0 w-full bg-white shadow-md h-[64px] px-4 flex justify-between items-center">
         <div className="flex items-center gap-2">
           <FileText />
           <h1 className="text-xl font-bold">ResuGenie</h1>
@@ -21,7 +21,7 @@ const Header: FunctionComponent<HeaderProps> = () => {
           {session.data.user?.name}
           <Link
             href="/api/auth/signout"
-            className={buttonVariants({ variant: "secondary" })}
+            className={buttonVariants({ variant: 'secondary' })}
           >
             Sign Out
           </Link>
@@ -40,7 +40,7 @@ const Header: FunctionComponent<HeaderProps> = () => {
         <Link href="/pricing">Pricing</Link>
         <Link
           href="/api/auth/signin"
-          className={buttonVariants({ variant: "secondary" })}
+          className={buttonVariants({ variant: 'secondary' })}
         >
           Sign in
         </Link>

@@ -15,11 +15,11 @@ import {
 
 type Props = {
   name: string;
+  onSelect: (date?: Date) => void;
+  value?: Date;
 };
 
-export function DatePicker({ name }: Props) {
-  const [date, setDate] = React.useState<Date>();
-
+export function DatePicker({ name, value, onSelect }: Props) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -27,25 +27,25 @@ export function DatePicker({ name }: Props) {
           variant={'outline'}
           className={cn(
             'w-[280px] justify-start text-left font-normal',
-            !date && 'text-muted-foreground'
+            !value && 'text-muted-foreground'
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? format(date, 'PPP') : <span>Pick a date</span>}
+          {value ? format(value, 'PPP') : <span>Pick a Date</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
         <Calendar
           id={name}
           mode="single"
-          selected={date}
-          onSelect={setDate}
+          selected={value}
+          onSelect={onSelect}
           initialFocus
         />
       </PopoverContent>
 
       {/* hidden input with value to use when form submits */}
-      <input type="hidden" name={name} value={date?.toISOString()} />
+      <input type="hidden" name={name} value={value?.toISOString()} />
     </Popover>
   );
 }
