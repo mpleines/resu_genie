@@ -1,18 +1,16 @@
-"use client";
+'use client';
 
-import { Button, buttonVariants } from "@/components/ui/button";
-import openAiClient from "@/lib/openaiClient";
-import { useSession } from "next-auth/react";
-import Header from "./api/auth/[...nextauth]/Header";
+import { buttonVariants } from '@/components/ui/button';
+import openAiClient from '@/lib/openaiClient';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
+} from '@/components/ui/card';
+import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 export default function Home() {
   async function testPrompt() {
@@ -133,11 +131,11 @@ export default function Home() {
   10. If calculating dates or durations, ensure the correct year is {datetime.datetime.now().year}.
 `);
 
-    const message = response.data["choices"][0]["message"]["content"];
+    const message = response.data['choices'][0]['message']['content'];
   }
 
   return (
-    <main className="py-16 px-6">
+    <main className="py-16 px-6 flex-1">
       <section className="flex flex-col items-center justify-center">
         <h1 className="text-5xl md:text-7xl font-bold text-indigo-500 mb-4">
           Launch Your Career
@@ -150,8 +148,8 @@ export default function Home() {
           href="/api/auth/signin"
           className={cn(
             buttonVariants({
-              variant: "default",
-              className: "font-semibold bg-indigo-500 hover:bg-indigo-600",
+              variant: 'default',
+              className: 'font-semibold bg-indigo-500 hover:bg-indigo-600',
             })
           )}
         >

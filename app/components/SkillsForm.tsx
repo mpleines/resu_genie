@@ -1,31 +1,31 @@
 'use client';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { createClient } from '@/lib/supabase/client';
 import { Database } from '@/types/supabase';
 import { useSession } from 'next-auth/react';
 import { useCallback, useEffect, useState } from 'react';
+import { createClient } from '@/lib/supabase/client';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import SubmitButton from './SubmitButton';
 
 type Skill = Database['public']['Tables']['skills']['Row'];
 
-const supabaseClient = createClient();
-
-export default function Home() {
-  const router = useRouter();
+export default function SkillsForm() {
+  const supabase = createClient();
   const session = useSession();
   const userEmail = session?.data?.user?.email;
+  const router = useRouter();
 
   const [skill, setSkill] = useState<string>('');
   const [skills, setSkills] = useState<Skill[]>([]);
@@ -35,7 +35,7 @@ export default function Home() {
       return;
     }
 
-    await supabaseClient
+    await supabase
       .from('skills')
       .select()
       .eq('user_id', userEmail)
@@ -51,13 +51,14 @@ export default function Home() {
   }, [userEmail, fetchSkills]);
 
   async function addSkill() {
-    if (skill === '') {
+    if (!skill) {
       return;
     }
 
-    const response = await supabaseClient.from('skills').insert({
+    const response = await supabase.from('skills').insert({
       skill_name: skill,
       user_id: userEmail,
+      resume_id: 1, // TODO: get resume id
     });
 
     if (response.error) {
@@ -70,10 +71,7 @@ export default function Home() {
   }
 
   async function removeSkill(skillId: number) {
-    const response = await supabaseClient
-      .from('skills')
-      .delete()
-      .eq('id', skillId);
+    const response = await supabase.from('skills').delete().eq('id', skillId);
 
     if (response.error) {
       console.error(response.error);
@@ -85,13 +83,18 @@ export default function Home() {
     );
   }
 
-  async function next() {
-    // redirect to step 4 using client side navigation
-    router.push('/dashboard/step-4');
+  async function submitSkills() {
+    if (skills.length < 1) {
+      return;
+    }
+
+    // TODO: write skills to db only when form is submitted
+
+    router.push('/work-experience');
   }
 
   return (
-    <main className="py-16">
+    <form action={submitSkills}>
       <Card>
         <CardHeader>
           <CardTitle>Skills</CardTitle>
@@ -104,29 +107,36 @@ export default function Home() {
             <div className="flex-1">
               <Label htmlFor="skill">Skill</Label>
               <Input
+                required={skills.length < 1}
                 name="skill"
                 id="skill"
                 placeholder="Skill"
                 value={skill}
-                onChange={(e) => setSkill(e.target.value)}
-                required
-                onKeyDown={(e) => {
+                onChange={(e) =>
+                  e.target.value ? setSkill(e.target.value) : null
+                }
+                onKeyDown={(e: React.KeyboardEvent) => {
                   if (e.key === 'Enter') {
-                    addSkill();
+                    e.preventDefault();
+                    if (skill) {
+                      addSkill();
+                    }
                   }
                 }}
               />
             </div>
-            {/* TODO: Add multiple skills */}
             <div className="flex justify-end mt-6">
-              <Button onClick={addSkill}>Add Skill</Button>
+              <Button type="button" onClick={addSkill}>
+                Add Skill
+              </Button>
             </div>
           </div>
           <div className="flex gap-2 mt-4">
             {skills?.map((skill) => (
               <Badge key={skill.id} variant="secondary">
-                {skill.skill_name}{' '}
+                {skill.skill_name}
                 <button
+                  type="button"
                   onClick={() => removeSkill(skill.id)}
                   className="ml-2 hover:text-destructive focus:text-destructive"
                   aria-label={`Remove ${skill}`}
@@ -137,10 +147,10 @@ export default function Home() {
             ))}
           </div>
         </CardContent>
-        <CardFooter className="flex justify-end">
-          <Button onClick={next}>Next</Button>
-        </CardFooter>
       </Card>
-    </main>
+      <div className="flex justify-end py-2">
+        <SubmitButton text="Continue" />
+      </div>
+    </form>
   );
 }
