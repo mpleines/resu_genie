@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { formatDate } from 'date-fns';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { getServerSession } from 'next-auth';
 import {
   createResumePrompt,
@@ -15,6 +15,8 @@ import openAiClient from '@/lib/openaiClient';
 import SubmitButton from '@/app/components/SubmitButton';
 import { redirect } from 'next/navigation';
 import { FileText } from 'lucide-react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 // FIXME: this is just a placeholder, needs heavy refactoring and re-styling
 
@@ -224,6 +226,13 @@ export default async function Page() {
                   ))}
             </CardContent>
           </Card>
+        </div>
+        <div>
+          <Link href="/education">
+            <Button variant="outline" className="mr-2">
+              Back
+            </Button>
+          </Link>
         </div>
       </div>
     </form>

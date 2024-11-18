@@ -18,6 +18,7 @@ import { Badge } from '@/components/ui/badge';
 import { X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import SubmitButton from './SubmitButton';
+import Link from 'next/link';
 
 type Skill = Database['public']['Tables']['skills']['Row'];
 
@@ -149,6 +150,11 @@ export default function SkillsForm() {
         </CardContent>
       </Card>
       <div className="flex justify-end py-2">
+        <Link href="/personal-information">
+          <Button variant="outline" className="mr-2">
+            Back
+          </Button>
+        </Link>
         <SubmitButton text="Continue" />
       </div>
     </form>

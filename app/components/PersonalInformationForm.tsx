@@ -15,6 +15,8 @@ import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import SubmitButton from './SubmitButton';
 import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 export default function PersonalInformationForm() {
   const supabase = createClient();
@@ -121,6 +123,11 @@ export default function PersonalInformationForm() {
         </CardContent>
       </Card>
       <div className="flex justify-end py-2">
+        <Link href="/job-advertisement">
+          <Button variant="outline" className="mr-2">
+            Back
+          </Button>
+        </Link>
         <SubmitButton text="Continue" />
       </div>
     </form>

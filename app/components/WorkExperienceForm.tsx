@@ -20,6 +20,7 @@ import { createClient } from '@/lib/supabase/client';
 import SubmitButton from './SubmitButton';
 import { useRouter } from 'next/navigation';
 import { formatDate } from 'date-fns';
+import Link from 'next/link';
 
 export default function WorkExperienceForm() {
   const supabase = createClient();
@@ -218,6 +219,11 @@ export default function WorkExperienceForm() {
         </CardContent>
       </Card>
       <div className="flex justify-end py-2">
+        <Link href="/skills">
+          <Button variant="outline" className="mr-2">
+            Back
+          </Button>
+        </Link>
         <SubmitButton text="Continue" />
       </div>
     </form>
