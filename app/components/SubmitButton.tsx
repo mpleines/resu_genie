@@ -1,14 +1,18 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
-import { FunctionComponent } from 'react';
+import { FunctionComponent, ReactNode } from 'react';
 import { useFormStatus } from 'react-dom';
 
 interface SubmitButtonProps {
   text?: string;
+  icon?: ReactNode;
 }
 
 const SubmitButton: FunctionComponent<SubmitButtonProps> = ({
   text = 'Submit',
+  icon,
 }) => {
   const formStatus = useFormStatus();
 
@@ -19,7 +23,10 @@ const SubmitButton: FunctionComponent<SubmitButtonProps> = ({
           <Loader2 className="animate-spin" /> <span>{text}</span>
         </>
       ) : (
-        text
+        <>
+          {icon && icon}
+          {text}
+        </>
       )}
     </Button>
   );
