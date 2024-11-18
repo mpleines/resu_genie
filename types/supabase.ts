@@ -76,7 +76,7 @@ export type Database = {
           {
             foreignKeyName: "job_advertisement_resume_id_fkey"
             columns: ["resume_id"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "resume"
             referencedColumns: ["id"]
           },
@@ -129,7 +129,7 @@ export type Database = {
           {
             foreignKeyName: "personal_information_resume_id_fkey"
             columns: ["resume_id"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "resume"
             referencedColumns: ["id"]
           },
@@ -137,16 +137,19 @@ export type Database = {
       }
       resume: {
         Row: {
+          chat_gpt_response_raw: Json | null
           created_at: string
           id: number
           user_id: string | null
         }
         Insert: {
+          chat_gpt_response_raw?: Json | null
           created_at?: string
           id?: number
           user_id?: string | null
         }
         Update: {
+          chat_gpt_response_raw?: Json | null
           created_at?: string
           id?: number
           user_id?: string | null

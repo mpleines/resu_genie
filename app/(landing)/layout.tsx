@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import '../globals.css';
 import Providers from '../components/Providers';
-import Header from '../api/auth/[...nextauth]/Header';
 import { createClient } from '@/lib/supabase/server';
 import { cookies } from 'next/headers';
 
