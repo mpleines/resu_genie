@@ -18,7 +18,7 @@ import { Badge } from '@/components/ui/badge';
 import { X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import SubmitButton from './SubmitButton';
-import Link from 'next/link';
+import { useStepper } from '../(dashboard)/useStepper';
 
 type Skill = Database['public']['Tables']['skills']['Row'];
 
@@ -26,7 +26,7 @@ export default function SkillsForm() {
   const supabase = createClient();
   const session = useSession();
   const userEmail = session?.data?.user?.email;
-  const router = useRouter();
+  const stepper = useStepper();
 
   const [skill, setSkill] = useState<string>('');
   const [skills, setSkills] = useState<Skill[]>([]);
@@ -89,9 +89,7 @@ export default function SkillsForm() {
       return;
     }
 
-    // TODO: write skills to db only when form is submitted
-
-    router.push('/work-experience');
+    stepper.next();
   }
 
   return (
@@ -150,11 +148,14 @@ export default function SkillsForm() {
         </CardContent>
       </Card>
       <div className="flex justify-end py-2">
-        <Link href="/personal-information">
-          <Button variant="outline" className="mr-2">
-            Back
-          </Button>
-        </Link>
+        <Button
+          type="button"
+          variant="outline"
+          className="mr-2"
+          onClick={stepper.previous}
+        >
+          Back
+        </Button>
         <SubmitButton text="Continue" />
       </div>
     </form>

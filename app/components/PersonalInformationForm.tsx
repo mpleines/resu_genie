@@ -14,15 +14,14 @@ import { Database } from '@/types/supabase';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import SubmitButton from './SubmitButton';
-import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
+import { useStepper } from '../(dashboard)/useStepper';
 
 export default function PersonalInformationForm() {
   const supabase = createClient();
   const session = useSession();
   const userEmail = session?.data?.user?.email;
-  const router = useRouter();
+  const stepper = useStepper();
 
   const [personalInfo, setPersonalInfo] = useState<
     Database['public']['Tables']['personal_information']['Row'] | null
@@ -64,7 +63,7 @@ export default function PersonalInformationForm() {
       await supabase.from('personal_information').upsert(personalInformation, {
         onConflict: 'resume_id',
       });
-      router.push('/skills');
+      stepper.next();
     } catch (error) {
       console.error(error);
     }
@@ -123,11 +122,14 @@ export default function PersonalInformationForm() {
         </CardContent>
       </Card>
       <div className="flex justify-end py-2">
-        <Link href="/job-advertisement">
-          <Button variant="outline" className="mr-2">
-            Back
-          </Button>
-        </Link>
+        <Button
+          type="button"
+          variant="outline"
+          className="mr-2"
+          onClick={stepper.previous}
+        >
+          Back
+        </Button>
         <SubmitButton text="Continue" />
       </div>
     </form>

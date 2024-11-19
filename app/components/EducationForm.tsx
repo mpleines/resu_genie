@@ -19,13 +19,13 @@ import { formatDate } from 'date-fns';
 import { createClient } from '@/lib/supabase/client';
 import SubmitButton from './SubmitButton';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { useStepper } from '../(dashboard)/useStepper';
 
 export default function EducationForm() {
   const supabase = createClient();
   const session = useSession();
   const userEmail = session?.data?.user?.email;
-  const router = useRouter();
+  const stepper = useStepper();
 
   const [education, setEducation] = useState<{
     institute_name: string;
@@ -100,7 +100,7 @@ export default function EducationForm() {
       return;
     }
 
-    router.push('/summary');
+    stepper.next();
   }
 
   return (
@@ -204,11 +204,14 @@ export default function EducationForm() {
         </CardContent>
       </Card>
       <div className="flex justify-end py-2">
-        <Link href="/work-experience">
-          <Button variant="outline" className="mr-2">
-            Back
-          </Button>
-        </Link>
+        <Button
+          type="button"
+          variant="outline"
+          className="mr-2"
+          onClick={stepper.previous}
+        >
+          Back
+        </Button>
         <SubmitButton text="Continue" />
       </div>
     </form>

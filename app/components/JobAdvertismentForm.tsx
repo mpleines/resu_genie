@@ -10,17 +10,17 @@ import { Textarea } from '@/components/ui/textarea';
 import { createClient } from '@/lib/supabase/client';
 import { Database } from '@/types/supabase';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import SubmitButton from './SubmitButton';
+import { useStepper } from '../(dashboard)/useStepper';
 
 // TODO: rewrite this as a server component
 
 export default function JobAdvertisementForm() {
-  const router = useRouter();
   const session = useSession();
   const userEmail = session?.data?.user?.email;
   const supabase = createClient();
+  const stepper = useStepper();
 
   const [jobAdvertisement, setJobAdvertisement] = useState<
     Database['public']['Tables']['job_advertisement']['Row'] | null
@@ -59,7 +59,7 @@ export default function JobAdvertisementForm() {
         .upsert(jobAdvertisement, { onConflict: 'resume_id' })
         .select();
 
-      router.push('/personal-information');
+      stepper.next();
     } catch (error) {
       console.error(error);
     }
