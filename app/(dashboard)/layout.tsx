@@ -46,7 +46,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     <div className="min-h-screen flex flex-col">
       <Header />
       <StepperProvider steps={resumeSteps}>
-        <main className="mx-auto max-w-screen-2xl w-full py-16 px-16 flex-1 overflow-y-auto grid grid-cols-[300px_1fr] gap-16">
+        <main className="mx-auto max-w-screen-2xl w-full py-16 px-16 flex-1 overflow-y-auto">
           <div>
             <Stepper />
           </div>

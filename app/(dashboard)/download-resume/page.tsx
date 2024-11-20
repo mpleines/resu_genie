@@ -5,7 +5,7 @@ import { ResumeResponse } from '@/lib/promptHelper';
 import { createClient } from '@/lib/supabase/client';
 import { format } from 'date-fns';
 import { DownloadIcon } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useReactToPrint } from 'react-to-print';
 
 export default function Page() {
@@ -15,7 +15,7 @@ export default function Page() {
   const contentRef = useRef<HTMLDivElement>(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
 
-  async function getOptimizedResumeData() {
+  const getOptimizedResumeData = useCallback(async () => {
     const { data } = await supabase
       .from('resume')
       .select()
@@ -29,25 +29,23 @@ export default function Page() {
     // FIXME: handle possible errors
     const resumeData = data?.chat_gpt_response_raw as ResumeResponse;
     setOptimizedResume(resumeData);
+  }, [supabase]);
+
+  async function handleDownload() {
+    reactToPrintFn();
   }
 
   useEffect(() => {
     getOptimizedResumeData();
-  }, []);
+  }, [getOptimizedResumeData]);
 
-  const {
-    personal_information,
-    work_experience,
-    education,
-    skills,
-    improvement_tips,
-    summary,
-  } = optimizedResume ?? {};
+  const { personal_information, work_experience, education, skills, summary } =
+    optimizedResume ?? {};
 
   return (
     <div className="flex flex-col items-center">
       <div>
-        <Button onClick={() => reactToPrintFn()}>
+        <Button onClick={handleDownload}>
           <DownloadIcon />
           Download
         </Button>
@@ -63,16 +61,6 @@ export default function Page() {
                 <h1 className="text-4xl font-bold">
                   {personal_information?.name}
                 </h1>
-                {/* <p className="text-blue-600">
-                  <a
-                    href={githubLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:underline"
-                  >
-                    {githubLink}
-                  </a>
-                </p> */}
               </header>
               <section>
                 {summary && (
