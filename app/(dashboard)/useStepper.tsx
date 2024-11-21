@@ -7,11 +7,13 @@ import {
   useState,
   ReactNode,
   useEffect,
+  useCallback,
 } from 'react';
 
 export type Step = {
   path: string;
   label?: string;
+  description?: string;
 };
 
 export type Steps = Array<Step>;
@@ -39,19 +41,19 @@ const StepperProvider = ({ steps, children }: StepperProviderProps) => {
 
   const [currentStep, setCurrentStep] = useState<Step | null>(null);
 
-  const getCurrentStep = () => {
+  const getCurrentStep = useCallback(() => {
     const step = steps.find((step) => step.path === pathname);
     if (step != null) {
       return step;
     } else {
-      steps[0];
+      return steps[0];
     }
-  };
+  }, [steps, pathname]);
 
   useEffect(() => {
     const step = getCurrentStep();
     setCurrentStep(step!);
-  }, []);
+  }, [getCurrentStep]);
 
   const next = () => {
     const nextStepIndex =
