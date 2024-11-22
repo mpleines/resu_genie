@@ -2,6 +2,9 @@ import { ReactNode } from 'react';
 import Header from '../../../api/auth/[...nextauth]/Header';
 import { StepperProvider, Steps } from '../../useStepper';
 import Stepper from '../../../components/Stepper';
+import supabaseClient from '@/lib/supabase/server';
+import { notFound } from 'next/navigation';
+import { getServerSession } from 'next-auth';
 
 const resumeSteps = (resumeId: string): Steps => {
   return [
@@ -43,13 +46,25 @@ const resumeSteps = (resumeId: string): Steps => {
   ];
 };
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
   params,
 }: {
   children: ReactNode;
   params: any;
 }) {
+  const session = await getServerSession();
+  const { data: resume, error } = await supabaseClient
+    .from('resume')
+    .select()
+    .eq('id', params.resumeId)
+    .eq('user_id', session?.user?.email)
+    .single();
+
+  if (resume == null || error) {
+    notFound();
+  }
+
   const steps = resumeSteps(params.resumeId);
 
   return (
