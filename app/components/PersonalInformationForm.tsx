@@ -15,13 +15,16 @@ import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import SubmitButton from './SubmitButton';
 import { Button } from '@/components/ui/button';
-import { useStepper } from '../(dashboard)/useStepper';
+import { useStepper } from '../(steps)/useStepper';
+import { useParams } from 'next/navigation';
 
 export default function PersonalInformationForm() {
   const supabase = createClient();
   const session = useSession();
   const userEmail = session?.data?.user?.email;
   const stepper = useStepper();
+  const params = useParams();
+  const resumeId = Number(params['resumeId'] as string);
 
   const [personalInfo, setPersonalInfo] = useState<
     Database['public']['Tables']['personal_information']['Row'] | null
@@ -36,7 +39,8 @@ export default function PersonalInformationForm() {
       const { data } = await supabase
         .from('personal_information')
         .select()
-        .eq('resume_id', 1) // TODO: get resume id
+        .eq('user_id', userEmail)
+        .eq('resume_id', resumeId)
         .limit(1)
         .single();
 
@@ -44,7 +48,7 @@ export default function PersonalInformationForm() {
     }
 
     fetchPersonalInfo();
-  }, [userEmail]);
+  }, [userEmail, resumeId, supabase]);
 
   async function submitPersonalInfo(formData: FormData) {
     const personalInformation = {
@@ -56,7 +60,7 @@ export default function PersonalInformationForm() {
         formData.get('professional-experience')
       ),
       user_id: userEmail,
-      resume_id: 1, // TODO: get correct resume id
+      resume_id: resumeId,
     };
 
     try {

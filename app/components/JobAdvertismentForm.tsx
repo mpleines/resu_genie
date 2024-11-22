@@ -12,15 +12,16 @@ import { Database } from '@/types/supabase';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import SubmitButton from './SubmitButton';
-import { useStepper } from '../(dashboard)/useStepper';
-
-// TODO: rewrite this as a server component
+import { useStepper } from '../(steps)/useStepper';
+import { useParams } from 'next/navigation';
 
 export default function JobAdvertisementForm() {
   const session = useSession();
   const userEmail = session?.data?.user?.email;
   const supabase = createClient();
   const stepper = useStepper();
+  const params = useParams();
+  const resumeId = Number(params['resumeId'] as string);
 
   const [jobAdvertisement, setJobAdvertisement] = useState<
     Database['public']['Tables']['job_advertisement']['Row'] | null
@@ -36,6 +37,7 @@ export default function JobAdvertisementForm() {
         .from('job_advertisement')
         .select()
         .eq('user_id', userEmail)
+        .eq('resume_id', resumeId)
         .limit(1)
         .single();
 
@@ -43,14 +45,14 @@ export default function JobAdvertisementForm() {
     }
 
     fetchJobAdvertisement();
-  }, [userEmail]);
+  }, [userEmail, resumeId, supabase]);
 
   async function submitJobAdvertisement(formData: FormData) {
     const jobAdvertisement = {
       text: formData.get('job-advertisement') as string,
       user_id: userEmail,
       created_at: new Date().toISOString(),
-      resume_id: 1, // FIXME: get correct resume id
+      resume_id: resumeId,
     };
 
     try {
@@ -75,14 +77,12 @@ export default function JobAdvertisementForm() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {/* <form onSubmit={handleSubmit}> */}
           <Textarea
             name="job-advertisement"
             required
             defaultValue={jobAdvertisement?.text ?? ''}
           />
           {/* TODO: adding a link to a job advertisement should extract the text with a web crawler */}
-          {/* </form> */}
         </CardContent>
       </Card>
 

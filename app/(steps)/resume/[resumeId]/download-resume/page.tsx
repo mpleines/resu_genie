@@ -5,6 +5,7 @@ import { ResumeResponse } from '@/lib/promptHelper';
 import { createClient } from '@/lib/supabase/client';
 import { format } from 'date-fns';
 import { DownloadIcon } from 'lucide-react';
+import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useReactToPrint } from 'react-to-print';
 
@@ -15,12 +16,15 @@ export default function Page() {
   const contentRef = useRef<HTMLDivElement>(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
 
+  const params = useParams();
+  const resumeId = Number(params['resumeId'] as string);
+
   const getOptimizedResumeData = useCallback(async () => {
     const { data } = await supabase
       .from('resume')
       .select()
-      .eq('id', 1)
-      .single(); // TODO: get resume id
+      .eq('id', resumeId)
+      .single();
 
     if (data?.chat_gpt_response_raw == null) {
       return;
@@ -29,7 +33,7 @@ export default function Page() {
     // FIXME: handle possible errors
     const resumeData = data?.chat_gpt_response_raw as ResumeResponse;
     setOptimizedResume(resumeData);
-  }, [supabase]);
+  }, [resumeId, supabase]);
 
   async function handleDownload() {
     reactToPrintFn();

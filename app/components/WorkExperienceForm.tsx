@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -18,15 +18,17 @@ import { Trash } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { createClient } from '@/lib/supabase/client';
 import SubmitButton from './SubmitButton';
-import { useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { formatDate } from 'date-fns';
-import { useStepper } from '../(dashboard)/useStepper';
+import { useStepper } from '../(steps)/useStepper';
 
 export default function WorkExperienceForm() {
   const supabase = createClient();
   const session = useSession();
   const userEmail = session?.data?.user?.email;
   const stepper = useStepper();
+  const params = useParams();
+  const resumeId = Number(params['resumeId'] as string);
 
   const [workExperiences, setWorkExperiences] = useState<
     Database['public']['Tables']['work_experience']['Row'][]
@@ -44,18 +46,18 @@ export default function WorkExperienceForm() {
     end_date: new Date(),
   });
 
-  const fetchWorkExperiences = async () => {
+  const fetchWorkExperiences = useCallback(async () => {
     const { data } = await supabase
       .from('work_experience')
       .select()
-      .eq('resume_id', 1); // TODO: get resume id
+      .eq('resume_id', resumeId);
 
     setWorkExperiences(data ?? []);
-  };
+  }, [supabase, resumeId]);
 
   useEffect(() => {
     fetchWorkExperiences();
-  }, [supabase, userEmail]);
+  }, [fetchWorkExperiences, supabase, userEmail]);
 
   async function addExperience() {
     const workExperienceToInsert: Database['public']['Tables']['work_experience']['Insert'] =
@@ -65,7 +67,7 @@ export default function WorkExperienceForm() {
         start_date: workExperience.start_date?.toISOString(),
         end_date: workExperience.end_date?.toISOString(),
         user_id: userEmail,
-        resume_id: 1, // TODO: get correct resume id
+        resume_id: resumeId,
       };
 
     if (

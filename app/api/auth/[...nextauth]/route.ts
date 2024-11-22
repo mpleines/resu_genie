@@ -10,7 +10,7 @@ const handler = NextAuth({
   ],
   callbacks: {
     async redirect({ url, baseUrl }) {
-      return '/job-advertisement';
+      return '/dashboard';
     },
   },
 });

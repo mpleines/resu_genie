@@ -188,6 +188,33 @@ export type Database = {
           },
         ]
       }
+      users: {
+        Row: {
+          created_at: string
+          email: string | null
+          first_login: boolean | null
+          id: number
+          name: string | null
+          username: string | null
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          first_login?: boolean | null
+          id?: number
+          name?: string | null
+          username?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          first_login?: boolean | null
+          id?: number
+          name?: string | null
+          username?: string | null
+        }
+        Relationships: []
+      }
       work_experience: {
         Row: {
           created_at: string

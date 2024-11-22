@@ -16,9 +16,9 @@ import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { X } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import SubmitButton from './SubmitButton';
-import { useStepper } from '../(dashboard)/useStepper';
+import { useStepper } from '../(steps)/useStepper';
+import { useParams } from 'next/navigation';
 
 type Skill = Database['public']['Tables']['skills']['Row'];
 
@@ -31,6 +31,9 @@ export default function SkillsForm() {
   const [skill, setSkill] = useState<string>('');
   const [skills, setSkills] = useState<Skill[]>([]);
 
+  const params = useParams();
+  const resumeId = Number(params['resumeId'] as string);
+
   const fetchSkills = useCallback(async () => {
     if (userEmail == null) {
       return;
@@ -40,12 +43,13 @@ export default function SkillsForm() {
       .from('skills')
       .select()
       .eq('user_id', userEmail)
+      .eq('resume_id', resumeId)
       .then(({ data }) => {
         if (data != null) {
           setSkills(data);
         }
       });
-  }, [userEmail]);
+  }, [userEmail, supabase, resumeId]);
 
   useEffect(() => {
     fetchSkills();
@@ -59,7 +63,7 @@ export default function SkillsForm() {
     const response = await supabase.from('skills').insert({
       skill_name: skill,
       user_id: userEmail,
-      resume_id: 1, // TODO: get resume id
+      resume_id: resumeId,
     });
 
     if (response.error) {
