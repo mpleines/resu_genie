@@ -15,7 +15,9 @@ const Header: FunctionComponent<HeaderProps> = () => {
       <header className="sticky top-0 w-full bg-white shadow-md h-[64px] px-4 flex justify-between items-center">
         <div className="flex items-center gap-2">
           <FileText />
-          <h1 className="text-xl font-bold">ResuGenie</h1>
+          <Link href="/dashboard">
+            <h1 className="text-xl font-bold">ResuGenie</h1>
+          </Link>
         </div>
         <div className="flex gap-6 items-center">
           {session.data.user?.name}
@@ -33,7 +35,9 @@ const Header: FunctionComponent<HeaderProps> = () => {
     <header className="p-4 flex justify-between items-center">
       <div className="flex items-center gap-2">
         <FileText />
-        <h1 className="text-xl font-bold">ResuGenie</h1>
+        <Link href="/">
+          <h1 className="text-xl font-bold">ResuGenie</h1>
+        </Link>
       </div>
       <div className="flex gap-6 items-center">
         <Link href="/features">Features</Link>

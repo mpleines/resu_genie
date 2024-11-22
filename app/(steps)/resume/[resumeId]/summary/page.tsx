@@ -1,10 +1,9 @@
-import { supabaseClientServer } from '@/app/layout';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { formatDate } from 'date-fns';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { getServerSession } from 'next-auth';
 import {
   createResumePrompt,
@@ -17,13 +16,18 @@ import { redirect } from 'next/navigation';
 import { FileText } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import supabaseClient from '@/lib/supabase/server';
 
-// FIXME: this is just a placeholder, needs heavy refactoring and re-styling
+export default async function Page({
+  params,
+}: {
+  params: { resumeId: string };
+}) {
+  const resumeId = Number(params.resumeId as string);
 
-export default async function Page() {
   const session = await getServerSession();
   // FIXME: this produces a wrong type somehow, it is returning a single entity for the joined tables, not an array
-  const { data } = await supabaseClientServer
+  const { data } = await supabaseClient
     .from('resume')
     .select(
       `
@@ -34,7 +38,7 @@ export default async function Page() {
       education (institute_name, start_date, end_date)
     `
     )
-    .eq('id', 1) // TODO: get resume id
+    .eq('id', resumeId)
     .single();
 
   async function generateResume() {
@@ -59,17 +63,17 @@ export default async function Page() {
 
     // save resume data to supabase
     try {
-      await supabaseClientServer
+      await supabaseClient
         .from('resume')
         .update({
           chat_gpt_response_raw: resumeData,
         })
-        .eq('id', 1); // TODO: get resume id
+        .eq('id', resumeId);
     } catch (error) {
       console.error(error);
     } finally {
       // navigate to resume page
-      redirect(`/download-resume`);
+      redirect(`/resume/${resumeId}/download-resume`);
     }
   }
 

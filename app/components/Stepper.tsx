@@ -1,6 +1,6 @@
 'use client';
 import React, { FunctionComponent, useMemo, useEffect } from 'react';
-import { Step, useStepper } from '../(dashboard)/useStepper';
+import { Step, useStepper } from '../(steps)/useStepper';
 import { usePathname } from 'next/navigation';
 import { Check, Circle, Dot } from 'lucide-react';
 import { cn } from '@/lib/utils';

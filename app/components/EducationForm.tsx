@@ -14,18 +14,20 @@ import {
 import { Database } from '@/types/supabase';
 import { Trash } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { formatDate } from 'date-fns';
 import { createClient } from '@/lib/supabase/client';
 import SubmitButton from './SubmitButton';
-import { useRouter } from 'next/navigation';
-import { useStepper } from '../(dashboard)/useStepper';
+import { useStepper } from '../(steps)/useStepper';
+import { useParams } from 'next/navigation';
 
 export default function EducationForm() {
   const supabase = createClient();
   const session = useSession();
   const userEmail = session?.data?.user?.email;
   const stepper = useStepper();
+  const params = useParams();
+  const resumeId = Number(params['resumeId'] as string);
 
   const [education, setEducation] = useState<{
     institute_name: string;
@@ -41,18 +43,18 @@ export default function EducationForm() {
     Database['public']['Tables']['education']['Row'][]
   >([]);
 
-  async function fetchEducation() {
+  const fetchEducation = useCallback(async () => {
     const { data } = await supabase
       .from('education')
       .select()
-      .eq('resume_id', 1); // TODO: get resume id
+      .eq('resume_id', resumeId);
 
     setEducations(data ?? []);
-  }
+  }, [resumeId, supabase]);
 
   useEffect(() => {
     fetchEducation();
-  }, [userEmail]);
+  }, [fetchEducation, userEmail]);
 
   async function addEducation() {
     if (
@@ -70,7 +72,7 @@ export default function EducationForm() {
       start_date: education.start_date.toISOString(),
       end_date: education.end_date.toISOString(),
       user_id: userEmail,
-      resume_id: 1, // TODO: get correct resume id
+      resume_id: resumeId,
     };
 
     try {
