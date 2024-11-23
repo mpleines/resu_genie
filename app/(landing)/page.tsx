@@ -1,6 +1,6 @@
 'use client';
 
-import { buttonVariants } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -8,8 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import Link from 'next/link';
-import { cn } from '@/lib/utils';
+import { signIn } from 'next-auth/react';
 
 export default function Home() {
   return (
@@ -22,17 +21,13 @@ export default function Home() {
           Create a stellar resume in minutes with our AI-powered cosmic resume
           builder
         </p>
-        <Link
-          href="/api/auth/signin"
-          className={cn(
-            buttonVariants({
-              variant: 'default',
-              className: 'font-semibold bg-indigo-500 hover:bg-indigo-600',
-            })
-          )}
+
+        <Button
+          className="font-semibold bg-indigo-500 hover:bg-indigo-600"
+          onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
         >
           Create Your Resume
-        </Link>
+        </Button>
       </section>
       <section className="flex flex-col items-center justify-center mt-24">
         <h1 className="text-5xl md:text-5xl font-bold text-indigo-500 mb-4">
