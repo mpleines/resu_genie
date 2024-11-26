@@ -20,8 +20,6 @@ export default async function DashboardPage() {
     )
     .eq('user_id', userEmail!);
 
-  console.log(resumes);
-
   return (
     <div className="space-y-4">
       <h1 className="text-3xl font-bold">My Resumes</h1>

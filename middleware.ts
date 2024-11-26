@@ -1,3 +1,7 @@
 export { default } from 'next-auth/middleware';
 
-export const config = { matcher: ['/resume(.*)', '/dashboard(.*)'] };
+const allExceptRoot = '/((?!^$).*)';
+
+export const config = {
+  matcher: [allExceptRoot],
+};
