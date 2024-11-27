@@ -32,12 +32,12 @@ export default function RootLayout({
       <Providers>
         <Header />
         <div className="min-h-screen">
-          <div className="min-h-full w-full max-w-7xl mx-auto font-[family-name:var(--font-geist-sans)]">
+          <div className="min-h-full w-full font-[family-name:var(--font-geist-sans)]">
             {children}
           </div>
         </div>
       </Providers>
-      <footer className="px-8 py-4">
+      <footer className="border px-12 py-4 flex justify-between mb-8 mt-8">
         <div className="flex items-center gap-2">
           ResuGenie created by{' '}
           <Link href="https://maikpleines.com" className="underline">
@@ -45,6 +45,11 @@ export default function RootLayout({
           </Link>
           <Copyright size={16} />
           {new Date().getFullYear()}
+        </div>
+        <div>
+          <Link href="/legal" className="underline">
+            Legal Notice
+          </Link>
         </div>
       </footer>
     </div>

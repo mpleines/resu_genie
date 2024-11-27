@@ -6,7 +6,11 @@ export async function middleware(req: NextRequest) {
   const { pathname } = new URL(req.url);
 
   // Allow public access to `/` and `/api/auth` (NextAuth routes)
-  if (pathname === '/' || pathname.startsWith('/api/auth')) {
+  if (
+    pathname === '/' ||
+    pathname.startsWith('/api/auth') ||
+    pathname === '/legal'
+  ) {
     return NextResponse.next();
   }
 
