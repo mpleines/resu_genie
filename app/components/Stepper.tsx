@@ -75,7 +75,7 @@ const StepComponent: FunctionComponent<StepProps> = ({
             'rounded-full',
             isActive &&
               'ring-1 ring-offset-2 ring-primary ring-offset-background',
-            'bg-black',
+            'bg-primary',
             'text-white p-1',
             isDisabled && 'opacity-30'
           )}

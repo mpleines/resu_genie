@@ -1,28 +1,47 @@
 'use client';
 import { Button } from '@/components/ui/button';
-import { FileText } from 'lucide-react';
+import { FileText, User } from 'lucide-react';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useEffect, useState } from 'react';
 
 interface HeaderProps {}
 
 const Header: FunctionComponent<HeaderProps> = () => {
   const session = useSession();
+  const [shouldShowBorder, setShouldShowBorder] = useState(false);
+
+  useEffect(() => {
+    window.addEventListener('scroll', () => {
+      const { pageYOffset } = window;
+      if (pageYOffset > 0) {
+        setShouldShowBorder(true);
+      } else {
+        setShouldShowBorder(false);
+      }
+    });
+  }, []);
 
   if (session.status === 'authenticated') {
     return (
-      <header className="sticky top-0 w-full bg-white shadow-md h-[64px] px-4 flex justify-between items-center">
+      <header
+        className={`sticky top-0 w-full bg-transparent z-10 h-[64px] p-8 flex justify-between items-center ${
+          shouldShowBorder ? 'border-b bg-white/10 backdrop-blur-md' : ''
+        }`}
+      >
         <div className="flex items-center gap-2">
-          <FileText />
+          <FileText className="text-primary" />
           <Link href="/dashboard">
             <h1 className="text-xl font-bold">ResuGenie</h1>
           </Link>
         </div>
         {session.status === 'authenticated' && (
           <div className="flex gap-6 items-center">
-            {session.data.user?.name}
-            <Button onClick={() => signOut({ callbackUrl: '/' })}>
+            <div className="flex items-center gap-2">
+              <User />
+              {session.data.user?.name}
+            </div>
+            <Button onClick={() => signOut({ callbackUrl: '/' })} size="sm">
               Sign Out
             </Button>
           </div>
@@ -31,23 +50,24 @@ const Header: FunctionComponent<HeaderProps> = () => {
     );
   }
   return (
-    <header className="sticky top-0 w-full bg-white shadow-md h-[64px] px-4 flex justify-between items-center">
+    <header
+      className={`sticky top-0 w-full bg-transparent z-10 h-[64px] p-8 flex justify-between items-center ${
+        shouldShowBorder ? 'border-b bg-white/10 backdrop-blur-md' : ''
+      }`}
+    >
       <div className="flex items-center gap-2">
-        <FileText />
+        <FileText className="text-primary" />
         <Link href="/">
           <h1 className="text-xl font-bold">ResuGenie</h1>
         </Link>
       </div>
       {session.status === 'unauthenticated' && (
-        <div className="flex gap-6 items-center">
-          <Link href="/features">Features</Link>
-          <Link href="/pricing">Pricing</Link>
-          <Button
-            onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
-          >
-            Sign In{' '}
-          </Button>
-        </div>
+        <Button
+          onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
+          size="sm"
+        >
+          Sign In{' '}
+        </Button>
       )}
     </header>
   );

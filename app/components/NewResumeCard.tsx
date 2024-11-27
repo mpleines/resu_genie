@@ -39,7 +39,7 @@ export const NewResume: FunctionComponent<ResumePreviewProps> = () => {
     >
       <CardContent className="w-[250px] h-[300px] cursor-pointer hover:shadow-lg transition-shadow flex flex-col items-center justify-center">
         <>
-          <PlusCircle className="w-12 h-12 text-muted-foreground mb-4" />
+          <PlusCircle className="w-12 h-12 text-primary mb-4" />
           <h3 className="text-lg font-semibold text-center mb-1">
             Create New Resume
           </h3>
