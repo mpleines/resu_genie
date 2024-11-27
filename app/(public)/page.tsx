@@ -13,7 +13,7 @@ import { signIn } from 'next-auth/react';
 
 export default function Home() {
   return (
-    <main className="py-16 px-6 flex-1 grid grid-row-1 max-w-screen-lg mx-auto">
+    <main className="mx-auto py-16 px-6 flex-1 grid grid-row-1 max-w-screen-lg mx-auto">
       <section className="flex flex-col items-center justify-center space-y-6">
         <h1 className="text-6xl font-bold text-center text-balance">
           Your platform for crafting standout resumes.
