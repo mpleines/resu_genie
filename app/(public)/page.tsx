@@ -1,5 +1,6 @@
 'use client';
 
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -8,13 +9,19 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Wand } from 'lucide-react';
+import { Dot, Wand } from 'lucide-react';
 import { signIn } from 'next-auth/react';
 
 export default function Home() {
   return (
-    <main className="mx-auto py-16 px-6 flex-1 grid grid-row-1 max-w-screen-lg mx-auto">
+    <main className="mx-auto py-16 px-6 flex-1 grid grid-row-1 max-w-screen-lg">
       <section className="flex flex-col items-center justify-center space-y-6">
+        <div>
+          <Badge variant="secondary">
+            <Dot className="text-orange-500" />
+            Alpha Version
+          </Badge>
+        </div>
         <h1 className="text-6xl font-bold text-center text-balance">
           Your platform for crafting standout resumes.
         </h1>
