@@ -8,31 +8,31 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { Wand } from 'lucide-react';
 import { signIn } from 'next-auth/react';
 
 export default function Home() {
   return (
-    <main className="py-16 px-6 flex-1">
-      <section className="flex flex-col items-center justify-center">
-        <h1 className="text-5xl md:text-7xl font-bold text-indigo-500 mb-4">
-          Launch Your Career
+    <main className="py-16 px-6 flex-1 grid grid-row-1 max-w-screen-lg mx-auto">
+      <section className="flex flex-col items-center justify-center space-y-6">
+        <h1 className="text-6xl font-bold text-center text-balance">
+          Your platform for crafting standout resumes.
         </h1>
-        <p className="text-xl mb-4">
-          Create a stellar resume in minutes with our AI-powered cosmic resume
-          builder
-        </p>
-
+        <span className="text-center text-muted-foreground text-balance">
+          Transform your job search with tailored, professional resumes crafted
+          by advanced AI. Save time, showcase your skills, and make a lasting
+          impression—effortlessly.
+        </span>
         <Button
-          className="font-semibold bg-indigo-500 hover:bg-indigo-600"
+          className="font-semibold text-lg p-6 rounded-2xl"
           onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
         >
+          <Wand />
           Create Your Resume
         </Button>
       </section>
       <section className="flex flex-col items-center justify-center mt-24">
-        <h1 className="text-5xl md:text-5xl font-bold text-indigo-500 mb-4">
-          How it works
-        </h1>
+        <h1 className="text-5xl md:text-5xl font-bold mb-4">How it works</h1>
         <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
           <Card>
             <CardHeader>
@@ -70,9 +70,49 @@ export default function Home() {
         </div>
       </section>
       <section className="flex flex-col items-center justify-center mt-24">
-        <h1 className="text-5xl md:text-5xl font-bold text-indigo-500 mb-4">
-          Pricing
-        </h1>
+        <h1 className="text-5xl md:text-5xl font-bold mb-4">FAQ</h1>
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Is my data secure?</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CardDescription>
+                Yes, we value your privacy and ensure the security of your data.
+                Your information is protected at all times. We work with
+                third-party services like ChatGPT and Supabase to ensure the
+                highest level of data safety and security.
+              </CardDescription>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>How does the AI work?</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CardDescription>
+                We send your information to ChatGPT, a powerful language model,
+                to analyze and enhance your resume. This AI-generated content is
+                then optimized for ATS platforms and tailored to the job you're
+                applying to. We make sure to not generate or inflate any
+                information. We believe in keeping your resume authentic and
+                honest. We only enhance what you've already written.
+              </CardDescription>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>How do I sign up?</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CardDescription>
+                You can sign up by clicking the "Create Your Resume" button
+                above or the "Sign In" button in the top right corner. Currently
+                we support Google Sign In.
+              </CardDescription>
+            </CardContent>
+          </Card>
+        </div>
       </section>
     </main>
   );

@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { formatDate } from 'date-fns';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { getServerSession } from 'next-auth';
 import {
   createResumePrompt,
@@ -79,21 +79,21 @@ export default async function Page({
 
   return (
     <form action={generateResume}>
-      <div className="flex justify-center">
-        <SubmitButton
-          text="Generate Resume"
-          icon={<FileText className="h-6 w-6 mr-2" />}
-        />
-      </div>
       <div className="flex flex-col space-y-2">
         <h1 className="text-xl">Summary</h1>
+        <Card>
+          <CardHeader>
+            <CardTitle>Job Advertisement</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Textarea disabled value={data?.job_advertisement.text} />
+          </CardContent>
+        </Card>
         <div>
-          <h2>Job Advertisement</h2>
-          <Textarea disabled value={data?.job_advertisement.text} />
-        </div>
-        <div>
-          <h2>Personal Information</h2>
           <Card>
+            <CardHeader>
+              <CardTitle>Personal Information</CardTitle>
+            </CardHeader>
             <CardContent>
               <Label htmlFor="name">Name</Label>
               <Input
@@ -153,17 +153,25 @@ export default async function Page({
             </CardContent>
           </Card>
         </div>
-        <h2>Skills</h2>
-        <div className="flex gap-2">
-          {data?.skills?.map((skill) => (
-            <Badge key={skill.id} variant="secondary">
-              {skill.skill_name}
-            </Badge>
-          ))}
-        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Skills</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex gap-2">
+              {data?.skills?.map((skill) => (
+                <Badge key={skill.id} variant="secondary">
+                  {skill.skill_name}
+                </Badge>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
         <div>
-          <h2>Work Experience</h2>
           <Card className="mt-4">
+            <CardHeader>
+              <CardTitle>Work Experience</CardTitle>
+            </CardHeader>
             <CardContent>
               {data?.work_experience != null &&
                 data?.work_experience?.length > 0 &&
@@ -199,8 +207,10 @@ export default async function Page({
           </Card>
         </div>
         <div>
-          <h2>Education</h2>
           <Card className="mt-4">
+            <CardHeader>
+              <CardTitle>Education</CardTitle>
+            </CardHeader>
             <CardContent>
               {data?.education != null &&
                 data?.education?.length > 0 &&
@@ -231,12 +241,16 @@ export default async function Page({
             </CardContent>
           </Card>
         </div>
-        <div>
+        <div className="flex justify-end py-2">
           <Link href="/education">
             <Button variant="outline" className="mr-2">
               Back
             </Button>
           </Link>
+          <SubmitButton
+            text="Generate Resume"
+            icon={<FileText className="h-6 w-6 mr-2" />}
+          />
         </div>
       </div>
     </form>

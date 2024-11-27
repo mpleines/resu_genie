@@ -2,6 +2,9 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import '../globals.css';
 import Providers from '../components/Providers';
+import Header from '../api/auth/[...nextauth]/Header';
+import { Copyright } from 'lucide-react';
+import Link from 'next/link';
 
 const geistSans = localFont({
   src: '../fonts/GeistVF.woff',
@@ -25,18 +28,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <Providers>
-          <div className="min-h-screen">
-            <div className="min-h-full w-full max-w-7xl mx-auto font-[family-name:var(--font-geist-sans)]">
-              {children}
-            </div>
+    <div className="bg-gradient-to-r from-white to-mint-cream/60">
+      <Providers>
+        <Header />
+        <div className="min-h-screen">
+          <div className="min-h-full w-full max-w-7xl mx-auto font-[family-name:var(--font-geist-sans)]">
+            {children}
           </div>
-        </Providers>
-      </body>
-    </html>
+        </div>
+      </Providers>
+      <footer className="px-8 py-4">
+        <div className="flex items-center gap-2">
+          ResuGenie created by{' '}
+          <Link href="https://maikpleines.com" className="underline">
+            Maik Pleines
+          </Link>
+          <Copyright size={16} />
+          {new Date().getFullYear()}
+        </div>
+      </footer>
+    </div>
   );
 }
