@@ -7,7 +7,7 @@ export default function page() {
   const lastUpdated = new Date(year, month - 1, day);
 
   return (
-    <div className="px-9 space-y-4 mt-8">
+    <div className="space-y-4 mt-8 max-w-screen-2xl mx-auto">
       <h1 className="text-3xl font-bold">Legal Notice</h1>
       <p>Last updated {formatDate(lastUpdated, ' dd. MMMM yyyy')}</p>
       <h2 className="text-2xl font-bold">Contact</h2>

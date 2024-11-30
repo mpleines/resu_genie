@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { FileText, User } from 'lucide-react';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { FunctionComponent, useEffect, useState } from 'react';
+import { FunctionComponent, ReactNode, useEffect, useState } from 'react';
 
 interface HeaderProps {}
 
@@ -24,37 +24,27 @@ const Header: FunctionComponent<HeaderProps> = () => {
 
   if (session.status === 'authenticated') {
     return (
-      <header
-        className={`sticky top-0 w-full bg-transparent z-10 h-[64px] p-8 flex justify-between items-center ${
-          shouldShowBorder ? 'border-b bg-white/10 backdrop-blur-md' : ''
-        }`}
-      >
+      <HeaderWrapper shouldShowBorder={shouldShowBorder}>
         <div className="flex items-center gap-2">
           <FileText className="text-primary" />
           <Link href="/dashboard">
             <h1 className="text-xl font-bold">ResuGenie</h1>
           </Link>
         </div>
-        {session.status === 'authenticated' && (
-          <div className="flex gap-6 items-center">
-            <div className="flex items-center gap-2">
-              <User />
-              {session.data.user?.name}
-            </div>
-            <Button onClick={() => signOut({ callbackUrl: '/' })} size="sm">
-              Sign Out
-            </Button>
+        <div className="flex gap-6 items-center">
+          <div className="flex items-center gap-2">
+            <User />
+            {session.data.user?.name}
           </div>
-        )}
-      </header>
+          <Button onClick={() => signOut({ callbackUrl: '/' })} size="sm">
+            Sign Out
+          </Button>
+        </div>
+      </HeaderWrapper>
     );
   }
   return (
-    <header
-      className={`sticky top-0 w-full bg-transparent z-10 h-[64px] p-8 flex justify-between items-center ${
-        shouldShowBorder ? 'border-b bg-white/10 backdrop-blur-md' : ''
-      }`}
-    >
+    <HeaderWrapper shouldShowBorder={shouldShowBorder}>
       <div className="flex items-center gap-2">
         <FileText className="text-primary" />
         <Link href="/">
@@ -69,6 +59,22 @@ const Header: FunctionComponent<HeaderProps> = () => {
           Sign In{' '}
         </Button>
       )}
+    </HeaderWrapper>
+  );
+};
+
+const HeaderWrapper: React.FC<
+  React.PropsWithChildren<{ shouldShowBorder: boolean }>
+> = ({ shouldShowBorder, children }) => {
+  return (
+    <header
+      className={`sticky top-0 w-full bg-transparent z-10 h-[64px] p-8 ${
+        shouldShowBorder ? 'border-b bg-white/10 backdrop-blur-md' : ''
+      }`}
+    >
+      <div className="h-full mx-auto max-w-screen-2xl flex items-center justify-between">
+        {children}
+      </div>
     </header>
   );
 };
