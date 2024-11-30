@@ -1,10 +1,11 @@
+'use client';
+
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { formatDate } from 'date-fns';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { getServerSession } from 'next-auth';
 import {
   createResumePrompt,
   ResumeData,
@@ -12,39 +13,51 @@ import {
 } from '@/lib/promptHelper';
 import openAiClient from '@/lib/openaiClient';
 import SubmitButton from '@/app/components/SubmitButton';
-import { redirect } from 'next/navigation';
-import { FileText } from 'lucide-react';
+import { redirect, useRouter } from 'next/navigation';
+import { FileText, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import supabaseClient from '@/lib/supabase/server';
-import { cookies } from 'next/headers';
+import { createClient } from '@/lib/supabase/client';
+import { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
 
-export default async function Page({
-  params,
-}: {
-  params: { resumeId: string };
-}) {
+export default function Page({ params }: { params: { resumeId: string } }) {
   const resumeId = Number(params.resumeId as string);
-  const supabase = supabaseClient(cookies);
-  const session = await getServerSession();
-  // FIXME: this produces a wrong type somehow, it is returning a single entity for the joined tables, not an array
-  const { data } = await supabase
-    .from('resume')
-    .select(
-      `
-      job_advertisement (text),
-      personal_information (name, phone_1, address, city, professional_experience_in_years),
-      skills (skill_name),
-      work_experience (organisation_name, profile, start_date, end_date),
-      education (institute_name, start_date, end_date)
-    `
-    )
-    .eq('id', resumeId)
-    .single();
+  const session = useSession();
+  const supabase = createClient();
+  const router = useRouter();
+
+  const [data, setData] = useState<ResumeResponse | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data, error } = await supabase
+        .from('resume')
+        .select(
+          `
+          job_advertisement (text),
+          personal_information (name, phone_1, address, city, professional_experience_in_years),
+          skills (skill_name),
+          work_experience (organisation_name, profile, start_date, end_date),
+          education (institute_name, start_date, end_date)
+        `
+        )
+        .eq('id', resumeId)
+        .maybeSingle();
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      setData(data);
+    };
+
+    fetchData();
+  }, [resumeId]);
 
   async function generateResume() {
-    'use server';
-
     // FIXME: type errors
     const resumePromptData: ResumeData = {
       job_advertisement: data?.job_advertisement.text ?? '',
@@ -56,6 +69,8 @@ export default async function Page({
       work_experience: data?.work_experience,
       education: data?.education ?? [],
     };
+
+    setLoading(true);
 
     const prompt = createResumePrompt(resumePromptData);
     const response = await openAiClient.completions(prompt);
@@ -73,13 +88,14 @@ export default async function Page({
     } catch (error) {
       console.error(error);
     } finally {
+      setLoading(false);
       // navigate to resume page
-      redirect(`/resume/${resumeId}/download-resume`);
+      router.push(`/resume/${resumeId}/download-resume`);
     }
   }
 
   return (
-    <form action={generateResume}>
+    <form>
       <div className="flex flex-col space-y-2">
         <h1 className="text-xl">Summary</h1>
         <Card>
@@ -248,10 +264,14 @@ export default async function Page({
               Back
             </Button>
           </Link>
-          <SubmitButton
-            text="Generate Resume"
-            icon={<FileText className="h-6 w-6 mr-2" />}
-          />
+          <Button type="button" onClick={generateResume}>
+            {loading ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <FileText className="h-6 w-6 mr-2" />
+            )}
+            Generate Resume
+          </Button>
         </div>
       </div>
     </form>
