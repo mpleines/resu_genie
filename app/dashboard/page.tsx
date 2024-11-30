@@ -2,11 +2,13 @@ import supabaseClient from '@/lib/supabase/server';
 import { getServerSession } from 'next-auth';
 import ResumePreview from '../components/ResumePreview';
 import { NewResume } from '../components/NewResumeCard';
+import { cookies } from 'next/headers';
 
 export default async function DashboardPage() {
   const session = await getServerSession();
   const userEmail = session?.user?.email;
-  const { data: resumes } = await supabaseClient
+  const supabase = supabaseClient(cookies);
+  const { data: resumes } = await supabase
     .from('resume')
     .select(
       `

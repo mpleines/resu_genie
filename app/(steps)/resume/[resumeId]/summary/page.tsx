@@ -17,6 +17,7 @@ import { FileText } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import supabaseClient from '@/lib/supabase/server';
+import { cookies } from 'next/headers';
 
 export default async function Page({
   params,
@@ -24,10 +25,10 @@ export default async function Page({
   params: { resumeId: string };
 }) {
   const resumeId = Number(params.resumeId as string);
-
+  const supabase = supabaseClient(cookies);
   const session = await getServerSession();
   // FIXME: this produces a wrong type somehow, it is returning a single entity for the joined tables, not an array
-  const { data } = await supabaseClient
+  const { data } = await supabase
     .from('resume')
     .select(
       `
@@ -63,7 +64,7 @@ export default async function Page({
 
     // save resume data to supabase
     try {
-      await supabaseClient
+      await supabase
         .from('resume')
         .update({
           chat_gpt_response_raw: resumeData,

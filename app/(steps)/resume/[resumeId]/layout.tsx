@@ -5,6 +5,7 @@ import Stepper from '../../../components/Stepper';
 import supabaseClient from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import { getServerSession } from 'next-auth';
+import { cookies } from 'next/headers';
 
 const resumeSteps = (resumeId: string): Steps => {
   return [
@@ -53,8 +54,9 @@ export default async function DashboardLayout({
   children: ReactNode;
   params: any;
 }) {
+  const supabase = supabaseClient(cookies);
   const session = await getServerSession();
-  const { data: resume, error } = await supabaseClient
+  const { data: resume, error } = await supabase
     .from('resume')
     .select()
     .eq('id', params.resumeId)
