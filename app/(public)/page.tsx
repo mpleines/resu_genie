@@ -22,7 +22,7 @@ export default function Home() {
             Alpha Version
           </Badge>
         </div>
-        <h1 className="text-6xl font-bold text-center text-balance">
+        <h1 className="text-5xl lg:text-6xl font-bold text-center text-balance">
           Your platform for crafting standout resumes.
         </h1>
         <span className="text-center text-muted-foreground text-balance">

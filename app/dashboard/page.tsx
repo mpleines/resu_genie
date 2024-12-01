@@ -23,9 +23,9 @@ export default async function DashboardPage() {
     .eq('user_id', userEmail!);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 px-4 md:px-0">
       <h1 className="text-3xl font-bold">My Resumes</h1>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-4">
         <NewResume />
         {resumes?.map((resume) => (
           <ResumePreview

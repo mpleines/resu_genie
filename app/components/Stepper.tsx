@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
 interface StepperProps {}
 
 const Stepper: FunctionComponent<StepperProps> = () => {
-  const { steps, comesAfterCurrentStep } = useStepper();
+  const { steps, comesAfterCurrentStep, currentStep } = useStepper();
   const currentPath = usePathname();
 
   const visibleSteps = useMemo(() => {
@@ -27,6 +27,17 @@ const Stepper: FunctionComponent<StepperProps> = () => {
 
     return slice;
   }, [steps, currentPath]);
+
+  const isSmallScreen = window.innerWidth < 640;
+
+  if (isSmallScreen) {
+    return (
+      <div className="font-bold">
+        Step {steps.findIndex((s) => s.path === currentPath) + 1} of{' '}
+        {steps.length}
+      </div>
+    );
+  }
 
   return (
     <div className="flex gap-4 justify-center items-center overflow-hidden">

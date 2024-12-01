@@ -81,13 +81,14 @@ export default function JobAdvertisementForm() {
             name="job-advertisement"
             required
             defaultValue={jobAdvertisement?.text ?? ''}
+            className="min-h-[250px]"
           />
           {/* TODO: adding a link to a job advertisement should extract the text with a web crawler */}
         </CardContent>
       </Card>
 
       <div className="flex justify-end py-2">
-        <SubmitButton text="Continue" />
+        <SubmitButton text="Next" />
       </div>
     </form>
   );

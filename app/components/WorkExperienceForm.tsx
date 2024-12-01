@@ -21,6 +21,7 @@ import SubmitButton from './SubmitButton';
 import { useParams } from 'next/navigation';
 import { formatDate } from 'date-fns';
 import { useStepper } from '../(steps)/useStepper';
+import BackButton from './BackButton';
 
 export default function WorkExperienceForm() {
   const supabase = createClient();
@@ -221,15 +222,8 @@ export default function WorkExperienceForm() {
         </CardContent>
       </Card>
       <div className="flex justify-end py-2">
-        <Button
-          type="button"
-          variant="outline"
-          className="mr-2"
-          onClick={stepper.previous}
-        >
-          Back
-        </Button>
-        <SubmitButton text="Continue" />
+        <BackButton />
+        <SubmitButton text="Next" />
       </div>
     </form>
   );

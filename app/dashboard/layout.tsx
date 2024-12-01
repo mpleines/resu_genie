@@ -9,7 +9,7 @@ export default function BasicLayout({
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="mx-auto max-w-screen-2xl w-full py-16 px-16 flex-1 overflow-y-auto">
+      <main className="mx-auto max-w-screen-2xl w-full py-8 flex-1 overflow-y-auto">
         <div className="mt-4">{children}</div>
       </main>
     </div>

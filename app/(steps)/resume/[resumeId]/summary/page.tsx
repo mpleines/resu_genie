@@ -20,6 +20,7 @@ import { Button } from '@/components/ui/button';
 import { createClient } from '@/lib/supabase/client';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
+import BackButton from '@/app/components/BackButton';
 
 export default function Page({ params }: { params: { resumeId: string } }) {
   const resumeId = Number(params.resumeId as string);
@@ -175,7 +176,7 @@ export default function Page({ params }: { params: { resumeId: string } }) {
             <CardTitle>Skills</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               {data?.skills?.map((skill) => (
                 <Badge key={skill.id} variant="secondary">
                   {skill.skill_name}
@@ -259,11 +260,7 @@ export default function Page({ params }: { params: { resumeId: string } }) {
           </Card>
         </div>
         <div className="flex justify-end py-2">
-          <Link href="/education">
-            <Button variant="outline" className="mr-2">
-              Back
-            </Button>
-          </Link>
+          <BackButton />
           <Button type="button" onClick={generateResume}>
             {loading ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />

@@ -37,19 +37,21 @@ export default function RootLayout({
           </div>
         </div>
       </Providers>
-      <footer className="border px-12 py-4 flex justify-between mb-8 mt-8">
-        <div className="flex items-center gap-2">
-          ResuGenie created by{' '}
-          <Link href="https://maikpleines.com" className="underline">
-            Maik Pleines
-          </Link>
-          <Copyright size={16} />
-          {new Date().getFullYear()}
-        </div>
-        <div>
-          <Link href="/legal" className="underline">
-            Legal Notice
-          </Link>
+      <footer className="p-8 border-t">
+        <div className="max-w-screen-2xl mx-auto md:flex md:justify-between">
+          <div className="flex items-center gap-2 font-bold">
+            ResuGenie by{' '}
+            <Link href="https://maikpleines.com" className="underline">
+              Maik Pleines
+            </Link>
+            <Copyright size={16} />
+            {new Date().getFullYear()}
+          </div>
+          <div>
+            <Link href="/legal" className="underline">
+              Legal Notice
+            </Link>
+          </div>
         </div>
       </footer>
     </div>
