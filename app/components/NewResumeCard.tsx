@@ -34,10 +34,10 @@ export const NewResume: FunctionComponent<ResumePreviewProps> = () => {
 
   return (
     <Card
-      className="w-[250px] h-[300px] cursor-pointer hover:shadow-lg transition-shadow"
+      className="w-full md:w-[250px] h-[250px] md:h-[300px] cursor-pointer hover:shadow-lg transition-shadow grid place-items-center"
       onClick={onClick}
     >
-      <CardContent className="w-[250px] h-[300px] cursor-pointer hover:shadow-lg transition-shadow flex flex-col items-center justify-center">
+      <CardContent className="grid place-items-center">
         <>
           <PlusCircle className="w-12 h-12 text-primary mb-4" />
           <h3 className="text-lg font-semibold text-center mb-1">

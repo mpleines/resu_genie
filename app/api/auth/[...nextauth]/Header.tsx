@@ -32,9 +32,11 @@ const Header: FunctionComponent<HeaderProps> = () => {
           </Link>
         </div>
         <div className="flex gap-6 items-center">
+          {/* FIXME: this should be a dropdown for mobile view */}
           <div className="flex items-center gap-2">
-            <User />
-            {session.data.user?.name}
+            <User className="hidden md:block" />
+
+            <span className="hidden md:block">{session.data.user?.name}</span>
           </div>
           <Button onClick={() => signOut({ callbackUrl: '/' })} size="sm">
             Sign Out
@@ -68,7 +70,7 @@ const HeaderWrapper: React.FC<
 > = ({ shouldShowBorder, children }) => {
   return (
     <header
-      className={`sticky top-0 w-full bg-transparent z-10 h-[64px] p-8 ${
+      className={`sticky top-0 w-full bg-transparent z-10 h-[64px] py-8 px-4 md:px-0 ${
         shouldShowBorder ? 'border-b bg-white/10 backdrop-blur-md' : ''
       }`}
     >

@@ -1,33 +1,36 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Loader2 } from 'lucide-react';
+import { ChevronRight, Loader2 } from 'lucide-react';
 import { FunctionComponent, ReactNode } from 'react';
 import { useFormStatus } from 'react-dom';
 
 interface SubmitButtonProps {
   text?: string;
-  icon?: ReactNode;
+  iconLeft?: ReactNode;
+  showChevronRight?: boolean;
 }
 
 const SubmitButton: FunctionComponent<SubmitButtonProps> = ({
   text = 'Submit',
-  icon,
+  iconLeft,
+  showChevronRight = true,
 }) => {
   const formStatus = useFormStatus();
 
   return (
-    <Button type="submit">
+    <Button type="submit" className="w-24">
       {formStatus.pending ? (
         <>
           <Loader2 className="animate-spin" /> <span>{text}</span>
         </>
       ) : (
         <>
-          {icon && icon}
+          {iconLeft && iconLeft}
           {text}
         </>
       )}
+      {showChevronRight && <ChevronRight />}
     </Button>
   );
 };

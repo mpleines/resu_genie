@@ -19,6 +19,7 @@ import { X } from 'lucide-react';
 import SubmitButton from './SubmitButton';
 import { useStepper } from '../(steps)/useStepper';
 import { useParams } from 'next/navigation';
+import BackButton from './BackButton';
 
 type Skill = Database['public']['Tables']['skills']['Row'];
 
@@ -134,7 +135,7 @@ export default function SkillsForm() {
               </Button>
             </div>
           </div>
-          <div className="flex gap-2 mt-4">
+          <div className="flex flex-wrap gap-2 mt-4">
             {skills?.map((skill) => (
               <Badge key={skill.id} variant="secondary">
                 {skill.skill_name}
@@ -152,15 +153,8 @@ export default function SkillsForm() {
         </CardContent>
       </Card>
       <div className="flex justify-end py-2">
-        <Button
-          type="button"
-          variant="outline"
-          className="mr-2"
-          onClick={stepper.previous}
-        >
-          Back
-        </Button>
-        <SubmitButton text="Continue" />
+        <BackButton />
+        <SubmitButton text="Next" />
       </div>
     </form>
   );

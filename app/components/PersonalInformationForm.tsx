@@ -17,6 +17,7 @@ import SubmitButton from './SubmitButton';
 import { Button } from '@/components/ui/button';
 import { useStepper } from '../(steps)/useStepper';
 import { useParams } from 'next/navigation';
+import BackButton from './BackButton';
 
 export default function PersonalInformationForm() {
   const supabase = createClient();
@@ -126,15 +127,8 @@ export default function PersonalInformationForm() {
         </CardContent>
       </Card>
       <div className="flex justify-end py-2">
-        <Button
-          type="button"
-          variant="outline"
-          className="mr-2"
-          onClick={stepper.previous}
-        >
-          Back
-        </Button>
-        <SubmitButton text="Continue" />
+        <BackButton />
+        <SubmitButton text="Next" />
       </div>
     </form>
   );
