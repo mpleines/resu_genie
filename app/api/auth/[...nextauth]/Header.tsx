@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { FileText, User } from 'lucide-react';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { FunctionComponent, ReactNode, useEffect, useState } from 'react';
+import { FunctionComponent, useEffect, useState } from 'react';
 
 interface HeaderProps {}
 
@@ -70,7 +70,7 @@ const HeaderWrapper: React.FC<
 > = ({ shouldShowBorder, children }) => {
   return (
     <header
-      className={`sticky top-0 w-full bg-transparent z-10 h-[64px] py-8 px-4 md:px-0 ${
+      className={`sticky top-0 w-full bg-transparent z-10 h-[64px] py-8 px-4 ${
         shouldShowBorder ? 'border-b bg-white/10 backdrop-blur-md' : ''
       }`}
     >
