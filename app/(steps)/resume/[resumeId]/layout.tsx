@@ -73,7 +73,7 @@ export default async function DashboardLayout({
     <div className="min-h-screen flex flex-col">
       <Header />
       <StepperProvider steps={steps}>
-        <main className="mx-auto max-w-screen-2xl w-full p-4 md:px-0 flex-1 overflow-y-auto">
+        <main className="mx-auto max-w-screen-2xl w-full p-4 flex-1 overflow-y-auto">
           <div>
             <Stepper />
           </div>

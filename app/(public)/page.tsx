@@ -14,7 +14,7 @@ import { signIn } from 'next-auth/react';
 
 export default function Home() {
   return (
-    <main className="mx-auto py-16 px-6 flex-1 grid grid-row-1 max-w-screen-lg">
+    <main className="mx-auto py-16 px-4 flex-1 grid grid-row-1 max-w-screen-lg">
       <section className="flex flex-col items-center justify-center space-y-6">
         <div>
           <Badge variant="secondary">
