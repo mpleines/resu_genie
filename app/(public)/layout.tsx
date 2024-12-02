@@ -37,7 +37,7 @@ export default function RootLayout({
           </div>
         </div>
       </Providers>
-      <footer className="p-4 border-t">
+      <footer className="p-8 border-t">
         <div className="max-w-screen-2xl mx-auto md:flex md:justify-between">
           <div className="flex items-center gap-2 font-bold">
             ResuGenie by{' '}
