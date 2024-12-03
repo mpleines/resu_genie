@@ -20,6 +20,7 @@ import SubmitButton from './SubmitButton';
 import { useStepper } from '../(steps)/useStepper';
 import { useParams } from 'next/navigation';
 import BackButton from './BackButton';
+import { useScrollToTop } from '@/lib/useScrollToTop';
 
 type Skill = Database['public']['Tables']['skills']['Row'];
 
@@ -28,6 +29,8 @@ export default function SkillsForm() {
   const session = useSession();
   const userEmail = session?.data?.user?.email;
   const stepper = useStepper();
+
+  useScrollToTop();
 
   const [skill, setSkill] = useState<string>('');
   const [skills, setSkills] = useState<Skill[]>([]);

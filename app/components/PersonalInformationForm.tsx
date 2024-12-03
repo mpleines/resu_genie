@@ -14,10 +14,10 @@ import { Database } from '@/types/supabase';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import SubmitButton from './SubmitButton';
-import { Button } from '@/components/ui/button';
 import { useStepper } from '../(steps)/useStepper';
 import { useParams } from 'next/navigation';
 import BackButton from './BackButton';
+import { useScrollToTop } from '@/lib/useScrollToTop';
 
 export default function PersonalInformationForm() {
   const supabase = createClient();
@@ -26,6 +26,8 @@ export default function PersonalInformationForm() {
   const stepper = useStepper();
   const params = useParams();
   const resumeId = Number(params['resumeId'] as string);
+
+  useScrollToTop();
 
   const [personalInfo, setPersonalInfo] = useState<
     Database['public']['Tables']['personal_information']['Row'] | null

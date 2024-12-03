@@ -12,21 +12,22 @@ import {
   ResumeResponse,
 } from '@/lib/promptHelper';
 import openAiClient from '@/lib/openaiClient';
-import SubmitButton from '@/app/components/SubmitButton';
-import { redirect, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { FileText, Loader2 } from 'lucide-react';
-import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { createClient } from '@/lib/supabase/client';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import BackButton from '@/app/components/BackButton';
+import { useScrollToTop } from '@/lib/useScrollToTop';
 
 export default function Page({ params }: { params: { resumeId: string } }) {
   const resumeId = Number(params.resumeId as string);
   const session = useSession();
   const supabase = createClient();
   const router = useRouter();
+
+  useScrollToTop();
 
   const [data, setData] = useState<ResumeResponse | null>(null);
   const [loading, setLoading] = useState(false);
