@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
 import Providers from './components/Providers';
@@ -17,6 +17,10 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: 'ResuGenie',
   description: 'AI Resume Generator',
+};
+
+export const viewport: Viewport = {
+  maximumScale: 1,
 };
 
 export default function RootLayout({
