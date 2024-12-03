@@ -26,7 +26,7 @@ const Header: FunctionComponent<HeaderProps> = () => {
     return (
       <HeaderWrapper shouldShowBorder={shouldShowBorder}>
         <div className="flex items-center gap-2">
-          <FileText className="text-primary" />
+          <FileText className="text-primary" style={{ marginLeft: '-4px' }} />
           <Link href="/dashboard">
             <h1 className="text-xl font-bold">ResuGenie</h1>
           </Link>
@@ -70,11 +70,11 @@ const HeaderWrapper: React.FC<
 > = ({ shouldShowBorder, children }) => {
   return (
     <header
-      className={`sticky top-0 w-full bg-transparent z-10 h-[64px] py-8 px-4 ${
+      className={`sticky top-0 w-full bg-transparent z-10 h-[64px] ${
         shouldShowBorder ? 'border-b bg-white/10 backdrop-blur-md' : ''
       }`}
     >
-      <div className="h-full mx-auto max-w-screen-2xl flex items-center justify-between">
+      <div className="h-full mx-auto max-w-screen-2xl flex items-center justify-between py-8 px-4">
         {children}
       </div>
     </header>
