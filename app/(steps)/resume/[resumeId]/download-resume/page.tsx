@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { ResumeResponse } from '@/lib/promptHelper';
 import { createClient } from '@/lib/supabase/client';
+import { useScrollToTop } from '@/lib/useScrollToTop';
 import { format } from 'date-fns';
 import { DownloadIcon } from 'lucide-react';
 import { useParams } from 'next/navigation';
@@ -18,6 +19,8 @@ export default function Page() {
 
   const params = useParams();
   const resumeId = Number(params['resumeId'] as string);
+
+  useScrollToTop();
 
   const getOptimizedResumeData = useCallback(async () => {
     const { data } = await supabase

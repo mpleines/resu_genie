@@ -14,6 +14,7 @@ import { useEffect, useState } from 'react';
 import SubmitButton from './SubmitButton';
 import { useStepper } from '../(steps)/useStepper';
 import { useParams } from 'next/navigation';
+import { useScrollToTop } from '@/lib/useScrollToTop';
 
 export default function JobAdvertisementForm() {
   const session = useSession();
@@ -22,6 +23,8 @@ export default function JobAdvertisementForm() {
   const stepper = useStepper();
   const params = useParams();
   const resumeId = Number(params['resumeId'] as string);
+
+  useScrollToTop();
 
   const [jobAdvertisement, setJobAdvertisement] = useState<
     Database['public']['Tables']['job_advertisement']['Row'] | null
