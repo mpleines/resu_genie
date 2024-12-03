@@ -48,7 +48,7 @@ const Header: FunctionComponent<HeaderProps> = () => {
   return (
     <HeaderWrapper shouldShowBorder={shouldShowBorder}>
       <div className="flex items-center gap-2">
-        <FileText className="text-primary" />
+        <FileText className="text-primary" style={{ marginLeft: '-4px' }} />
         <Link href="/">
           <h1 className="text-xl font-bold">ResuGenie</h1>
         </Link>
