@@ -14,7 +14,6 @@ import { Database } from '@/types/supabase';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import SubmitButton from './SubmitButton';
-import { Button } from '@/components/ui/button';
 import { useStepper } from '../(steps)/useStepper';
 import { useParams } from 'next/navigation';
 import BackButton from './BackButton';
@@ -68,6 +67,12 @@ export default function PersonalInformationForm() {
       await supabase.from('personal_information').upsert(personalInformation, {
         onConflict: 'resume_id',
       });
+      await supabase
+        .from('resume')
+        .update({
+          last_updated: new Date().toISOString(),
+        })
+        .eq('id', resumeId);
       stepper.next();
     } catch (error) {
       console.error(error);

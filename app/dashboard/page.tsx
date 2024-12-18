@@ -4,15 +4,18 @@ import ResumePreview from '../components/ResumePreview';
 import { NewResume } from '../components/NewResumeCard';
 import { cookies } from 'next/headers';
 
+export const revalidate = 0;
+
 export default async function DashboardPage() {
   const session = await getServerSession();
   const userEmail = session?.user?.email;
+
   const supabase = supabaseClient(cookies);
   const { data: resumes } = await supabase
     .from('resume')
     .select(
       `
-      id,
+      id, last_updated,
       job_advertisement (text),
       personal_information (name, phone_1, address, city, professional_experience_in_years),
       skills (skill_name),
@@ -20,7 +23,8 @@ export default async function DashboardPage() {
       education (institute_name, start_date, end_date)
     `
     )
-    .eq('user_id', userEmail!);
+    .eq('user_id', userEmail!)
+    .order('last_updated', { ascending: false });
 
   return (
     <div className="space-y-4">
@@ -29,9 +33,11 @@ export default async function DashboardPage() {
         <NewResume />
         {resumes?.map((resume) => (
           <ResumePreview
+            key={resume.id}
             resumeId={resume.id.toString()}
             name={resume.personal_information?.name}
             skills={resume.skills?.map((skill) => skill.skill_name) || []}
+            last_updated={resume.last_updated}
           />
         ))}
       </div>

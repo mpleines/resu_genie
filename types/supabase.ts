@@ -140,18 +140,21 @@ export type Database = {
           chat_gpt_response_raw: Json | null
           created_at: string
           id: number
+          last_updated: string | null
           user_id: string | null
         }
         Insert: {
           chat_gpt_response_raw?: Json | null
           created_at?: string
           id?: number
+          last_updated?: string | null
           user_id?: string | null
         }
         Update: {
           chat_gpt_response_raw?: Json | null
           created_at?: string
           id?: number
+          last_updated?: string | null
           user_id?: string | null
         }
         Relationships: []

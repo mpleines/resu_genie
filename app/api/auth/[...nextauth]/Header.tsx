@@ -27,9 +27,12 @@ const Header: FunctionComponent<HeaderProps> = () => {
       <HeaderWrapper shouldShowBorder={shouldShowBorder}>
         <div className="flex items-center gap-2">
           <FileText className="text-primary" style={{ marginLeft: '-4px' }} />
-          <Link href="/dashboard">
+          {/* note: we are using a link tag here instead of the <Link/> component because we don't want soft navigation with caching.
+            Instead we need to re-fetch data on the dashboard when navigating
+          */}
+          <a href="/dashboard">
             <h1 className="text-xl font-bold">ResuGenie</h1>
-          </Link>
+          </a>
         </div>
         <div className="flex gap-6 items-center">
           {/* FIXME: this should be a dropdown for mobile view */}

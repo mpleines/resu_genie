@@ -2,6 +2,7 @@
 
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
+import { formatDate } from '@/lib/utils';
 import { FileText } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { FunctionComponent } from 'react';
@@ -10,12 +11,14 @@ interface ResumePreviewProps {
   resumeId: string;
   name: string;
   skills: string[];
+  last_updated: string;
 }
 
 const ResumePreview: FunctionComponent<ResumePreviewProps> = ({
   resumeId,
   name,
   skills,
+  last_updated,
 }) => {
   const router = useRouter();
 
@@ -33,10 +36,13 @@ const ResumePreview: FunctionComponent<ResumePreviewProps> = ({
         <h3 className="text-lg font-semibold text-center mb-1">
           {name ? name : 'Unnamed Resume'}
         </h3>
-        <p className="text-sm text-muted-foreground text-center mb-4">
+        <p className="text-sm text-muted-foreground text-center">
           {'Unknown Job Title'}
         </p>
-        <div className="flex flex-wrap justify-center gap-1 min-h-[1.5rem]">
+        <span className="text-sm text-muted-foreground mb-4">
+          Last updated: {formatDate(new Date(last_updated))}
+        </span>
+        <div className="flex flex-wrap items-center justify-center gap-1 min-h-[1.5rem]">
           {skills.length > 0 ? (
             <>
               {skills.slice(0, 4).map((skill, index) => (

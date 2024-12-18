@@ -56,10 +56,18 @@ export default function JobAdvertisementForm() {
     };
 
     try {
+      // FIXME: supabase does not support transactions, maybe refactor this to a RPC function
       await supabase
         .from('job_advertisement')
         .upsert(jobAdvertisement, { onConflict: 'resume_id' })
         .select();
+
+      await supabase
+        .from('resume')
+        .update({
+          last_updated: new Date().toISOString(),
+        })
+        .eq('id', resumeId);
 
       stepper.next();
     } catch (error) {
