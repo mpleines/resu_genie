@@ -12,10 +12,8 @@ import {
   ResumeResponse,
 } from '@/lib/promptHelper';
 import openAiClient from '@/lib/openaiClient';
-import SubmitButton from '@/app/components/SubmitButton';
-import { redirect, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { FileText, Loader2 } from 'lucide-react';
-import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { createClient } from '@/lib/supabase/client';
 import { useEffect, useState } from 'react';
@@ -84,6 +82,7 @@ export default function Page({ params }: { params: { resumeId: string } }) {
         .from('resume')
         .update({
           chat_gpt_response_raw: resumeData,
+          last_updated: new Date().toISOString(),
         })
         .eq('id', resumeId);
     } catch (error) {

@@ -81,6 +81,12 @@ export default function WorkExperienceForm() {
     }
 
     await supabase.from('work_experience').insert(workExperienceToInsert);
+    await supabase
+      .from('resume')
+      .update({
+        last_updated: new Date().toISOString(),
+      })
+      .eq('id', resumeId);
 
     setWorkExperience({
       organisation_name: '',

@@ -78,6 +78,7 @@ export default function EducationForm() {
 
     try {
       await supabase.from('education').insert(newEducation);
+
       fetchEducation();
       setEducation({
         institute_name: '',
@@ -102,6 +103,13 @@ export default function EducationForm() {
     if (educations.length < 1) {
       return;
     }
+
+    await supabase
+      .from('resume')
+      .update({
+        last_updated: new Date().toISOString(),
+      })
+      .eq('id', resumeId);
 
     stepper.next();
   }

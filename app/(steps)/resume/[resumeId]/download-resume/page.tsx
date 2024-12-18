@@ -55,7 +55,7 @@ export default function Page() {
         </Button>
       </div>
       <div className="mt-4 w-full">
-        <div className="bg-white shadow-md rounded-md w-full">
+        <div className="bg-white shadow-md rounded-md w-full h-auto md:w-[210mm] md:h-[297mm] mx-auto border border-gray-300">
           <div ref={contentRef}>
             <div
               className="p-6 mx-auto font-serif text-xl"

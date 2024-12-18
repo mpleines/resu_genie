@@ -94,6 +94,13 @@ export default function SkillsForm() {
       return;
     }
 
+    await supabase
+      .from('resume')
+      .update({
+        last_updated: new Date().toISOString(),
+      })
+      .eq('id', resumeId);
+
     stepper.next();
   }
 
