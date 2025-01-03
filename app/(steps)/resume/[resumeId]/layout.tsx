@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import Header from '../../../api/auth/[...nextauth]/Header';
+import Header from '../../../components/Header';
 import { StepperProvider, Steps } from '../../useStepper';
 import Stepper from '../../../components/Stepper';
 import supabaseClient from '@/lib/supabase/server';
