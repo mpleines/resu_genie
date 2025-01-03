@@ -21,6 +21,7 @@ import SubmitButton from './SubmitButton';
 import { useStepper } from '../(steps)/useStepper';
 import { useParams } from 'next/navigation';
 import BackButton from './BackButton';
+import { useScrollToTop } from '@/lib/useScrollToTop';
 
 export default function EducationForm() {
   const supabase = createClient();
@@ -29,6 +30,8 @@ export default function EducationForm() {
   const stepper = useStepper();
   const params = useParams();
   const resumeId = Number(params['resumeId'] as string);
+
+  useScrollToTop();
 
   const [education, setEducation] = useState<{
     institute_name: string;

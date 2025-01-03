@@ -19,12 +19,15 @@ import { createClient } from '@/lib/supabase/client';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import BackButton from '@/app/components/BackButton';
+import { useScrollToTop } from '@/lib/useScrollToTop';
 
 export default function Page({ params }: { params: { resumeId: string } }) {
   const resumeId = Number(params.resumeId as string);
   const session = useSession();
   const supabase = createClient();
   const router = useRouter();
+
+  useScrollToTop();
 
   const [data, setData] = useState<ResumeResponse | null>(null);
   const [loading, setLoading] = useState(false);

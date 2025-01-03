@@ -56,6 +56,7 @@ export default async function DashboardLayout({
 }) {
   const supabase = supabaseClient(cookies);
   const session = await getServerSession();
+
   const { data: resume, error } = await supabase
     .from('resume')
     .select()

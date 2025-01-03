@@ -22,6 +22,7 @@ import { useParams } from 'next/navigation';
 import { formatDate } from 'date-fns';
 import { useStepper } from '../(steps)/useStepper';
 import BackButton from './BackButton';
+import { useScrollToTop } from '@/lib/useScrollToTop';
 
 export default function WorkExperienceForm() {
   const supabase = createClient();
@@ -30,6 +31,8 @@ export default function WorkExperienceForm() {
   const stepper = useStepper();
   const params = useParams();
   const resumeId = Number(params['resumeId'] as string);
+
+  useScrollToTop();
 
   const [workExperiences, setWorkExperiences] = useState<
     Database['public']['Tables']['work_experience']['Row'][]
