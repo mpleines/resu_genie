@@ -1,4 +1,4 @@
-import Header from '../api/auth/[...nextauth]/Header';
+import Header from '../components/Header';
 
 export default function BasicLayout({
   children,

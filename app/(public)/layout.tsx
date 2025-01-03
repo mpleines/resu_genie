@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import '../globals.css';
 import Providers from '../components/Providers';
-import Header from '../api/auth/[...nextauth]/Header';
+import Header from '../components/Header';
 import { Copyright } from 'lucide-react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
