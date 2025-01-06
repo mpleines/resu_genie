@@ -1,4 +1,4 @@
-import { FileText, User } from 'lucide-react';
+import { User } from 'lucide-react';
 import { getServerSession } from 'next-auth';
 import Link from 'next/link';
 import { FunctionComponent } from 'react';
@@ -20,15 +20,28 @@ const HeaderContent: FunctionComponent = async () => {
       );
     }
 
-    return <SignInButton />;
+    return (
+      <div className="flex items-center gap-4">
+        <Link
+          href="#how-it-works"
+          className="text-muted-foreground font-semibold"
+        >
+          How it works
+        </Link>
+
+        <Link href="#faq" className="text-muted-foreground font-semibold">
+          FAQ
+        </Link>
+        <SignInButton />
+      </div>
+    );
   };
 
   return (
     <div className="h-full mx-auto max-w-screen-2xl flex items-center justify-between py-8 px-4">
       <div className="flex items-center gap-2">
-        <FileText className="text-primary" style={{ marginLeft: '-4px' }} />
         <Link href="/">
-          <h1 className="text-xl font-bold">ResuGenie</h1>
+          <h1 className="text-xl font-bold">resugenie.</h1>
         </Link>
       </div>
       {renderSessionContent()}

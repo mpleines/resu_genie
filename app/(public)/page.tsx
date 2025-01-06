@@ -9,36 +9,109 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Dot, Wand } from 'lucide-react';
+import { Dot, FileIcon, SparklesIcon } from 'lucide-react';
 import { signIn } from 'next-auth/react';
+import Image from 'next/image';
+import ExampleResume from '/public/example-resume.webp';
 
 export default function Home() {
   return (
-    <main className="mx-auto py-16 px-4 flex-1 grid grid-row-1 max-w-screen-lg">
-      <section className="flex flex-col items-center justify-center space-y-6">
+    <main className="mx-auto py-16 px-4 flex-1 grid grid-row-1">
+      <section className="mx-auto max-w-screen-lg relative pt-24 pb-48 flex flex-col items-center justify-center space-y-6">
         <div>
           <Badge variant="secondary">
             <Dot className="text-orange-500" />
             Alpha Version
           </Badge>
         </div>
-        <h1 className="text-5xl lg:text-6xl font-bold text-center text-balance">
-          Your platform for crafting standout resumes.
-        </h1>
-        <span className="text-center text-muted-foreground text-balance">
-          Transform your job search with tailored, professional resumes crafted
-          by advanced AI. Save time, showcase your skills, and make a lasting
-          impression—effortlessly.
-        </span>
+        <div className="space-y-4 text-center">
+          <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl">
+            Your platform for crafting
+            <span className="block bg-gradient-to-r from-foreground to-muted-foreground/80 bg-clip-text text-transparent">
+              standout resumes.
+            </span>
+          </h1>
+          <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
+            Transform your job search with tailored, professional resumes
+            crafted by advanced AI. Save time, showcase your skills, and make a
+            lasting impression—effortlessly.
+          </p>
+        </div>
         <Button
-          className="font-semibold text-lg p-6 rounded-2xl"
+          size="lg"
           onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
         >
-          <Wand />
+          <SparklesIcon />
           Create Your Resume
         </Button>
       </section>
-      <section className="flex flex-col items-center justify-center mt-24">
+      <section id="features" className="lg:px-24 pb-24">
+        <div className="grid gap-8 md:grid-cols-3">
+          <div className="group relative">
+            <div className="absolute -inset-px rounded-xl bg-gradient-to-r from-primary/50 to-primary blur-lg transition-all group-hover:blur-xl" />
+            <div className="relative aspect-[3/4] overflow-hidden rounded-xl border shadow-xl">
+              <Image
+                src={ExampleResume}
+                alt="Minimalistic resume template example"
+                width={600}
+                height={800}
+                className="h-full w-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent p-6">
+                <div className="absolute bottom-6 left-6">
+                  <Badge className="mb-2 gap-1">
+                    <FileIcon className="h-3 w-3" />
+                    Minimalistic Template
+                  </Badge>
+                  <p className="text-sm text-white">
+                    For those who prefer a clean and simple design.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="group relative translate-y-8">
+            <div className="absolute -inset-px rounded-xl bg-gradient-to-r from-primary/50 to-primary blur-lg transition-all group-hover:blur-xl" />
+            <div className="relative aspect-[3/4] overflow-hidden rounded-xl border bg-card shadow-xl">
+              <div className="h-full flex justify-center items-center text-muted-foreground font-bold">
+                Coming soon
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent p-6">
+                <div className="absolute bottom-6 left-6">
+                  <Badge className="mb-2 gap-1">
+                    <FileIcon className="h-3 w-3" />
+                    Professional Template
+                  </Badge>
+                  <p className="text-sm text-white">For executive positions</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="group relative">
+            <div className="absolute -inset-px rounded-xl bg-gradient-to-r from-primary/50 to-primary blur-lg transition-all group-hover:blur-xl" />
+            <div className="relative aspect-[3/4] overflow-hidden rounded-xl border bg-card shadow-xl">
+              <div className="h-full flex justify-center items-center text-muted-foreground font-bold">
+                Coming soon
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent p-6">
+                <div className="absolute bottom-6 left-6">
+                  <Badge className="mb-2 gap-1">
+                    <FileIcon className="h-3 w-3" />
+                    Creative Template
+                  </Badge>
+                  <p className="text-sm text-white">
+                    Stand out in creative fields
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section
+        id="how-it-works"
+        className="max-w-screen-lg mx-auto flex flex-col items-center justify-center mt-8"
+      >
         <h1 className="text-5xl md:text-5xl font-bold mb-4">How it works</h1>
         <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
           <Card>
@@ -76,7 +149,10 @@ export default function Home() {
           </Card>
         </div>
       </section>
-      <section className="flex flex-col items-center justify-center mt-24">
+      <section
+        id="faq"
+        className="max-w-screen-lg mx-auto flex flex-col items-center justify-center mt-24"
+      >
         <h1 className="text-5xl md:text-5xl font-bold mb-4">FAQ</h1>
         <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
           <Card>

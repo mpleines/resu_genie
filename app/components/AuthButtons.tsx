@@ -5,7 +5,7 @@ import { signIn, signOut } from 'next-auth/react';
 
 export const SignoutButton = () => {
   return (
-    <Button onClick={() => signOut({ callbackUrl: '/' })} size="sm">
+    <Button variant="secondary" onClick={() => signOut({ callbackUrl: '/' })}>
       Sign Out
     </Button>
   );
@@ -14,8 +14,8 @@ export const SignoutButton = () => {
 export const SignInButton = () => {
   return (
     <Button
+      variant="secondary"
       onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
-      size="sm"
     >
       Sign In{' '}
     </Button>
