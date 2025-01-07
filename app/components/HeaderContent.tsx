@@ -1,8 +1,8 @@
-import { FileText, User } from 'lucide-react';
 import { getServerSession } from 'next-auth';
 import Link from 'next/link';
 import { FunctionComponent } from 'react';
-import { SignInButton, SignoutButton } from './AuthButtons';
+import { SignInButton } from './AuthButtons';
+import UserDropdown from './UserDropdown';
 
 const HeaderContent: FunctionComponent = async () => {
   const session = await getServerSession();
@@ -11,24 +11,36 @@ const HeaderContent: FunctionComponent = async () => {
     if (session?.user != null) {
       return (
         <div className="flex gap-6 items-center">
-          <div className="flex items-center gap-2">
-            <User className="hidden md:block" />
-            <span className="hidden md:block">{session.user?.name}</span>
-          </div>
-          <SignoutButton />
+          <UserDropdown
+            username={session.user.name ?? 'Unknown User'}
+            avatarUrl={session.user.image ?? undefined}
+          />
         </div>
       );
     }
 
-    return <SignInButton />;
+    return (
+      <div className="flex items-center gap-4">
+        <Link
+          href="#how-it-works"
+          className="text-muted-foreground font-semibold"
+        >
+          How it works
+        </Link>
+
+        <Link href="#faq" className="text-muted-foreground font-semibold">
+          FAQ
+        </Link>
+        <SignInButton />
+      </div>
+    );
   };
 
   return (
     <div className="h-full mx-auto max-w-screen-2xl flex items-center justify-between py-8 px-4">
       <div className="flex items-center gap-2">
-        <FileText className="text-primary" style={{ marginLeft: '-4px' }} />
         <Link href="/">
-          <h1 className="text-xl font-bold">ResuGenie</h1>
+          <h1 className="text-xl font-bold">resugenie.</h1>
         </Link>
       </div>
       {renderSessionContent()}
