@@ -1,8 +1,8 @@
-import { User } from 'lucide-react';
 import { getServerSession } from 'next-auth';
 import Link from 'next/link';
 import { FunctionComponent } from 'react';
-import { SignInButton, SignoutButton } from './AuthButtons';
+import { SignInButton } from './AuthButtons';
+import UserDropdown from './UserDropdown';
 
 const HeaderContent: FunctionComponent = async () => {
   const session = await getServerSession();
@@ -11,11 +11,10 @@ const HeaderContent: FunctionComponent = async () => {
     if (session?.user != null) {
       return (
         <div className="flex gap-6 items-center">
-          <div className="flex items-center gap-2">
-            <User className="hidden md:block" />
-            <span className="hidden md:block">{session.user?.name}</span>
-          </div>
-          <SignoutButton />
+          <UserDropdown
+            username={session.user.name ?? 'Unknown User'}
+            avatarUrl={session.user.image ?? undefined}
+          />
         </div>
       );
     }
