@@ -9,15 +9,15 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Dot, FileIcon, SparklesIcon } from 'lucide-react';
+import { Dot, SparklesIcon } from 'lucide-react';
 import { signIn } from 'next-auth/react';
-import Image from 'next/image';
 import ExampleResume from '/public/example-resume.webp';
+import ResumeImageCard from '../components/ResumeImageCard';
 
 export default function Home() {
   return (
     <main className="mx-auto py-16 px-4 flex-1 grid grid-row-1">
-      <section className="mx-auto max-w-screen-lg relative pt-24 pb-48 flex flex-col items-center justify-center space-y-6">
+      <section className="mx-auto max-w-screen-lg relative flex flex-col items-center justify-center space-y-6 pt-24">
         <div>
           <Badge variant="secondary">
             <Dot className="text-orange-500" />
@@ -45,67 +45,16 @@ export default function Home() {
           Create Your Resume
         </Button>
       </section>
-      <section id="features" className="lg:px-24 pb-24">
+      <section id="features" className="pt-24 pb-24 max-w-[2400px] mx-auto">
         <div className="grid gap-8 md:grid-cols-3">
-          <div className="group relative">
-            <div className="absolute -inset-px rounded-xl bg-gradient-to-r from-primary/50 to-primary blur-lg transition-all group-hover:blur-xl" />
-            <div className="relative aspect-[3/4] overflow-hidden rounded-xl border shadow-xl">
-              <Image
-                src={ExampleResume}
-                alt="Minimalistic resume template example"
-                width={600}
-                height={800}
-                className="h-full w-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent p-6">
-                <div className="absolute bottom-6 left-6">
-                  <Badge className="mb-2 gap-1">
-                    <FileIcon className="h-3 w-3" />
-                    Minimalistic Template
-                  </Badge>
-                  <p className="text-sm text-white">
-                    For those who prefer a clean and simple design.
-                  </p>
-                </div>
-              </div>
-            </div>
+          <ResumeImageCard
+            imgUrl={ExampleResume.src}
+            alt="Minimalistic resume template example"
+          />
+          <div className="lg:translate-y-8">
+            <ResumeImageCard placeholder="Coming soon" />
           </div>
-          <div className="group relative translate-y-8">
-            <div className="absolute -inset-px rounded-xl bg-gradient-to-r from-primary/50 to-primary blur-lg transition-all group-hover:blur-xl" />
-            <div className="relative aspect-[3/4] overflow-hidden rounded-xl border bg-card shadow-xl">
-              <div className="h-full flex justify-center items-center text-muted-foreground font-bold">
-                Coming soon
-              </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent p-6">
-                <div className="absolute bottom-6 left-6">
-                  <Badge className="mb-2 gap-1">
-                    <FileIcon className="h-3 w-3" />
-                    Professional Template
-                  </Badge>
-                  <p className="text-sm text-white">For executive positions</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="group relative">
-            <div className="absolute -inset-px rounded-xl bg-gradient-to-r from-primary/50 to-primary blur-lg transition-all group-hover:blur-xl" />
-            <div className="relative aspect-[3/4] overflow-hidden rounded-xl border bg-card shadow-xl">
-              <div className="h-full flex justify-center items-center text-muted-foreground font-bold">
-                Coming soon
-              </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent p-6">
-                <div className="absolute bottom-6 left-6">
-                  <Badge className="mb-2 gap-1">
-                    <FileIcon className="h-3 w-3" />
-                    Creative Template
-                  </Badge>
-                  <p className="text-sm text-white">
-                    Stand out in creative fields
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+          <ResumeImageCard placeholder="Coming soon" />
         </div>
       </section>
       <section
