@@ -1,4 +1,5 @@
 'use client';
+
 import {
   Card,
   CardContent,
@@ -8,15 +9,29 @@ import {
 } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { createClient } from '@/lib/supabase/client';
-import { Database } from '@/types/supabase';
 import { useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
 import SubmitButton from './SubmitButton';
 import { useStepper } from '../(steps)/useStepper';
 import { useParams } from 'next/navigation';
 import { useScrollToTop } from '@/lib/useScrollToTop';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  Form,
+  FormMessage,
+} from '@/components/ui/form';
+
+const formSchema = z.object({
+  jobAdvertisement: z.string().min(1, { message: 'This field is required' }),
+});
 
 export default function JobAdvertisementForm() {
+  useScrollToTop();
+
   const session = useSession();
   const userEmail = session?.data?.user?.email;
   const supabase = createClient();
@@ -24,35 +39,33 @@ export default function JobAdvertisementForm() {
   const params = useParams();
   const resumeId = Number(params['resumeId'] as string);
 
-  useScrollToTop();
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: async () => {
+      const jobAdvertisement = await fetchJobAdvertisement();
+      return { jobAdvertisement: jobAdvertisement ?? '' };
+    },
+  });
 
-  const [jobAdvertisement, setJobAdvertisement] = useState<
-    Database['public']['Tables']['job_advertisement']['Row'] | null
-  >();
-
-  useEffect(() => {
-    async function fetchJobAdvertisement() {
-      if (userEmail == null) {
-        return;
-      }
-
-      const { data } = await supabase
-        .from('job_advertisement')
-        .select()
-        .eq('user_id', userEmail)
-        .eq('resume_id', resumeId)
-        .limit(1)
-        .single();
-
-      setJobAdvertisement(data);
+  async function fetchJobAdvertisement() {
+    if (userEmail == null) {
+      return;
     }
 
-    fetchJobAdvertisement();
-  }, [userEmail, resumeId, supabase]);
+    const { data } = await supabase
+      .from('job_advertisement')
+      .select()
+      .eq('user_id', userEmail)
+      .eq('resume_id', resumeId)
+      .limit(1)
+      .single();
 
-  async function submitJobAdvertisement(formData: FormData) {
+    return data?.text;
+  }
+
+  async function submitJobAdvertisement(jobAd: string) {
     const jobAdvertisement = {
-      text: formData.get('job-advertisement') as string,
+      text: jobAd,
       user_id: userEmail,
       created_at: new Date().toISOString(),
       resume_id: resumeId,
@@ -78,29 +91,42 @@ export default function JobAdvertisementForm() {
     }
   }
 
-  return (
-    <form action={submitJobAdvertisement}>
-      <Card>
-        <CardHeader>
-          <CardTitle>Job Advertisement</CardTitle>
-          <CardDescription>
-            Copy the Job Advertisement Text in here to get started
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Textarea
-            name="job-advertisement"
-            required
-            defaultValue={jobAdvertisement?.text ?? ''}
-            className="min-h-[250px]"
-          />
-          {/* TODO: adding a link to a job advertisement should extract the text with a web crawler */}
-        </CardContent>
-      </Card>
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    // TODO: handle form submission
+    const { jobAdvertisement } = values;
 
-      <div className="flex justify-end py-2">
-        <SubmitButton text="Next" />
-      </div>
-    </form>
+    await submitJobAdvertisement(jobAdvertisement);
+  }
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <Card>
+          <CardHeader>
+            <CardTitle>Job Advertisement</CardTitle>
+            <CardDescription>
+              Copy the Job Advertisement Text in here to get started
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <FormField
+              control={form.control}
+              name="jobAdvertisement"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Textarea {...field} className="min-h-[250px]" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </CardContent>
+        </Card>
+        <div className="flex justify-end py-2">
+          <SubmitButton text="Next" pending={form.formState.isSubmitting} />
+        </div>
+      </form>
+    </Form>
   );
 }
