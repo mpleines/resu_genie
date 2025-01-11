@@ -39,7 +39,9 @@ body {
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
-    --mint-cream: 120 100% 98%;
+    /* custom colors */
+    --ice-blue: 180, 89%, 78%;
+    --lavender-pink: 324, 52%, 81%;
   }
 
   .dark {
