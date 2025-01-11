@@ -1,7 +1,6 @@
 'use client';
 
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -9,10 +8,11 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Dot, SparklesIcon } from 'lucide-react';
+import { ArrowRight, Dot, SparklesIcon } from 'lucide-react';
 import { signIn } from 'next-auth/react';
 import ExampleResume from '/public/example-resume.webp';
 import ResumeImageCard from '../components/ResumeImageCard';
+import GradientButton from '../components/GradientButton';
 
 export default function Home() {
   return (
@@ -37,13 +37,14 @@ export default function Home() {
             lasting impression—effortlessly.
           </p>
         </div>
-        <Button
+        <GradientButton
           size="lg"
           onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
         >
           <SparklesIcon />
-          Create Your Resume
-        </Button>
+          <span>Create Your Resume</span>
+          <ArrowRight className="transition duration-300 ease-in-out" />
+        </GradientButton>
       </section>
       <section id="features" className="pt-24 pb-24 max-w-[2400px] mx-auto">
         <div className="grid gap-8 md:grid-cols-3">
