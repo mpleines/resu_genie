@@ -97,6 +97,7 @@ export default function SkillsForm() {
     if (response.error) {
       console.error(response.error);
     } else {
+      submitForm.reset({});
       form.reset({ skill: '' });
     }
 
