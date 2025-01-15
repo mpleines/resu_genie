@@ -32,6 +32,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { AlertDestructive } from './AlertDestructive';
 
 const formSchema = z.object({
   institute_name: z.string().min(1, { message: 'This field is required' }),
@@ -253,6 +254,12 @@ export default function EducationForm() {
       </Form>
       <Form {...submitForm}>
         <form onSubmit={submitForm.handleSubmit(submitEducation)}>
+          {submitForm.formState.errors.root?.message && (
+            <AlertDestructive
+              className="my-2"
+              message={submitForm.formState.errors.root.message}
+            />
+          )}
           <div className="flex justify-end py-2">
             <BackButton />
             <SubmitButton
@@ -261,7 +268,6 @@ export default function EducationForm() {
             />
           </div>
         </form>
-        <FormMessage>{submitForm.formState.errors.root?.message}</FormMessage>
       </Form>
     </>
   );

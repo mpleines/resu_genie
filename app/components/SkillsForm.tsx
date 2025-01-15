@@ -31,6 +31,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { AlertDestructive } from './AlertDestructive';
 
 type Skill = Database['public']['Tables']['skills']['Row'];
 
@@ -137,17 +138,16 @@ export default function SkillsForm() {
 
   return (
     <div>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(addSkill)}>
-          <Card>
-            <CardHeader>
-              <CardTitle>Skills</CardTitle>
-              <CardDescription>
-                Enter the Skills you have that are relevant to the job
-                advertisement
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+      <Card>
+        <CardHeader>
+          <CardTitle>Skills</CardTitle>
+          <CardDescription>
+            Enter the Skills you have that are relevant to the job advertisement
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(addSkill)}>
               <div className="flex gap-2">
                 <div className="flex-1">
                   <FormField
@@ -170,28 +170,35 @@ export default function SkillsForm() {
                 </div>
               </div>
               <FormMessage>{form.formState.errors.skill?.message}</FormMessage>
-              <div className="flex flex-wrap gap-2 mt-4">
-                {skills?.map((skill) => (
-                  <Badge key={skill.id} variant="secondary">
-                    {skill.skill_name}
-                    <button
-                      type="button"
-                      onClick={() => removeSkill(skill.id)}
-                      className="ml-2 hover:text-destructive focus:text-destructive"
-                      aria-label={`Remove ${skill}`}
-                    >
-                      <X size={16} />
-                    </button>
-                  </Badge>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </form>
-      </Form>
+            </form>
+          </Form>
+
+          <div className="flex flex-wrap gap-2 mt-4">
+            {skills?.map((skill) => (
+              <Badge key={skill.id} variant="secondary">
+                {skill.skill_name}
+                <button
+                  type="button"
+                  onClick={() => removeSkill(skill.id)}
+                  className="ml-2 hover:text-destructive focus:text-destructive"
+                  aria-label={`Remove ${skill}`}
+                >
+                  <X size={16} />
+                </button>
+              </Badge>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
 
       <Form {...submitForm}>
         <form onSubmit={submitForm.handleSubmit(submitSkills)}>
+          {submitForm.formState.errors.root?.message && (
+            <AlertDestructive
+              className="my-2"
+              message={submitForm.formState.errors.root.message}
+            />
+          )}
           <div className="flex justify-end py-2">
             <BackButton />
             <SubmitButton
@@ -199,7 +206,6 @@ export default function SkillsForm() {
               pending={submitForm.formState.isSubmitting}
             />
           </div>
-          <FormMessage>{submitForm.formState.errors.root?.message}</FormMessage>
         </form>
       </Form>
     </div>
