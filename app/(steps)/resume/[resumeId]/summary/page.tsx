@@ -20,12 +20,14 @@ import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import BackButton from '@/app/components/BackButton';
 import { useScrollToTop } from '@/lib/useScrollToTop';
+import { useToast } from '@/hooks/use-toast';
 
 export default function Page({ params }: { params: { resumeId: string } }) {
   const resumeId = Number(params.resumeId as string);
   const session = useSession();
   const supabase = createClient();
   const router = useRouter();
+  const { toast } = useToast();
 
   useScrollToTop();
 
@@ -74,13 +76,13 @@ export default function Page({ params }: { params: { resumeId: string } }) {
 
     setLoading(true);
 
-    const prompt = createResumePrompt(resumePromptData);
-    const response = await openAiClient.completions(prompt);
-    const resumeResponseStr = response.data.choices[0].message.content;
-    const resumeData: ResumeResponse = JSON.parse(resumeResponseStr);
-
-    // save resume data to supabase
     try {
+      const prompt = createResumePrompt(resumePromptData);
+      const response = await openAiClient.completions(prompt);
+      const resumeResponseStr = response.data.choices[0].message.content;
+      const resumeData: ResumeResponse = JSON.parse(resumeResponseStr);
+
+      // save resume data to supabase
       await supabase
         .from('resume')
         .update({
@@ -88,12 +90,17 @@ export default function Page({ params }: { params: { resumeId: string } }) {
           last_updated: new Date().toISOString(),
         })
         .eq('id', resumeId);
-    } catch (error) {
-      console.error(error);
-    } finally {
+
       setLoading(false);
       // navigate to resume page
       router.push(`/resume/${resumeId}/download-resume`);
+    } catch (error) {
+      setLoading(false);
+      console.error(error);
+      toast({
+        title: 'Error generating resume. Please try again.',
+        variant: 'destructive',
+      });
     }
   }
 
