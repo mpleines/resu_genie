@@ -137,9 +137,9 @@ export default function WorkExperienceForm() {
   }
 
   return (
-    <>
+    <div className="space-y-4">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(addExperience)}>
+        <form onSubmit={form.handleSubmit(addExperience)} className="space-y-4">
           <Card>
             <CardHeader>
               <CardTitle>Add Work Experience</CardTitle>
@@ -147,7 +147,7 @@ export default function WorkExperienceForm() {
                 Add your previous work experience.
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
               <FormField
                 control={form.control}
                 name="organisation_name"
@@ -158,13 +158,11 @@ export default function WorkExperienceForm() {
                       <FormControl>
                         <Input {...field} placeholder="Company Name" />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   );
                 }}
               />
-              <FormMessage>
-                {form.formState.errors.organisation_name?.message}
-              </FormMessage>
 
               <FormField
                 control={form.control}
@@ -176,13 +174,11 @@ export default function WorkExperienceForm() {
                       <FormControl>
                         <Input {...field} placeholder="profile" />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   );
                 }}
               />
-              <FormMessage>
-                {form.formState.errors.profile?.message}
-              </FormMessage>
 
               <FormField
                 control={form.control}
@@ -190,17 +186,18 @@ export default function WorkExperienceForm() {
                 render={({ field }) => {
                   return (
                     <FormItem>
-                      <div className="flex flex-col my-2 space-y-2">
-                        <FormLabel>Start Date</FormLabel>
-                        <FormControl>
+                      <FormLabel>Start Date</FormLabel>
+                      <FormControl>
+                        <div>
                           <DatePicker
                             {...field}
                             onSelect={(date) =>
                               form.setValue('start_date', date!)
                             }
                           />
-                        </FormControl>
-                      </div>
+                        </div>
+                      </FormControl>
+                      <FormMessage />
                     </FormItem>
                   );
                 }}
@@ -213,17 +210,18 @@ export default function WorkExperienceForm() {
                   render={({ field }) => {
                     return (
                       <FormItem>
-                        <div className="flex flex-col my-2 space-y-2">
-                          <FormLabel>End Date</FormLabel>
-                          <FormControl>
+                        <FormLabel>End Date</FormLabel>
+                        <FormControl>
+                          <div>
                             <DatePicker
                               {...field}
                               onSelect={(date) =>
                                 form.setValue('end_date', date!)
                               }
                             />
-                          </FormControl>
-                        </div>
+                          </div>
+                        </FormControl>
+                        <FormMessage />
                       </FormItem>
                     );
                   }}
@@ -290,7 +288,7 @@ export default function WorkExperienceForm() {
               message={submitForm.formState.errors.root.message}
             />
           )}
-          <div className="flex justify-end py-2">
+          <div className="flex justify-end">
             <BackButton />
             <SubmitButton
               text="Next"
@@ -299,6 +297,6 @@ export default function WorkExperienceForm() {
           </div>
         </form>
       </Form>
-    </>
+    </div>
   );
 }

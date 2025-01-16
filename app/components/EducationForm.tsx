@@ -127,15 +127,15 @@ export default function EducationForm() {
   }
 
   return (
-    <>
+    <div className="space-y-4">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(addEducation)}>
+        <form onSubmit={form.handleSubmit(addEducation)} className="space-y-4">
           <Card>
             <CardHeader>
               <CardTitle>Add Education</CardTitle>
               <CardDescription>Add your previous education.</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
               <FormField
                 control={form.control}
                 name="institute_name"
@@ -146,13 +146,11 @@ export default function EducationForm() {
                       <FormControl>
                         <Input {...field} placeholder="Institution Name" />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   );
                 }}
               />
-              <FormMessage>
-                {form.formState.errors.institute_name?.message}
-              </FormMessage>
 
               <FormField
                 control={form.control}
@@ -160,17 +158,18 @@ export default function EducationForm() {
                 render={({ field }) => {
                   return (
                     <FormItem>
-                      <div className="flex flex-col my-2 space-y-2">
-                        <FormLabel>Start Date</FormLabel>
-                        <FormControl>
+                      <FormLabel>Start Date</FormLabel>
+                      <FormControl>
+                        <div>
                           <DatePicker
                             {...field}
                             onSelect={(date) =>
                               form.setValue('start_date', date!)
                             }
                           />
-                        </FormControl>
-                      </div>
+                        </div>
+                      </FormControl>
+                      <FormMessage />
                     </FormItem>
                   );
                 }}
@@ -183,17 +182,18 @@ export default function EducationForm() {
                   render={({ field }) => {
                     return (
                       <FormItem>
-                        <div className="flex flex-col my-2 space-y-2">
-                          <FormLabel>End Date</FormLabel>
-                          <FormControl>
+                        <FormLabel>End Date</FormLabel>
+                        <FormControl>
+                          <div>
                             <DatePicker
                               {...field}
                               onSelect={(date) =>
                                 form.setValue('end_date', date!)
                               }
                             />
-                          </FormControl>
-                        </div>
+                          </div>
+                        </FormControl>
+                        <FormMessage />
                       </FormItem>
                     );
                   }}
@@ -260,7 +260,7 @@ export default function EducationForm() {
               message={submitForm.formState.errors.root.message}
             />
           )}
-          <div className="flex justify-end py-2">
+          <div className="flex justify-end">
             <BackButton />
             <SubmitButton
               text="Next"
@@ -269,6 +269,6 @@ export default function EducationForm() {
           </div>
         </form>
       </Form>
-    </>
+    </div>
   );
 }
