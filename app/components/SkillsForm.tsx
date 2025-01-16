@@ -137,7 +137,7 @@ export default function SkillsForm() {
   }
 
   return (
-    <div>
+    <div className="space-y-4">
       <Card>
         <CardHeader>
           <CardTitle>Skills</CardTitle>
@@ -145,31 +145,27 @@ export default function SkillsForm() {
             Enter the Skills you have that are relevant to the job advertisement
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(addSkill)}>
-              <div className="flex gap-2">
-                <div className="flex-1">
-                  <FormField
-                    control={form.control}
-                    name="skill"
-                    render={({ field }) => {
-                      return (
-                        <FormItem className="space-y-0">
-                          <FormLabel>Skill</FormLabel>
-                          <FormControl>
-                            <Input {...field} placeholder="Add a skill" />
-                          </FormControl>
-                        </FormItem>
-                      );
-                    }}
-                  />
-                </div>
-                <div className="flex justify-end mt-6">
-                  <Button>Add Skill</Button>
-                </div>
-              </div>
-              <FormMessage>{form.formState.errors.skill?.message}</FormMessage>
+            <form onSubmit={form.handleSubmit(addSkill)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="skill"
+                render={({ field }) => {
+                  return (
+                    <FormItem>
+                      <FormLabel>Skill</FormLabel>
+                      <div className="flex w-full items-center space-x-2">
+                        <FormControl>
+                          <Input {...field} placeholder="Add a skill" />
+                        </FormControl>
+                        <Button type="submit">Add</Button>
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
+              />
             </form>
           </Form>
 
@@ -199,7 +195,7 @@ export default function SkillsForm() {
               message={submitForm.formState.errors.root.message}
             />
           )}
-          <div className="flex justify-end py-2">
+          <div className="flex justify-end">
             <BackButton />
             <SubmitButton
               text="Next"

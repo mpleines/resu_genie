@@ -107,7 +107,10 @@ export default function PersonalInformationForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(submitPersonalInfo)}>
+      <form
+        onSubmit={form.handleSubmit(submitPersonalInfo)}
+        className="space-y-4"
+      >
         <Card>
           <CardHeader>
             <CardTitle>Contact Information</CardTitle>
@@ -115,7 +118,7 @@ export default function PersonalInformationForm() {
               Enter you Contact Information to start
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-4">
             <FormField
               control={form.control}
               name="name"
@@ -192,7 +195,7 @@ export default function PersonalInformationForm() {
             />
           </CardContent>
         </Card>
-        <div className="flex justify-end py-2">
+        <div className="flex justify-end">
           <BackButton />
           <SubmitButton text="Next" pending={form.formState.isSubmitting} />
         </div>

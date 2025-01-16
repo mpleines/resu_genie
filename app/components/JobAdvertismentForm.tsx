@@ -100,7 +100,7 @@ export default function JobAdvertisementForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <Card>
           <CardHeader>
             <CardTitle>Job Advertisement</CardTitle>
@@ -123,7 +123,7 @@ export default function JobAdvertisementForm() {
             />
           </CardContent>
         </Card>
-        <div className="flex justify-end py-2">
+        <div className="flex justify-end">
           <SubmitButton text="Next" pending={form.formState.isSubmitting} />
         </div>
       </form>

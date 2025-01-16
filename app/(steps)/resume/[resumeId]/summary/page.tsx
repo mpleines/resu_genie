@@ -99,7 +99,7 @@ export default function Page({ params }: { params: { resumeId: string } }) {
 
   return (
     <form>
-      <div className="flex flex-col space-y-2">
+      <div className="flex flex-col space-y-4">
         <h1 className="text-xl">Summary</h1>
         <Card>
           <CardHeader>
@@ -261,7 +261,7 @@ export default function Page({ params }: { params: { resumeId: string } }) {
             </CardContent>
           </Card>
         </div>
-        <div className="flex justify-end py-2">
+        <div className="flex justify-end">
           <BackButton />
           <Button type="button" onClick={generateResume}>
             {loading ? (
