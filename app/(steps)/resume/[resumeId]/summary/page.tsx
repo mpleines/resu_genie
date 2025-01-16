@@ -29,7 +29,7 @@ export default function Page({ params }: { params: { resumeId: string } }) {
 
   useScrollToTop();
 
-  const [data, setData] = useState<ResumeResponse | null>(null);
+  const [data, setData] = useState<ResumeData | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -53,7 +53,42 @@ export default function Page({ params }: { params: { resumeId: string } }) {
         return;
       }
 
-      setData(data);
+      if (data) {
+        // FIXME: type
+        const nonNullData = {
+          ...data,
+          job_advertisement: data.job_advertisement?.text,
+          skills: data.skills.map((skill) => skill.skill_name),
+          personal_information: {
+            ...data.personal_information,
+            email: session.data?.user?.email,
+          },
+        } as {
+          job_advertisement: string;
+          personal_information: {
+            name: string;
+            phone_1: string;
+            address: string;
+            city: string;
+            professional_experience_in_years: number;
+            email: string;
+          };
+          skills: string[];
+          work_experience: {
+            organisation_name: string;
+            profile: string;
+            start_date: string;
+            end_date: string;
+          }[];
+          education: {
+            institute_name: string;
+            start_date: string;
+            end_date: string;
+          }[];
+        };
+
+        setData(nonNullData);
+      }
     };
 
     fetchData();
@@ -61,14 +96,14 @@ export default function Page({ params }: { params: { resumeId: string } }) {
 
   async function generateResume() {
     // FIXME: type errors
-    const resumePromptData: ResumeData = {
-      job_advertisement: data?.job_advertisement.text ?? '',
+    const resumePromptData = {
+      job_advertisement: data?.job_advertisement ?? '',
       personal_information: {
-        ...data?.personal_information,
-        email: session?.user?.email!,
+        ...data?.personal_information!,
+        email: session.data?.user?.email!,
       },
-      skills: data?.skills,
-      work_experience: data?.work_experience,
+      skills: data?.skills!,
+      work_experience: data?.work_experience!,
       education: data?.education ?? [],
     };
 
@@ -106,7 +141,7 @@ export default function Page({ params }: { params: { resumeId: string } }) {
             <CardTitle>Job Advertisement</CardTitle>
           </CardHeader>
           <CardContent>
-            <Textarea disabled value={data?.job_advertisement.text} />
+            <Textarea disabled value={data?.job_advertisement} />
           </CardContent>
         </Card>
         <div>
@@ -129,7 +164,7 @@ export default function Page({ params }: { params: { resumeId: string } }) {
                 id="email"
                 name="email"
                 placeholder="Your E-Mail"
-                defaultValue={session?.user?.email ?? ''}
+                defaultValue={session?.data?.user?.email ?? ''}
               />
               <Label htmlFor="phone">Phone</Label>
               <Input
@@ -180,8 +215,8 @@ export default function Page({ params }: { params: { resumeId: string } }) {
           <CardContent>
             <div className="flex flex-wrap gap-2">
               {data?.skills?.map((skill) => (
-                <Badge key={skill.id} variant="secondary">
-                  {skill.skill_name}
+                <Badge key={skill} variant="secondary">
+                  {skill}
                 </Badge>
               ))}
             </div>
@@ -202,7 +237,7 @@ export default function Page({ params }: { params: { resumeId: string } }) {
                       new Date(a.start_date!).getTime()
                   )
                   .map((workExperience) => (
-                    <div key={workExperience.id}>
+                    <div key={workExperience.profile}>
                       <div className="flex items-center">
                         <div className="flex-1 flex flex-col border-b border-b-border pb-4">
                           <p className="text-lg font-semibold">
@@ -241,7 +276,7 @@ export default function Page({ params }: { params: { resumeId: string } }) {
                       new Date(a.start_date!).getTime()
                   )
                   .map((education) => (
-                    <div key={education.id}>
+                    <div key={education.institute_name}>
                       <div className="flex items-center">
                         <div className="flex-1 flex flex-col border-b border-b-border pb-4">
                           <p className="text-lg font-semibold">
