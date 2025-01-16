@@ -8,7 +8,6 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Database } from '@/types/supabase';
 import { useSession } from 'next-auth/react';
 import { useCallback, useEffect, useState } from 'react';
@@ -21,18 +20,42 @@ import { useStepper } from '../(steps)/useStepper';
 import { useParams } from 'next/navigation';
 import BackButton from './BackButton';
 import { useScrollToTop } from '@/lib/useScrollToTop';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { AlertDestructive } from './AlertDestructive';
 
 type Skill = Database['public']['Tables']['skills']['Row'];
 
+const skillFormSchema = z.object({
+  skill: z.string().min(1, { message: 'This field is required' }),
+});
+
 export default function SkillsForm() {
+  useScrollToTop();
+
   const supabase = createClient();
   const session = useSession();
   const userEmail = session?.data?.user?.email;
   const stepper = useStepper();
 
-  useScrollToTop();
+  const form = useForm<z.infer<typeof skillFormSchema>>({
+    resolver: zodResolver(skillFormSchema),
+    defaultValues: {
+      skill: '',
+    },
+  });
 
-  const [skill, setSkill] = useState<string>('');
+  const submitForm = useForm({});
+
   const [skills, setSkills] = useState<Skill[]>([]);
 
   const params = useParams();
@@ -59,7 +82,9 @@ export default function SkillsForm() {
     fetchSkills();
   }, [userEmail, fetchSkills]);
 
-  async function addSkill() {
+  async function addSkill(formData: z.infer<typeof skillFormSchema>) {
+    const { skill } = formData;
+
     if (!skill) {
       return;
     }
@@ -73,7 +98,8 @@ export default function SkillsForm() {
     if (response.error) {
       console.error(response.error);
     } else {
-      setSkill('');
+      submitForm.reset({});
+      form.reset({ skill: '' });
     }
 
     await fetchSkills();
@@ -93,7 +119,10 @@ export default function SkillsForm() {
   }
 
   async function submitSkills() {
-    if (skills.length < 1) {
+    if (skills.length === 0) {
+      submitForm.setError('root', {
+        message: 'You need to add at least one skill',
+      });
       return;
     }
 
@@ -108,7 +137,7 @@ export default function SkillsForm() {
   }
 
   return (
-    <form action={submitSkills}>
+    <div>
       <Card>
         <CardHeader>
           <CardTitle>Skills</CardTitle>
@@ -117,34 +146,33 @@ export default function SkillsForm() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex gap-2">
-            <div className="flex-1">
-              <Label htmlFor="skill">Skill</Label>
-              <Input
-                required={skills.length < 1}
-                name="skill"
-                id="skill"
-                placeholder="Skill"
-                value={skill}
-                onChange={(e) =>
-                  e.target.value ? setSkill(e.target.value) : null
-                }
-                onKeyDown={(e: React.KeyboardEvent) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault();
-                    if (skill) {
-                      addSkill();
-                    }
-                  }
-                }}
-              />
-            </div>
-            <div className="flex justify-end mt-6">
-              <Button type="button" onClick={addSkill}>
-                Add Skill
-              </Button>
-            </div>
-          </div>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(addSkill)}>
+              <div className="flex gap-2">
+                <div className="flex-1">
+                  <FormField
+                    control={form.control}
+                    name="skill"
+                    render={({ field }) => {
+                      return (
+                        <FormItem className="space-y-0">
+                          <FormLabel>Skill</FormLabel>
+                          <FormControl>
+                            <Input {...field} placeholder="Add a skill" />
+                          </FormControl>
+                        </FormItem>
+                      );
+                    }}
+                  />
+                </div>
+                <div className="flex justify-end mt-6">
+                  <Button>Add Skill</Button>
+                </div>
+              </div>
+              <FormMessage>{form.formState.errors.skill?.message}</FormMessage>
+            </form>
+          </Form>
+
           <div className="flex flex-wrap gap-2 mt-4">
             {skills?.map((skill) => (
               <Badge key={skill.id} variant="secondary">
@@ -162,10 +190,24 @@ export default function SkillsForm() {
           </div>
         </CardContent>
       </Card>
-      <div className="flex justify-end py-2">
-        <BackButton />
-        <SubmitButton text="Next" />
-      </div>
-    </form>
+
+      <Form {...submitForm}>
+        <form onSubmit={submitForm.handleSubmit(submitSkills)}>
+          {submitForm.formState.errors.root?.message && (
+            <AlertDestructive
+              className="my-2"
+              message={submitForm.formState.errors.root.message}
+            />
+          )}
+          <div className="flex justify-end py-2">
+            <BackButton />
+            <SubmitButton
+              text="Next"
+              pending={submitForm.formState.isSubmitting}
+            />
+          </div>
+        </form>
+      </Form>
+    </div>
   );
 }

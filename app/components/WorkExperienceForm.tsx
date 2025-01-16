@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { DatePicker } from '@/app/components/DatePicker';
 
 import {
@@ -23,6 +22,25 @@ import { formatDate } from 'date-fns';
 import { useStepper } from '../(steps)/useStepper';
 import BackButton from './BackButton';
 import { useScrollToTop } from '@/lib/useScrollToTop';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { AlertDestructive } from './AlertDestructive';
+
+const formSchema = z.object({
+  organisation_name: z.string().min(1, { message: 'This field is required' }),
+  profile: z.string().min(1, { message: 'This field is required' }),
+  start_date: z.date(),
+  end_date: z.date().optional(),
+});
 
 export default function WorkExperienceForm() {
   const supabase = createClient();
@@ -38,17 +56,17 @@ export default function WorkExperienceForm() {
     Database['public']['Tables']['work_experience']['Row'][]
   >([]);
 
-  const [workExperience, setWorkExperience] = useState<{
-    organisation_name: string;
-    profile: string;
-    start_date?: Date;
-    end_date?: Date;
-  }>({
-    organisation_name: '',
-    profile: '',
-    start_date: new Date(),
-    end_date: new Date(),
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      organisation_name: '',
+      profile: '',
+      start_date: new Date(),
+      end_date: new Date(),
+    },
   });
+
+  const submitForm = useForm({});
 
   const fetchWorkExperiences = useCallback(async () => {
     const { data } = await supabase
@@ -63,7 +81,9 @@ export default function WorkExperienceForm() {
     fetchWorkExperiences();
   }, [fetchWorkExperiences, supabase, userEmail]);
 
-  async function addExperience() {
+  async function addExperience(formData: z.infer<typeof formSchema>) {
+    const workExperience = formData;
+
     const workExperienceToInsert: Database['public']['Tables']['work_experience']['Insert'] =
       {
         organisation_name: workExperience.organisation_name,
@@ -74,15 +94,6 @@ export default function WorkExperienceForm() {
         resume_id: resumeId,
       };
 
-    if (
-      !workExperience.organisation_name ||
-      !workExperience.profile ||
-      !workExperience.start_date ||
-      !workExperience.end_date
-    ) {
-      return;
-    }
-
     await supabase.from('work_experience').insert(workExperienceToInsert);
     await supabase
       .from('resume')
@@ -91,7 +102,8 @@ export default function WorkExperienceForm() {
       })
       .eq('id', resumeId);
 
-    setWorkExperience({
+    submitForm.reset({});
+    form.reset({
       organisation_name: '',
       profile: '',
       start_date: new Date(),
@@ -107,84 +119,124 @@ export default function WorkExperienceForm() {
   }
 
   async function submitWorkExperience() {
-    if (workExperiences.length < 1) {
+    if (workExperiences.length === 0) {
+      submitForm.setError('root', {
+        message: 'Please add at least one work experience',
+      });
       return;
     }
+
+    await supabase
+      .from('resume')
+      .update({
+        last_updated: new Date().toISOString(),
+      })
+      .eq('id', resumeId);
 
     stepper.next();
   }
 
   return (
-    <form action={submitWorkExperience}>
-      <Card>
-        <CardHeader>
-          <CardTitle>Add Work Experience</CardTitle>
-          <CardDescription>Add your previous work experience.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Label htmlFor="company">Company</Label>
-          <Input
-            id="company"
-            name="company"
-            placeholder="Company Name"
-            value={workExperience.organisation_name}
-            onChange={(event) =>
-              setWorkExperience((prev) => ({
-                ...prev,
-                organisation_name: event.target.value,
-              }))
-            }
-          />
-          <Label htmlFor="profile">Profile/Description</Label>
-          <Input
-            id="profile"
-            name="profile"
-            placeholder="profile"
-            value={workExperience.profile}
-            onChange={(event) =>
-              setWorkExperience((prev) => ({
-                ...prev,
-                profile: event.target.value,
-              }))
-            }
-          />
-          <div className="flex flex-col my-2">
-            <Label className="mb-1" htmlFor="start_date">
-              Start Date
-            </Label>
-            <DatePicker
-              name="start_date"
-              value={workExperience.start_date}
-              onSelect={(date) => {
-                setWorkExperience((prev) => ({
-                  ...prev,
-                  start_date: date,
-                }));
-              }}
-            />
-          </div>
-          <div className="flex flex-col my-2">
-            <Label className="mb-1" htmlFor="end_date">
-              End Date
-            </Label>
-            <DatePicker
-              name="end_date"
-              value={workExperience.end_date}
-              onSelect={(date) =>
-                setWorkExperience((prev) => ({
-                  ...prev,
-                  end_date: date,
-                }))
-              }
-            />
-          </div>
-          <div className="flex justify-end mt-6">
-            <Button type="button" onClick={addExperience}>
-              Add Work Experience
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+    <>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(addExperience)}>
+          <Card>
+            <CardHeader>
+              <CardTitle>Add Work Experience</CardTitle>
+              <CardDescription>
+                Add your previous work experience.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <FormField
+                control={form.control}
+                name="organisation_name"
+                render={({ field }) => {
+                  return (
+                    <FormItem>
+                      <FormLabel>Company</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="Company Name" />
+                      </FormControl>
+                    </FormItem>
+                  );
+                }}
+              />
+              <FormMessage>
+                {form.formState.errors.organisation_name?.message}
+              </FormMessage>
+
+              <FormField
+                control={form.control}
+                name="profile"
+                render={({ field }) => {
+                  return (
+                    <FormItem>
+                      <FormLabel>Profile/Description</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="profile" />
+                      </FormControl>
+                    </FormItem>
+                  );
+                }}
+              />
+              <FormMessage>
+                {form.formState.errors.profile?.message}
+              </FormMessage>
+
+              <FormField
+                control={form.control}
+                name="start_date"
+                render={({ field }) => {
+                  return (
+                    <FormItem>
+                      <div className="flex flex-col my-2 space-y-2">
+                        <FormLabel>Start Date</FormLabel>
+                        <FormControl>
+                          <DatePicker
+                            {...field}
+                            onSelect={(date) =>
+                              form.setValue('start_date', date!)
+                            }
+                          />
+                        </FormControl>
+                      </div>
+                    </FormItem>
+                  );
+                }}
+              />
+
+              <div className="flex flex-col my-2">
+                <FormField
+                  control={form.control}
+                  name="end_date"
+                  render={({ field }) => {
+                    return (
+                      <FormItem>
+                        <div className="flex flex-col my-2 space-y-2">
+                          <FormLabel>End Date</FormLabel>
+                          <FormControl>
+                            <DatePicker
+                              {...field}
+                              onSelect={(date) =>
+                                form.setValue('end_date', date!)
+                              }
+                            />
+                          </FormControl>
+                        </div>
+                      </FormItem>
+                    );
+                  }}
+                />
+              </div>
+
+              <div className="flex justify-end mt-6">
+                <Button>Add Work Experience</Button>
+              </div>
+            </CardContent>
+          </Card>
+        </form>
+      </Form>
       <Card className="mt-4">
         <CardHeader>
           <CardTitle>Work Experience</CardTitle>
@@ -230,10 +282,23 @@ export default function WorkExperienceForm() {
           )}
         </CardContent>
       </Card>
-      <div className="flex justify-end py-2">
-        <BackButton />
-        <SubmitButton text="Next" />
-      </div>
-    </form>
+      <Form {...submitForm}>
+        <form onSubmit={submitForm.handleSubmit(submitWorkExperience)}>
+          {submitForm.formState.errors.root?.message && (
+            <AlertDestructive
+              className="my-2"
+              message={submitForm.formState.errors.root.message}
+            />
+          )}
+          <div className="flex justify-end py-2">
+            <BackButton />
+            <SubmitButton
+              text="Next"
+              pending={submitForm.formState.isSubmitting}
+            />
+          </div>
+        </form>
+      </Form>
+    </>
   );
 }

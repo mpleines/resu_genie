@@ -3,24 +3,23 @@
 import { Button } from '@/components/ui/button';
 import { ChevronRight, Loader2 } from 'lucide-react';
 import { FunctionComponent, ReactNode } from 'react';
-import { useFormStatus } from 'react-dom';
 
 interface SubmitButtonProps {
   text?: string;
   iconLeft?: ReactNode;
   showChevronRight?: boolean;
+  pending?: boolean;
 }
 
 const SubmitButton: FunctionComponent<SubmitButtonProps> = ({
   text = 'Submit',
   iconLeft,
   showChevronRight = true,
+  pending,
 }) => {
-  const formStatus = useFormStatus();
-
   return (
     <Button type="submit" className="w-24">
-      {formStatus.pending ? (
+      {pending ? (
         <>
           <Loader2 className="animate-spin" /> <span>{text}</span>
         </>
