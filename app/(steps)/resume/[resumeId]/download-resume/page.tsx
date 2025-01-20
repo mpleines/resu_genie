@@ -6,11 +6,13 @@ import { createClient } from '@/lib/supabase/client';
 import { useScrollToTop } from '@/lib/useScrollToTop';
 import { format } from 'date-fns';
 import { DownloadIcon } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useReactToPrint } from 'react-to-print';
 
 export default function Page() {
+  const session = useSession();
   const supabase = createClient();
   const [optimizedResume, setOptimizedResume] = useState<ResumeResponse>();
 
@@ -49,6 +51,14 @@ export default function Page() {
   const { personal_information, work_experience, education, skills, summary } =
     optimizedResume ?? {};
 
+  const contactInfo = [
+    personal_information?.address,
+    personal_information?.phone_1,
+    session.data?.user?.email,
+  ]
+    .filter(Boolean)
+    .join(' | ');
+
   return (
     <div className="flex flex-col items-center">
       <div>
@@ -65,9 +75,10 @@ export default function Page() {
               style={{ fontFamily: 'Times New Roman' }}
             >
               <header className="mt-8 mb-8 text-center">
-                <h1 className="text-4xl font-bold">
+                <h1 className="text-2xl font-bold">
                   {personal_information?.name}
                 </h1>
+                <span>{contactInfo}</span>
               </header>
               <section>
                 {summary && (
