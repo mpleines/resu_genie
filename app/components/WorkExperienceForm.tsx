@@ -28,16 +28,19 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
 import { AlertDestructive } from './AlertDestructive';
+import { Textarea } from '@/components/ui/textarea';
 
 const formSchema = z.object({
   organisation_name: z.string().min(1, { message: 'This field is required' }),
   profile: z.string().min(1, { message: 'This field is required' }),
+  job_description: z.string(),
   start_date: z.date(),
   end_date: z.date().optional(),
 });
@@ -61,6 +64,7 @@ export default function WorkExperienceForm() {
     defaultValues: {
       organisation_name: '',
       profile: '',
+      job_description: '',
       start_date: new Date(),
       end_date: new Date(),
     },
@@ -88,6 +92,7 @@ export default function WorkExperienceForm() {
       {
         organisation_name: workExperience.organisation_name,
         profile: workExperience.profile,
+        job_description: workExperience.job_description,
         start_date: workExperience.start_date?.toISOString(),
         end_date: workExperience.end_date?.toISOString(),
         user_id: userEmail,
@@ -106,6 +111,7 @@ export default function WorkExperienceForm() {
     form.reset({
       organisation_name: '',
       profile: '',
+      job_description: '',
       start_date: new Date(),
       end_date: new Date(),
     });
@@ -170,9 +176,12 @@ export default function WorkExperienceForm() {
                 render={({ field }) => {
                   return (
                     <FormItem>
-                      <FormLabel>Profile/Description</FormLabel>
+                      <FormLabel>Job Title</FormLabel>
                       <FormControl>
-                        <Input {...field} placeholder="profile" />
+                        <Input
+                          {...field}
+                          placeholder="e.g. Software Engineer, Data Scientist, Salesman, Plumber,... "
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -182,20 +191,19 @@ export default function WorkExperienceForm() {
 
               <FormField
                 control={form.control}
-                name="start_date"
+                name="job_description"
                 render={({ field }) => {
                   return (
                     <FormItem>
-                      <FormLabel>Start Date</FormLabel>
+                      <FormLabel>Job Description</FormLabel>
+                      <FormDescription>
+                        Briefly describe what you did at the company here
+                      </FormDescription>
                       <FormControl>
-                        <div>
-                          <DatePicker
-                            {...field}
-                            onSelect={(date) =>
-                              form.setValue('start_date', date!)
-                            }
-                          />
-                        </div>
+                        <Textarea
+                          {...field}
+                          placeholder="e.g. Built a website for the company, managed the team at the company, created a new product for the company"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -203,20 +211,21 @@ export default function WorkExperienceForm() {
                 }}
               />
 
-              <div className="flex flex-col my-2">
+              <div className="flex flex-row items-center flex-wrap space-x-4 sm:space-x-">
                 <FormField
                   control={form.control}
-                  name="end_date"
+                  name="start_date"
                   render={({ field }) => {
                     return (
                       <FormItem>
-                        <FormLabel>End Date</FormLabel>
+                        <FormLabel>Start Date</FormLabel>
+
                         <FormControl>
                           <div>
                             <DatePicker
                               {...field}
                               onSelect={(date) =>
-                                form.setValue('end_date', date!)
+                                form.setValue('start_date', date!)
                               }
                             />
                           </div>
@@ -226,6 +235,31 @@ export default function WorkExperienceForm() {
                     );
                   }}
                 />
+
+                <div className="flex flex-col my-2">
+                  <FormField
+                    control={form.control}
+                    name="end_date"
+                    render={({ field }) => {
+                      return (
+                        <FormItem>
+                          <FormLabel>End Date</FormLabel>
+                          <FormControl>
+                            <div>
+                              <DatePicker
+                                {...field}
+                                onSelect={(date) =>
+                                  form.setValue('end_date', date!)
+                                }
+                              />
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      );
+                    }}
+                  />
+                </div>
               </div>
 
               <div className="flex justify-end mt-6">
@@ -251,12 +285,17 @@ export default function WorkExperienceForm() {
               .map((workExperience) => (
                 <div key={workExperience.id}>
                   <div className="flex items-center">
-                    <div className="flex-1 flex flex-col border-b border-b-border pb-4">
+                    <div className="flex-1 flex flex-col border-b border-b-border py-2">
                       <p className="text-lg font-semibold">
                         {workExperience.organisation_name}
                       </p>
                       <p className="text-sm opacity-70">
                         {workExperience.profile}
+                      </p>
+                      <p className="text-sm opacity-70">
+                        {workExperience.job_description?.length > 45
+                          ? workExperience.job_description?.slice(0, 45) + '...'
+                          : workExperience.job_description}
                       </p>
                       <p className="text-sm opacity-70">
                         {formatDate(workExperience.start_date!, 'yyyy-MM-dd')} -{' '}

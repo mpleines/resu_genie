@@ -41,8 +41,8 @@ export default function Page({ params }: { params: { resumeId: string } }) {
           job_advertisement (text),
           personal_information (name, phone_1, address, city, professional_experience_in_years),
           skills (skill_name),
-          work_experience (organisation_name, profile, start_date, end_date),
-          education (institute_name, start_date, end_date)
+          work_experience (organisation_name, profile, job_description ,start_date, end_date),
+          education (institute_name, degree, start_date, end_date)
         `
         )
         .eq('id', resumeId)
@@ -239,12 +239,15 @@ export default function Page({ params }: { params: { resumeId: string } }) {
                   .map((workExperience) => (
                     <div key={workExperience.profile}>
                       <div className="flex items-center">
-                        <div className="flex-1 flex flex-col border-b border-b-border pb-4">
+                        <div className="flex-1 flex flex-col border-b border-b-border py-2">
                           <p className="text-lg font-semibold">
                             {workExperience.organisation_name}
                           </p>
                           <p className="text-sm opacity-70">
                             {workExperience.profile}
+                          </p>
+                          <p className="text-sm opacity-70">
+                            {workExperience.job_description}
                           </p>
                           <p className="text-sm opacity-70">
                             {formatDate(
@@ -283,7 +286,7 @@ export default function Page({ params }: { params: { resumeId: string } }) {
                             {education.institute_name}
                           </p>
                           <p className="text-sm opacity-70">
-                            {/* {education.score} */}
+                            {education.degree}
                           </p>
                           <p className="text-sm opacity-70">
                             {formatDate(education.start_date!, 'yyyy-MM-dd')} -{' '}
