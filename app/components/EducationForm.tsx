@@ -36,6 +36,7 @@ import { AlertDestructive } from './AlertDestructive';
 
 const formSchema = z.object({
   institute_name: z.string().min(1, { message: 'This field is required' }),
+  degree: z.string(),
   start_date: z.date(),
   end_date: z.date(),
 });
@@ -57,6 +58,7 @@ export default function EducationForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       institute_name: '',
+      degree: '',
       start_date: new Date(),
       end_date: new Date(),
     },
@@ -77,8 +79,9 @@ export default function EducationForm() {
   }, [fetchEducation, userEmail]);
 
   async function addEducation(education: z.infer<typeof formSchema>) {
-    const newEducation = {
+    const newEducation: Database['public']['Tables']['education']['Insert'] = {
       institute_name: education.institute_name,
+      degree: education.degree,
       start_date: education.start_date.toISOString(),
       end_date: education.end_date.toISOString(),
       user_id: userEmail,
@@ -90,6 +93,7 @@ export default function EducationForm() {
       fetchEducation();
       form.reset({
         institute_name: '',
+        degree: '',
         start_date: new Date(),
         end_date: new Date(),
       });
@@ -145,6 +149,25 @@ export default function EducationForm() {
                       <FormLabel>Institution Name</FormLabel>
                       <FormControl>
                         <Input {...field} placeholder="Institution Name" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
+              />
+
+              <FormField
+                control={form.control}
+                name="degree"
+                render={({ field }) => {
+                  return (
+                    <FormItem>
+                      <FormLabel>Degree</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder="e.g. Associate in digital photography, Bachelor of Arts, ..."
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -221,12 +244,12 @@ export default function EducationForm() {
                   .map((education) => (
                     <div key={education.id}>
                       <div className="flex items-center">
-                        <div className="flex-1 flex flex-col border-b border-b-border pb-4">
+                        <div className="flex-1 flex flex-col border-b border-b-border py-2">
                           <p className="text-lg font-semibold">
                             {education.institute_name}
                           </p>
                           <p className="text-sm opacity-70">
-                            {/* {education.score} */}
+                            {education.degree}
                           </p>
                           <p className="text-sm opacity-70">
                             {formatDate(education.start_date!, 'yyyy-MM-dd')} -{' '}

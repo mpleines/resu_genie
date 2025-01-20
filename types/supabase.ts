@@ -12,6 +12,7 @@ export type Database = {
       education: {
         Row: {
           created_at: string
+          degree: string | null
           end_date: string | null
           id: number
           institute_name: string | null
@@ -21,6 +22,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          degree?: string | null
           end_date?: string | null
           id?: number
           institute_name?: string | null
@@ -30,6 +32,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          degree?: string | null
           end_date?: string | null
           id?: number
           institute_name?: string | null
@@ -223,6 +226,7 @@ export type Database = {
           created_at: string
           end_date: string | null
           id: number
+          job_description: string | null
           organisation_name: string | null
           profile: string | null
           resume_id: number | null
@@ -233,6 +237,7 @@ export type Database = {
           created_at?: string
           end_date?: string | null
           id?: number
+          job_description?: string | null
           organisation_name?: string | null
           profile?: string | null
           resume_id?: number | null
@@ -243,6 +248,7 @@ export type Database = {
           created_at?: string
           end_date?: string | null
           id?: number
+          job_description?: string | null
           organisation_name?: string | null
           profile?: string | null
           resume_id?: number | null

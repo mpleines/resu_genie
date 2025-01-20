@@ -105,35 +105,28 @@ export default function Page() {
                           {format(new Date(job.end_date), 'MMMM yyyy')}
                         </p>
                       </div>
-                      {/* <ul className="mt-2 list-disc list-inside text-gray-700">
-                        {job.details.map((detail, i) => (
-                          <li key={i}>{detail}</li>
-                        ))}
-                      </ul> */}
-                    </li>
-                  ))}
-                </ul>
-              </section>
-              {/* <section className="mb-8">
-                <h2 className="text-2xl font-semibold border-b pb-2 mb-4">
-                  Projects
-                </h2>
-                <ul>
-                  {projects.map((project, index) => (
-                    <li key={index} className="mb-6">
-                      <h3 className="text-xl font-medium">{project.name}</h3>
-                      <p className="text-sm  mb-2">
-                        Stack: {project.stack}
-                      </p>
-                      <ul className="list-disc list-inside text-gray-700">
-                        {project.details.map((detail, i) => (
-                          <li key={i}>{detail}</li>
+                      <ul className="mt-2 list-disc list-inside text-gray-700">
+                        {job.job_description?.map((detail, i) => (
+                          <li
+                            key={i}
+                            style={{
+                              display: 'flex',
+                              alignItems: 'flex-start',
+                            }}
+                          >
+                            <span
+                              style={{ flexShrink: 0, marginRight: '0.5em' }}
+                            >
+                              &bull;
+                            </span>
+                            <span>{detail}</span>
+                          </li>
                         ))}
                       </ul>
                     </li>
                   ))}
                 </ul>
-              </section> */}
+              </section>
               <section className="mb-8">
                 <h2 className="font-bold border-b border-black pb-2 mb-4 text-center">
                   Skills
