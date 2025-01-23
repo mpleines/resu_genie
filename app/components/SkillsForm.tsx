@@ -10,11 +10,17 @@ import {
 import { Input } from '@/components/ui/input';
 import { Database } from '@/types/supabase';
 import { useSession } from 'next-auth/react';
-import { useCallback, useEffect, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useOptimistic,
+  useState,
+  useTransition,
+} from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { X } from 'lucide-react';
+import { Loader2, X } from 'lucide-react';
 import SubmitButton from './SubmitButton';
 import { useStepper } from '../(steps)/useStepper';
 import { useParams } from 'next/navigation';
@@ -32,8 +38,11 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { AlertDestructive } from './AlertDestructive';
+import { toast } from '@/hooks/use-toast';
 
 type Skill = Database['public']['Tables']['skills']['Row'];
+type SkillInsert = Database['public']['Tables']['skills']['Insert'];
+type OptimisticSkill = SkillInsert & { sending?: boolean };
 
 const skillFormSchema = z.object({
   skill: z.string().min(1, { message: 'This field is required' }),
@@ -57,6 +66,12 @@ export default function SkillsForm() {
   const submitForm = useForm({});
 
   const [skills, setSkills] = useState<Skill[]>([]);
+
+  const [_, startAddSkillTransition] = useTransition();
+  const [optimisticSkills, addOptimisticSkill] = useOptimistic<
+    OptimisticSkill[],
+    OptimisticSkill
+  >(skills, (state, newSkill) => [...state, newSkill]);
 
   const params = useParams();
   const resumeId = Number(params['resumeId'] as string);
@@ -83,26 +98,41 @@ export default function SkillsForm() {
   }, [userEmail, fetchSkills]);
 
   async function addSkill(formData: z.infer<typeof skillFormSchema>) {
-    const { skill } = formData;
+    startAddSkillTransition(async () => {
+      const { skill: skill_name } = formData;
 
-    if (!skill) {
-      return;
-    }
+      if (!skill_name || !userEmail) {
+        return;
+      }
 
-    const response = await supabase.from('skills').insert({
-      skill_name: skill,
-      user_id: userEmail,
-      resume_id: resumeId,
-    });
+      const newSkill: Database['public']['Tables']['skills']['Insert'] = {
+        skill_name,
+        user_id: userEmail,
+        resume_id: resumeId,
+      };
 
-    if (response.error) {
-      console.error(response.error);
-    } else {
+      addOptimisticSkill({ ...newSkill, sending: true });
       submitForm.reset({});
       form.reset({ skill: '' });
-    }
 
-    await fetchSkills();
+      const { data, error } = await supabase
+        .from('skills')
+        .insert(newSkill)
+        .select()
+        .single();
+
+      if (error || data == null) {
+        toast({
+          title: 'Error',
+          description: 'Something went wrong when adding the skill',
+          variant: 'destructive',
+        });
+
+        return;
+      }
+
+      setSkills((prevSkills) => [...prevSkills, data]);
+    });
   }
 
   async function removeSkill(skillId: number) {
@@ -170,16 +200,21 @@ export default function SkillsForm() {
           </Form>
 
           <div className="flex flex-wrap gap-2 mt-4">
-            {skills?.map((skill) => (
-              <Badge key={skill.id} variant="secondary">
-                {skill.skill_name}
+            {optimisticSkills?.map((skill, index) => (
+              <Badge key={index} variant="secondary">
+                {skill.skill_name}{' '}
                 <button
                   type="button"
-                  onClick={() => removeSkill(skill.id)}
+                  disabled={skill.sending}
+                  onClick={() => (skill.id ? removeSkill(skill.id) : null)}
                   className="ml-2 hover:text-destructive focus:text-destructive"
                   aria-label={`Remove ${skill}`}
                 >
-                  <X size={16} />
+                  {!!skill.sending ? (
+                    <Loader2 size={16} className="animate-spin" />
+                  ) : (
+                    <X size={16} />
+                  )}
                 </button>
               </Badge>
             ))}
