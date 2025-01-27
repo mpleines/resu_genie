@@ -39,6 +39,7 @@ import {
 } from '@/components/ui/form';
 import { AlertDestructive } from './AlertDestructive';
 import { toast } from '@/hooks/use-toast';
+import { useOptimisticItems } from '@/hooks/useOptimisticFixed';
 
 type Skill = Database['public']['Tables']['skills']['Row'];
 type SkillInsert = Database['public']['Tables']['skills']['Insert'];
@@ -67,11 +68,16 @@ export default function SkillsForm() {
 
   const [skills, setSkills] = useState<Skill[]>([]);
 
-  const [_, startAddSkillTransition] = useTransition();
-  const [optimisticSkills, addOptimisticSkill] = useOptimistic<
-    OptimisticSkill[],
-    OptimisticSkill
-  >(skills, (state, newSkill) => [...state, newSkill]);
+  const [optimisticSkills, updateOptimisticSkills] =
+    useOptimisticItems<OptimisticSkill>(skills);
+
+  const [, startAddSkillTransition] = useTransition();
+  const addOptimisticSkill = (skill: OptimisticSkill) =>
+    updateOptimisticSkills({ type: 'add', item: skill });
+
+  const [, startRemoveSkillTransition] = useTransition();
+  const removeOptimisticSkill = (skill: OptimisticSkill) =>
+    updateOptimisticSkills({ type: 'delete', item: skill, key: 'id' });
 
   const params = useParams();
   const resumeId = Number(params['resumeId'] as string);
@@ -98,28 +104,29 @@ export default function SkillsForm() {
   }, [userEmail, fetchSkills]);
 
   async function addSkill(formData: z.infer<typeof skillFormSchema>) {
-    startAddSkillTransition(async () => {
-      const { skill: skill_name } = formData;
+    const { skill: skill_name } = formData;
 
-      if (!skill_name || !userEmail) {
-        return;
-      }
+    if (!skill_name || !userEmail) {
+      return;
+    }
 
-      if (skills.find((skill) => skill.skill_name === skill_name)) {
-        submitForm.reset({});
-        form.reset({ skill: '' });
-        return;
-      }
-
-      const newSkill: Database['public']['Tables']['skills']['Insert'] = {
-        skill_name,
-        user_id: userEmail,
-        resume_id: resumeId,
-      };
-
-      addOptimisticSkill({ ...newSkill, sending: true });
+    if (skills.find((skill) => skill.skill_name === skill_name)) {
       submitForm.reset({});
       form.reset({ skill: '' });
+      return;
+    }
+
+    const newSkill: Database['public']['Tables']['skills']['Insert'] = {
+      skill_name,
+      user_id: userEmail,
+      resume_id: resumeId,
+    };
+
+    submitForm.reset({});
+    form.reset({ skill: '' });
+
+    startAddSkillTransition(async () => {
+      addOptimisticSkill({ ...newSkill, sending: true });
 
       const { data, error } = await supabase
         .from('skills')
@@ -142,16 +149,19 @@ export default function SkillsForm() {
   }
 
   async function removeSkill(skillId: number) {
-    const response = await supabase.from('skills').delete().eq('id', skillId);
+    startRemoveSkillTransition(async () => {
+      removeOptimisticSkill({ id: skillId, sending: true });
+      const response = await supabase.from('skills').delete().eq('id', skillId);
 
-    if (response.error) {
-      console.error(response.error);
-      return;
-    }
+      if (response.error) {
+        console.error(response.error);
+        return;
+      }
 
-    setSkills((prevSkills) =>
-      prevSkills.filter((skill) => skill.id != skillId)
-    );
+      setSkills((prevSkills) =>
+        prevSkills.filter((skill) => skill.id != skillId)
+      );
+    });
   }
 
   async function submitSkills() {
@@ -207,7 +217,7 @@ export default function SkillsForm() {
 
           <div className="flex flex-wrap gap-2 mt-4">
             {optimisticSkills?.map((skill, index) => (
-              <Badge key={skill.skill_name} variant="secondary">
+              <Badge key={index} variant="secondary">
                 {skill.skill_name}{' '}
                 <button
                   type="button"
