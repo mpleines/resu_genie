@@ -105,6 +105,12 @@ export default function SkillsForm() {
         return;
       }
 
+      if (skills.find((skill) => skill.skill_name === skill_name)) {
+        submitForm.reset({});
+        form.reset({ skill: '' });
+        return;
+      }
+
       const newSkill: Database['public']['Tables']['skills']['Insert'] = {
         skill_name,
         user_id: userEmail,
@@ -201,7 +207,7 @@ export default function SkillsForm() {
 
           <div className="flex flex-wrap gap-2 mt-4">
             {optimisticSkills?.map((skill, index) => (
-              <Badge key={index} variant="secondary">
+              <Badge key={skill.skill_name} variant="secondary">
                 {skill.skill_name}{' '}
                 <button
                   type="button"
@@ -210,11 +216,7 @@ export default function SkillsForm() {
                   className="ml-2 hover:text-destructive focus:text-destructive"
                   aria-label={`Remove ${skill}`}
                 >
-                  {!!skill.sending ? (
-                    <Loader2 size={16} className="animate-spin" />
-                  ) : (
-                    <X size={16} />
-                  )}
+                  <X size={16} />
                 </button>
               </Badge>
             ))}
