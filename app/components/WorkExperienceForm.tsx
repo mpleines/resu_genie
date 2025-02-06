@@ -1,6 +1,12 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useOptimistic,
+  useState,
+  useTransition,
+} from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { DatePicker } from '@/app/components/DatePicker';
@@ -36,6 +42,7 @@ import {
 } from '@/components/ui/form';
 import { AlertDestructive } from './AlertDestructive';
 import { Textarea } from '@/components/ui/textarea';
+import { toast } from '@/hooks/use-toast';
 
 const formSchema = z.object({
   organisation_name: z.string().min(1, { message: 'This field is required' }),
@@ -44,6 +51,10 @@ const formSchema = z.object({
   start_date: z.date(),
   end_date: z.date().optional(),
 });
+
+type WorkExperience = Database['public']['Tables']['work_experience']['Row'];
+type OptimistikWorkExpericence =
+  Database['public']['Tables']['work_experience']['Insert'];
 
 export default function WorkExperienceForm() {
   const supabase = createClient();
@@ -58,6 +69,19 @@ export default function WorkExperienceForm() {
   const [workExperiences, setWorkExperiences] = useState<
     Database['public']['Tables']['work_experience']['Row'][]
   >([]);
+
+  const [_, startTransition] = useTransition();
+
+  const [optimisticWorkExperiences, addOptimisticWorkExperience] =
+    useOptimistic<OptimistikWorkExpericence[], OptimistikWorkExpericence>(
+      workExperiences,
+      (state, newWorkExperience) => {
+        if (!state.includes(newWorkExperience)) {
+          return [...state, newWorkExperience];
+        }
+        return state;
+      }
+    );
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -88,24 +112,15 @@ export default function WorkExperienceForm() {
   async function addExperience(formData: z.infer<typeof formSchema>) {
     const workExperience = formData;
 
-    const workExperienceToInsert: Database['public']['Tables']['work_experience']['Insert'] =
-      {
-        organisation_name: workExperience.organisation_name,
-        profile: workExperience.profile,
-        job_description: workExperience.job_description,
-        start_date: workExperience.start_date?.toISOString(),
-        end_date: workExperience.end_date?.toISOString(),
-        user_id: userEmail,
-        resume_id: resumeId,
-      };
-
-    await supabase.from('work_experience').insert(workExperienceToInsert);
-    await supabase
-      .from('resume')
-      .update({
-        last_updated: new Date().toISOString(),
-      })
-      .eq('id', resumeId);
+    const newWorkExperience: OptimistikWorkExpericence = {
+      organisation_name: workExperience.organisation_name,
+      profile: workExperience.profile,
+      job_description: workExperience.job_description,
+      start_date: workExperience.start_date?.toISOString(),
+      end_date: workExperience.end_date?.toISOString(),
+      user_id: userEmail,
+      resume_id: resumeId,
+    };
 
     submitForm.reset({});
     form.reset({
@@ -116,7 +131,36 @@ export default function WorkExperienceForm() {
       end_date: new Date(),
     });
 
-    await fetchWorkExperiences();
+    startTransition(async () => {
+      addOptimisticWorkExperience(newWorkExperience);
+
+      const { data: addedWorkExperience, error } = await supabase
+        .from('work_experience')
+        .insert(newWorkExperience)
+        .select()
+        .single();
+
+      if (addedWorkExperience == null || error != null) {
+        toast({
+          title: 'Error',
+          description: 'Failed to add work experience',
+          variant: 'destructive',
+        });
+
+        return;
+      }
+
+      await supabase
+        .from('resume')
+        .update({
+          last_updated: new Date().toISOString(),
+        })
+        .eq('id', resumeId);
+
+      setWorkExperiences((workExperiences) => {
+        return [...workExperiences, addedWorkExperience];
+      });
+    });
   }
 
   async function deleteWorkExperience(id: number) {
@@ -274,9 +318,9 @@ export default function WorkExperienceForm() {
           <CardTitle>Work Experience</CardTitle>
         </CardHeader>
         <CardContent>
-          {workExperiences != null &&
-            workExperiences?.length > 0 &&
-            workExperiences
+          {optimisticWorkExperiences != null &&
+            optimisticWorkExperiences?.length > 0 &&
+            optimisticWorkExperiences
               ?.sort(
                 (a, b) =>
                   new Date(b.start_date!).getTime() -
@@ -293,7 +337,8 @@ export default function WorkExperienceForm() {
                         {workExperience.profile}
                       </p>
                       <p className="text-sm opacity-70">
-                        {workExperience.job_description?.length > 45
+                        {workExperience.job_description?.length &&
+                        workExperience.job_description?.length > 45
                           ? workExperience.job_description?.slice(0, 45) + '...'
                           : workExperience.job_description}
                       </p>
@@ -306,7 +351,7 @@ export default function WorkExperienceForm() {
                     <Button
                       type="button"
                       variant="destructive"
-                      onClick={() => deleteWorkExperience(workExperience.id)}
+                      onClick={() => deleteWorkExperience(workExperience.id!)}
                     >
                       <Trash />
                     </Button>
@@ -314,7 +359,7 @@ export default function WorkExperienceForm() {
                 </div>
               ))}
 
-          {workExperiences?.length === 0 && (
+          {optimisticWorkExperiences?.length === 0 && (
             <p className="text-sm opacity-70">No work experience added yet</p>
           )}
         </CardContent>
