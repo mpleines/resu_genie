@@ -1,15 +1,19 @@
 'use client';
 
-import { MinimalisticResumeTemplate } from '@/app/components/PdfTemplates';
+import ModernCreativeResume, {
+  MinimalisticResumeTemplate,
+  ProfessionalResumeTemplate,
+} from '@/app/components/PdfTemplates';
 import { Button } from '@/components/ui/button';
 import { ResumeResponse } from '@/lib/promptHelper';
 import { createClient } from '@/lib/supabase/client';
 import { useScrollToTop } from '@/lib/useScrollToTop';
-import { DownloadIcon } from 'lucide-react';
+import { Download, Loader2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useReactToPrint } from 'react-to-print';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function Page() {
   const session = useSession();
@@ -48,35 +52,90 @@ export default function Page() {
     getOptimizedResumeData();
   }, [getOptimizedResumeData]);
 
-  const { personal_information } = optimizedResume ?? {};
-
-  const contactInfo = [
-    personal_information?.address,
-    personal_information?.phone_1,
-    session.data?.user?.email,
-  ]
-    .filter(Boolean)
-    .join(' | ');
+  if (optimizedResume == null) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center">
+        <Loader2 className="animate-spin" />
+      </div>
+    );
+  }
 
   return (
-    <div className="flex flex-col items-center">
-      <div>
-        <Button onClick={handleDownload}>
-          <DownloadIcon />
-          Download
-        </Button>
-      </div>
-      <div className="mt-4 w-full">
-        <div className="bg-white shadow-md rounded-md w-full h-auto md:w-[210mm] md:h-[297mm] mx-auto border border-gray-300">
-          {optimizedResume && (
-            <MinimalisticResumeTemplate
-              ref={contentRef}
-              contactInfo={contactInfo}
-              data={optimizedResume}
-            />
-          )}
+    <Tabs
+      orientation="vertical"
+      defaultValue="minimalistic"
+      className="w-full flex"
+    >
+      {/* Left Sidebar */}
+      <div className="w-64 border-r bg-muted/30 p-4 hidden md:block">
+        <h2 className="font-semibold mb-4">Choose Template</h2>
+        <TabsList className="flex flex-col h-auto bg-transparent gap-2">
+          <TabsTrigger
+            value="minimalistic"
+            className="w-full justify-start px-4 py-6 data-[state=active]:bg-background"
+          >
+            <div className="text-left">
+              <div className="font-medium">Minimalistic</div>
+              <div className="text-xs text-muted-foreground">
+                Clean and simple design
+              </div>
+            </div>
+          </TabsTrigger>
+          <TabsTrigger
+            value="professional"
+            className="w-full justify-start px-4 py-6 data-[state=active]:bg-background"
+          >
+            <div className="text-left">
+              <div className="font-medium">Professional</div>
+              <div className="text-xs text-muted-foreground">
+                Traditional business style
+              </div>
+            </div>
+          </TabsTrigger>
+          <TabsTrigger
+            value="modern_creative"
+            className="w-full justify-start px-4 py-6 data-[state=active]:bg-background"
+          >
+            <div className="text-left">
+              <div className="font-medium">Modern & Creative</div>
+              <div className="text-xs text-muted-foreground">
+                Stand out from the crowd
+              </div>
+            </div>
+          </TabsTrigger>
+        </TabsList>
+
+        <div className="mt-4">
+          <h2 className="font-semibold mb-4">Download Resume</h2>
+          <Button onClick={handleDownload}>
+            <Download className="mr-2 h-4 w-4" />
+            Download
+          </Button>
         </div>
       </div>
-    </div>
+      <div className="px-4">
+        <TabsContent value="minimalistic" className="flex-1 container relative">
+          <MinimalisticResumeTemplate
+            ref={contentRef}
+            data={optimizedResume}
+            email={session.data?.user?.email ?? ''}
+          />
+        </TabsContent>
+        <TabsContent value="professional">
+          <ProfessionalResumeTemplate
+            ref={contentRef}
+            data={optimizedResume}
+            email={session?.data?.user?.email ?? ''}
+          />
+        </TabsContent>
+        <TabsContent value="modern_creative">
+          <ModernCreativeResume
+            ref={contentRef}
+            data={optimizedResume}
+            email={session?.data?.user?.email ?? ''}
+          />
+        </TabsContent>
+      </div>
+    </Tabs>
   );
 }
