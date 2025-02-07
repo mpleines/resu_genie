@@ -1,15 +1,19 @@
 'use client';
 
+import ModernCreativeResume, {
+  MinimalisticResumeTemplate,
+  ProfessionalResumeTemplate,
+} from '@/app/components/PdfTemplates';
 import { Button } from '@/components/ui/button';
 import { ResumeResponse } from '@/lib/promptHelper';
 import { createClient } from '@/lib/supabase/client';
 import { useScrollToTop } from '@/lib/useScrollToTop';
-import { format } from 'date-fns';
-import { DownloadIcon } from 'lucide-react';
+import { Download, Loader2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useReactToPrint } from 'react-to-print';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function Page() {
   const session = useSession();
@@ -21,6 +25,9 @@ export default function Page() {
 
   const params = useParams();
   const resumeId = Number(params['resumeId'] as string);
+
+  // FIXME: create hook to detect window size changes
+  const isSmallScreen = window.innerWidth < 640;
 
   useScrollToTop();
 
@@ -48,113 +55,133 @@ export default function Page() {
     getOptimizedResumeData();
   }, [getOptimizedResumeData]);
 
-  const { personal_information, work_experience, education, skills, summary } =
-    optimizedResume ?? {};
+  if (optimizedResume == null) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center">
+        <Loader2 className="animate-spin" />
+      </div>
+    );
+  }
 
-  const contactInfo = [
-    personal_information?.address,
-    personal_information?.phone_1,
-    session.data?.user?.email,
-  ]
-    .filter(Boolean)
-    .join(' | ');
-
-  return (
-    <div className="flex flex-col items-center">
-      <div>
-        <Button onClick={handleDownload}>
-          <DownloadIcon />
+  if (isSmallScreen) {
+    return (
+      <Tabs orientation="horizontal" defaultValue="minimalistic">
+        <Button onClick={handleDownload} className="w-full">
+          <Download />
           Download
         </Button>
-      </div>
-      <div className="mt-4 w-full">
-        <div className="bg-white shadow-md rounded-md w-full h-auto md:w-[210mm] md:h-[297mm] mx-auto border border-gray-300">
-          <div ref={contentRef}>
-            <div
-              className="p-6 mx-auto font-serif text-xl"
-              style={{ fontFamily: 'Times New Roman' }}
-            >
-              <header className="mt-8 mb-8 text-center">
-                <h1 className="text-2xl font-bold">
-                  {personal_information?.name}
-                </h1>
-                <span>{contactInfo}</span>
-              </header>
-              <section>
-                {summary && (
-                  <div className="mb-8">
-                    <h2 className="font-bold border-b border-black pb-2 mb-4 text-center">
-                      Summary
-                    </h2>
-                    <p>{summary}</p>
-                  </div>
-                )}
-              </section>
-              <section className="mb-8">
-                <h2 className="font-bold border-b border-black pb-2 mb-4 text-center">
-                  Experience
-                </h2>
-                <ul>
-                  {work_experience?.map((job, index) => (
-                    <li key={index} className="mb-6">
-                      <h3 className="font-bold">{job.organisation_name}</h3>
-                      <div className="flex justify-between">
-                        <p className="italic">{job.profile}</p>
-                        <p>
-                          {format(new Date(job.start_date), 'MMMM yyyy')} -{' '}
-                          {format(new Date(job.end_date), 'MMMM yyyy')}
-                        </p>
-                      </div>
-                      <ul className="mt-2 list-disc list-inside text-gray-700">
-                        {job.job_description?.map((detail, i) => (
-                          <li
-                            key={i}
-                            style={{
-                              display: 'flex',
-                              alignItems: 'flex-start',
-                            }}
-                          >
-                            <span
-                              style={{ flexShrink: 0, marginRight: '0.5em' }}
-                            >
-                              &bull;
-                            </span>
-                            <span>{detail}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-              <section className="mb-8">
-                <h2 className="font-bold border-b border-black pb-2 mb-4 text-center">
-                  Skills
-                </h2>
-                <p>{skills?.join(', ')}</p>
-              </section>
-              <section>
-                <h2 className="font font-bold border-b border-black pb-2 mb-4 text-center">
-                  Education
-                </h2>
-                <ul>
-                  {education?.map((edu, index) => (
-                    <li key={index} className="mb-6">
-                      <div className="flex justify-between">
-                        <h3 className="font-bold">{edu.institute_name}</h3>
-                        <p>
-                          {format(new Date(edu.start_date), 'MMMM yyyy')} -{' '}
-                          {format(new Date(edu.end_date), 'MMMM yyyy')}
-                        </p>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </section>
+        <TabsList className="mt-2 flex flex-row justify-between">
+          <TabsTrigger value="minimalistic" className="w-full">
+            Minimalistic
+          </TabsTrigger>
+          <TabsTrigger value="professional" className="w-full">
+            Professional
+          </TabsTrigger>
+          <TabsTrigger value="modern_creative" className="w-full">
+            Modern & Creative
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="minimalistic" className="mt-4">
+          <MinimalisticResumeTemplate
+            ref={contentRef}
+            data={optimizedResume}
+            email={session.data?.user?.email ?? ''}
+          />
+        </TabsContent>
+        <TabsContent value="professional" className="mt-4">
+          <ProfessionalResumeTemplate
+            ref={contentRef}
+            data={optimizedResume}
+            email={session?.data?.user?.email ?? ''}
+          />
+        </TabsContent>
+        <TabsContent value="modern_creative" className="mt-4">
+          <ModernCreativeResume
+            ref={contentRef}
+            data={optimizedResume}
+            email={session?.data?.user?.email ?? ''}
+          />
+        </TabsContent>
+      </Tabs>
+    );
+  }
+
+  return (
+    <Tabs
+      orientation="vertical"
+      defaultValue="minimalistic"
+      className="w-full flex"
+    >
+      {/* Left Sidebar */}
+      <div className="w-64 border-r bg-muted/30 p-4 hidden md:block">
+        <h2 className="font-semibold mb-4">Choose Template</h2>
+        <TabsList className="flex flex-col h-auto bg-transparent gap-2">
+          <TabsTrigger
+            value="minimalistic"
+            className="w-full justify-start px-4 py-6 data-[state=active]:bg-background"
+          >
+            <div className="text-left">
+              <div className="font-medium">Minimalistic</div>
+              <div className="text-xs text-muted-foreground">
+                Clean and simple design
+              </div>
             </div>
-          </div>
+          </TabsTrigger>
+          <TabsTrigger
+            value="professional"
+            className="w-full justify-start px-4 py-6 data-[state=active]:bg-background"
+          >
+            <div className="text-left">
+              <div className="font-medium">Professional</div>
+              <div className="text-xs text-muted-foreground">
+                Traditional business style
+              </div>
+            </div>
+          </TabsTrigger>
+          <TabsTrigger
+            value="modern_creative"
+            className="w-full justify-start px-4 py-6 data-[state=active]:bg-background"
+          >
+            <div className="text-left">
+              <div className="font-medium">Modern & Creative</div>
+              <div className="text-xs text-muted-foreground">
+                Stand out from the crowd
+              </div>
+            </div>
+          </TabsTrigger>
+        </TabsList>
+
+        <div className="mt-4">
+          <h2 className="font-semibold mb-4">Download Resume</h2>
+          <Button onClick={handleDownload}>
+            <Download className="mr-2 h-4 w-4" />
+            Download
+          </Button>
         </div>
       </div>
-    </div>
+      <div className="px-8">
+        <TabsContent value="minimalistic" className="mt-0">
+          <MinimalisticResumeTemplate
+            ref={contentRef}
+            data={optimizedResume}
+            email={session.data?.user?.email ?? ''}
+          />
+        </TabsContent>
+        <TabsContent value="professional" className="mt-0">
+          <ProfessionalResumeTemplate
+            ref={contentRef}
+            data={optimizedResume}
+            email={session?.data?.user?.email ?? ''}
+          />
+        </TabsContent>
+        <TabsContent value="modern_creative" className="mt-0">
+          <ModernCreativeResume
+            ref={contentRef}
+            data={optimizedResume}
+            email={session?.data?.user?.email ?? ''}
+          />
+        </TabsContent>
+      </div>
+    </Tabs>
   );
 }
