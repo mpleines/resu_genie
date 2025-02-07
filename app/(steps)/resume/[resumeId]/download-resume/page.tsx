@@ -113,22 +113,22 @@ export default function Page() {
           </Button>
         </div>
       </div>
-      <div className="px-4">
-        <TabsContent value="minimalistic" className="flex-1 container relative">
+      <div className="px-8">
+        <TabsContent value="minimalistic" className="mt-0">
           <MinimalisticResumeTemplate
             ref={contentRef}
             data={optimizedResume}
             email={session.data?.user?.email ?? ''}
           />
         </TabsContent>
-        <TabsContent value="professional">
+        <TabsContent value="professional" className="mt-0">
           <ProfessionalResumeTemplate
             ref={contentRef}
             data={optimizedResume}
             email={session?.data?.user?.email ?? ''}
           />
         </TabsContent>
-        <TabsContent value="modern_creative">
+        <TabsContent value="modern_creative" className="mt-0">
           <ModernCreativeResume
             ref={contentRef}
             data={optimizedResume}
