@@ -26,6 +26,9 @@ export default function Page() {
   const params = useParams();
   const resumeId = Number(params['resumeId'] as string);
 
+  // FIXME: create hook to detect window size changes
+  const isSmallScreen = window.innerWidth < 640;
+
   useScrollToTop();
 
   const getOptimizedResumeData = useCallback(async () => {
@@ -57,6 +60,49 @@ export default function Page() {
       <div className="w-full h-screen flex items-center justify-center">
         <Loader2 className="animate-spin" />
       </div>
+    );
+  }
+
+  if (isSmallScreen) {
+    return (
+      <Tabs orientation="horizontal" defaultValue="minimalistic">
+        <Button onClick={handleDownload} className="w-full">
+          <Download />
+          Download
+        </Button>
+        <TabsList className="mt-2 flex flex-row justify-between">
+          <TabsTrigger value="minimalistic" className="w-full">
+            Minimalistic
+          </TabsTrigger>
+          <TabsTrigger value="professional" className="w-full">
+            Professional
+          </TabsTrigger>
+          <TabsTrigger value="modern_creative" className="w-full">
+            Modern & Creative
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="minimalistic" className="mt-4">
+          <MinimalisticResumeTemplate
+            ref={contentRef}
+            data={optimizedResume}
+            email={session.data?.user?.email ?? ''}
+          />
+        </TabsContent>
+        <TabsContent value="professional" className="mt-4">
+          <ProfessionalResumeTemplate
+            ref={contentRef}
+            data={optimizedResume}
+            email={session?.data?.user?.email ?? ''}
+          />
+        </TabsContent>
+        <TabsContent value="modern_creative" className="mt-4">
+          <ModernCreativeResume
+            ref={contentRef}
+            data={optimizedResume}
+            email={session?.data?.user?.email ?? ''}
+          />
+        </TabsContent>
+      </Tabs>
     );
   }
 
