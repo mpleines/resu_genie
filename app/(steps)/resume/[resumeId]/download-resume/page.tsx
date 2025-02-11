@@ -1,7 +1,6 @@
 'use client';
 
 import ModernCreativeResume, {
-  MinimalisticResumeTemplate,
   ProfessionalResumeTemplate,
 } from '@/app/components/PdfTemplates';
 import { Button } from '@/components/ui/button';
@@ -14,6 +13,8 @@ import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useReactToPrint } from 'react-to-print';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { MinimalisticResumeTemplate } from '@/app/components/PdfTemplatesNew';
+import { PDFViewer } from '@react-pdf/renderer';
 
 export default function Page() {
   const session = useSession();
@@ -82,11 +83,13 @@ export default function Page() {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="minimalistic" className="mt-4">
-          <MinimalisticResumeTemplate
-            ref={contentRef}
-            data={optimizedResume}
-            email={session.data?.user?.email ?? ''}
-          />
+          <PDFViewer>
+            <MinimalisticResumeTemplate
+              ref={contentRef}
+              data={optimizedResume}
+              email={session.data?.user?.email ?? ''}
+            />
+          </PDFViewer>
         </TabsContent>
         <TabsContent value="professional" className="mt-4">
           <ProfessionalResumeTemplate
@@ -161,11 +164,13 @@ export default function Page() {
       </div>
       <div className="px-8">
         <TabsContent value="minimalistic" className="mt-0">
-          <MinimalisticResumeTemplate
-            ref={contentRef}
-            data={optimizedResume}
-            email={session.data?.user?.email ?? ''}
-          />
+          <PDFViewer width="500px" height="500px">
+            <MinimalisticResumeTemplate
+              ref={contentRef}
+              data={optimizedResume}
+              email={session.data?.user?.email ?? ''}
+            />
+          </PDFViewer>
         </TabsContent>
         <TabsContent value="professional" className="mt-0">
           <ProfessionalResumeTemplate
