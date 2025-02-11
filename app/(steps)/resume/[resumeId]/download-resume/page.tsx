@@ -11,8 +11,8 @@ import { useScrollToTop } from '@/lib/useScrollToTop';
 import { Download, Loader2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useReactToPrint } from 'react-to-print';
+import { useCallback, useEffect, useState } from 'react';
+import { usePDF } from 'react-to-pdf';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function Page() {
@@ -20,8 +20,7 @@ export default function Page() {
   const supabase = createClient();
   const [optimizedResume, setOptimizedResume] = useState<ResumeResponse>();
 
-  const contentRef = useRef<HTMLDivElement>(null);
-  const reactToPrintFn = useReactToPrint({ contentRef });
+  const { toPDF, targetRef } = usePDF({ filename: 'resume.pdf' });
 
   const params = useParams();
   const resumeId = Number(params['resumeId'] as string);
@@ -48,7 +47,7 @@ export default function Page() {
   }, [resumeId, supabase]);
 
   async function handleDownload() {
-    reactToPrintFn();
+    toPDF();
   }
 
   useEffect(() => {
@@ -81,23 +80,28 @@ export default function Page() {
             Modern & Creative
           </TabsTrigger>
         </TabsList>
+        <p className="text-red-600 text-sm py-4">
+          <strong>Warning:</strong> the PDF might not look great on small
+          screens, we are working on that. To get a better experience, try
+          downloading the PDF on a larger screen.
+        </p>
         <TabsContent value="minimalistic" className="mt-4">
           <MinimalisticResumeTemplate
-            ref={contentRef}
+            ref={targetRef}
             data={optimizedResume}
             email={session.data?.user?.email ?? ''}
           />
         </TabsContent>
         <TabsContent value="professional" className="mt-4">
           <ProfessionalResumeTemplate
-            ref={contentRef}
+            ref={targetRef}
             data={optimizedResume}
             email={session?.data?.user?.email ?? ''}
           />
         </TabsContent>
         <TabsContent value="modern_creative" className="mt-4">
           <ModernCreativeResume
-            ref={contentRef}
+            ref={targetRef}
             data={optimizedResume}
             email={session?.data?.user?.email ?? ''}
           />
@@ -162,21 +166,21 @@ export default function Page() {
       <div className="px-8">
         <TabsContent value="minimalistic" className="mt-0">
           <MinimalisticResumeTemplate
-            ref={contentRef}
+            ref={targetRef}
             data={optimizedResume}
             email={session.data?.user?.email ?? ''}
           />
         </TabsContent>
         <TabsContent value="professional" className="mt-0">
           <ProfessionalResumeTemplate
-            ref={contentRef}
+            ref={targetRef}
             data={optimizedResume}
             email={session?.data?.user?.email ?? ''}
           />
         </TabsContent>
         <TabsContent value="modern_creative" className="mt-0">
           <ModernCreativeResume
-            ref={contentRef}
+            ref={targetRef}
             data={optimizedResume}
             email={session?.data?.user?.email ?? ''}
           />
