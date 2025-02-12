@@ -27,6 +27,7 @@ import {
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { SkeletonInput } from './SkeletonInputs';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
@@ -126,7 +127,12 @@ export default function PersonalInformationForm() {
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="Your Name" />
+                    <SkeletonInput
+                      {...field}
+                      isLoading={form.formState.isLoading}
+                      disabled={form.formState.isSubmitting}
+                      placeholder="Your Name"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -140,7 +146,12 @@ export default function PersonalInformationForm() {
                 <FormItem>
                   <FormLabel>Phone</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="Your Phone Number" />
+                    <SkeletonInput
+                      {...field}
+                      isLoading={form.formState.isLoading}
+                      disabled={form.formState.isSubmitting}
+                      placeholder="Your Phone Number"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -154,7 +165,12 @@ export default function PersonalInformationForm() {
                 <FormItem>
                   <FormLabel>Street</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="Your Street" />
+                    <SkeletonInput
+                      {...field}
+                      isLoading={form.formState.isLoading}
+                      disabled={form.formState.isSubmitting}
+                      placeholder="Your Street"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -168,7 +184,12 @@ export default function PersonalInformationForm() {
                 <FormItem>
                   <FormLabel>City</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="Your City" />
+                    <SkeletonInput
+                      {...field}
+                      isLoading={form.formState.isLoading}
+                      disabled={form.formState.isSubmitting}
+                      placeholder="Your City"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -182,9 +203,11 @@ export default function PersonalInformationForm() {
                 <FormItem>
                   <FormLabel>Professional Experience in Years</FormLabel>
                   <FormControl>
-                    <Input
-                      type="number"
+                    <SkeletonInput
                       {...field}
+                      isLoading={form.formState.isLoading}
+                      disabled={form.formState.isSubmitting}
+                      type="number"
                       onChange={(event) => field.onChange(+event.target.value)}
                       placeholder="Your Professional Experience in Years"
                     />
