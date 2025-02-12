@@ -336,17 +336,19 @@ export default function Page({ params }: { params: { resumeId: string } }) {
           </CardContent>
         </Card>
       </div>
-      <div className="flex justify-end">
-        <BackButton />
-        <Button type="button" onClick={generateResume}>
-          {loading ? (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          ) : (
-            <FileText className="h-6 w-6 mr-2" />
-          )}
-          Generate Resume
-        </Button>
-      </div>
+      <footer className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4">
+        <div className="mx-auto max-w-screen-2xl flex justify-end px-0 md:px-4">
+          <BackButton />
+          <Button type="button" onClick={generateResume}>
+            {loading ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <FileText className="h-6 w-6 mr-2" />
+            )}
+            Generate Resume
+          </Button>
+        </div>
+      </footer>
     </div>
   );
 }
