@@ -36,6 +36,7 @@ import {
 } from '@/components/ui/form';
 import { AlertDestructive } from './AlertDestructive';
 import { Textarea } from '@/components/ui/textarea';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const formSchema = z.object({
   organisation_name: z.string().min(1, { message: 'This field is required' }),
@@ -55,6 +56,7 @@ export default function WorkExperienceForm() {
 
   useScrollToTop();
 
+  const [workexperiencesLoading, setWorkexperiencesLoading] = useState(true);
   const [workExperiences, setWorkExperiences] = useState<
     Database['public']['Tables']['work_experience']['Row'][]
   >([]);
@@ -82,7 +84,7 @@ export default function WorkExperienceForm() {
   }, [supabase, resumeId]);
 
   useEffect(() => {
-    fetchWorkExperiences();
+    fetchWorkExperiences().then(() => setWorkexperiencesLoading(false));
   }, [fetchWorkExperiences, supabase, userEmail]);
 
   async function addExperience(formData: z.infer<typeof formSchema>) {
@@ -162,7 +164,11 @@ export default function WorkExperienceForm() {
                     <FormItem>
                       <FormLabel>Company</FormLabel>
                       <FormControl>
-                        <Input {...field} placeholder="Company Name" />
+                        <Input
+                          {...field}
+                          placeholder="Company Name"
+                          disabled={form.formState.isSubmitting}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -180,6 +186,7 @@ export default function WorkExperienceForm() {
                       <FormControl>
                         <Input
                           {...field}
+                          disabled={form.formState.isSubmitting}
                           placeholder="e.g. Software Engineer, Data Scientist, Salesman, Plumber,... "
                         />
                       </FormControl>
@@ -202,6 +209,7 @@ export default function WorkExperienceForm() {
                       <FormControl>
                         <Textarea
                           {...field}
+                          disabled={form.formState.isSubmitting}
                           placeholder="e.g. Built a website for the company, managed the team at the company, created a new product for the company"
                         />
                       </FormControl>
@@ -224,6 +232,7 @@ export default function WorkExperienceForm() {
                           <div>
                             <DatePicker
                               {...field}
+                              disabled={form.formState.isSubmitting}
                               onSelect={(date) =>
                                 form.setValue('start_date', date!)
                               }
@@ -248,6 +257,7 @@ export default function WorkExperienceForm() {
                             <div>
                               <DatePicker
                                 {...field}
+                                disabled={form.formState.isSubmitting}
                                 onSelect={(date) =>
                                   form.setValue('end_date', date!)
                                 }
@@ -263,7 +273,9 @@ export default function WorkExperienceForm() {
               </div>
 
               <div className="flex justify-end mt-6">
-                <Button>Add Work Experience</Button>
+                <Button disabled={form.formState.isSubmitting}>
+                  Add Work Experience
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -273,7 +285,20 @@ export default function WorkExperienceForm() {
         <CardHeader>
           <CardTitle>Work Experience</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-2">
+          {workexperiencesLoading && (
+            <>
+              <Skeleton className="h-24 w-full" />
+              <Skeleton className="h-24 w-full" />
+            </>
+          )}
+
+          {!workexperiencesLoading && workExperiences?.length === 0 && (
+            <p className="text-sm opacity-70 h-24">
+              No work experience added yet
+            </p>
+          )}
+
           {workExperiences != null &&
             workExperiences?.length > 0 &&
             workExperiences
@@ -286,6 +311,7 @@ export default function WorkExperienceForm() {
                 <div key={workExperience.id}>
                   <div className="flex items-center">
                     <div className="flex-1 flex flex-col border-b border-b-border py-2">
+                      {/* render the actual data */}
                       <p className="text-lg font-semibold">
                         {workExperience.organisation_name}
                       </p>
@@ -307,16 +333,13 @@ export default function WorkExperienceForm() {
                       type="button"
                       variant="destructive"
                       onClick={() => deleteWorkExperience(workExperience.id)}
+                      disabled={form.formState.isSubmitting}
                     >
                       <Trash />
                     </Button>
                   </div>
                 </div>
               ))}
-
-          {workExperiences?.length === 0 && (
-            <p className="text-sm opacity-70">No work experience added yet</p>
-          )}
         </CardContent>
       </Card>
       <Form {...submitForm}>

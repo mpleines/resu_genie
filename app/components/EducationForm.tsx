@@ -33,6 +33,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { AlertDestructive } from './AlertDestructive';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const formSchema = z.object({
   institute_name: z.string().min(1, { message: 'This field is required' }),
@@ -50,6 +51,7 @@ export default function EducationForm() {
   const params = useParams();
   const resumeId = Number(params['resumeId'] as string);
 
+  const [educationLoading, setEducationLoading] = useState(true);
   const [educations, setEducations] = useState<
     Database['public']['Tables']['education']['Row'][]
   >([]);
@@ -75,7 +77,7 @@ export default function EducationForm() {
   }, [resumeId, supabase]);
 
   useEffect(() => {
-    fetchEducation();
+    fetchEducation().then(() => setEducationLoading(false));
   }, [fetchEducation, userEmail]);
 
   async function addEducation(education: z.infer<typeof formSchema>) {
@@ -148,7 +150,11 @@ export default function EducationForm() {
                     <FormItem>
                       <FormLabel>Institution Name</FormLabel>
                       <FormControl>
-                        <Input {...field} placeholder="Institution Name" />
+                        <Input
+                          {...field}
+                          disabled={form.formState.isSubmitting}
+                          placeholder="Institution Name"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -166,6 +172,7 @@ export default function EducationForm() {
                       <FormControl>
                         <Input
                           {...field}
+                          disabled={form.formState.isSubmitting}
                           placeholder="e.g. Associate in digital photography, Bachelor of Arts, ..."
                         />
                       </FormControl>
@@ -186,6 +193,7 @@ export default function EducationForm() {
                         <div>
                           <DatePicker
                             {...field}
+                            disabled={form.formState.isSubmitting}
                             onSelect={(date) =>
                               form.setValue('start_date', date!)
                             }
@@ -210,6 +218,7 @@ export default function EducationForm() {
                           <div>
                             <DatePicker
                               {...field}
+                              disabled={form.formState.isSubmitting}
                               onSelect={(date) =>
                                 form.setValue('end_date', date!)
                               }
@@ -224,7 +233,9 @@ export default function EducationForm() {
               </div>
 
               <div className="flex justify-end mt-6">
-                <Button>Add Education</Button>
+                <Button disabled={form.formState.isSubmitting}>
+                  Add Education
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -232,7 +243,20 @@ export default function EducationForm() {
             <CardHeader>
               <CardTitle>Education</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-2">
+              {educationLoading && (
+                <>
+                  <Skeleton className="h-24 w-full" />
+                  <Skeleton className="h-24 w-full" />
+                </>
+              )}
+
+              {!educationLoading && educations?.length === 0 && (
+                <p className="text-sm opacity-70 h-24">
+                  No Education added yet
+                </p>
+              )}
+
               {educations != null &&
                 educations?.length > 0 &&
                 educations
@@ -267,10 +291,6 @@ export default function EducationForm() {
                       </div>
                     </div>
                   ))}
-
-              {educations?.length === 0 && (
-                <p className="text-sm opacity-70">No Education added yet</p>
-              )}
             </CardContent>
           </Card>
         </form>
