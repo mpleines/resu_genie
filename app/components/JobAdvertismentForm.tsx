@@ -26,6 +26,7 @@ import {
 } from '@/components/ui/form';
 import { Skeleton } from '@/components/ui/skeleton';
 import { SkeletonTextArea } from './SkeletonInputs';
+import StepperFooter from './StepperFooter';
 
 const formSchema = z.object({
   jobAdvertisement: z.string().min(1, { message: 'This field is required' }),
@@ -135,9 +136,10 @@ export default function JobAdvertisementForm() {
             )}
           </CardContent>
         </Card>
-        <div className="flex justify-end">
-          <SubmitButton text="Next" pending={form.formState.isSubmitting} />
-        </div>
+        <StepperFooter
+          showBackButton={false}
+          isSubmitting={form.formState.isSubmitting}
+        />
       </form>
     </Form>
   );

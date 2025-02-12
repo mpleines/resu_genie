@@ -37,6 +37,7 @@ import {
 import { AlertDestructive } from './AlertDestructive';
 import { Textarea } from '@/components/ui/textarea';
 import { Skeleton } from '@/components/ui/skeleton';
+import StepperFooter from './StepperFooter';
 
 const formSchema = z.object({
   organisation_name: z.string().min(1, { message: 'This field is required' }),
@@ -350,13 +351,7 @@ export default function WorkExperienceForm() {
               message={submitForm.formState.errors.root.message}
             />
           )}
-          <div className="flex justify-end">
-            <BackButton />
-            <SubmitButton
-              text="Next"
-              pending={submitForm.formState.isSubmitting}
-            />
-          </div>
+          <StepperFooter isSubmitting={submitForm.formState.isSubmitting} />
         </form>
       </Form>
     </div>

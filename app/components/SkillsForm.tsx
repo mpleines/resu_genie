@@ -15,10 +15,8 @@ import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { X } from 'lucide-react';
-import SubmitButton from './SubmitButton';
 import { useStepper } from '../(steps)/useStepper';
 import { useParams } from 'next/navigation';
-import BackButton from './BackButton';
 import { useScrollToTop } from '@/lib/useScrollToTop';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -33,6 +31,7 @@ import {
 } from '@/components/ui/form';
 import { AlertDestructive } from './AlertDestructive';
 import { Skeleton } from '@/components/ui/skeleton';
+import StepperFooter from './StepperFooter';
 
 type Skill = Database['public']['Tables']['skills']['Row'];
 
@@ -225,13 +224,7 @@ export default function SkillsForm() {
               message={submitForm.formState.errors.root.message}
             />
           )}
-          <div className="flex justify-end">
-            <BackButton />
-            <SubmitButton
-              text="Next"
-              pending={submitForm.formState.isSubmitting}
-            />
-          </div>
+          <StepperFooter isSubmitting={submitForm.formState.isSubmitting} />
         </form>
       </Form>
     </div>
