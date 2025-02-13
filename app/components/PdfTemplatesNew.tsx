@@ -7,6 +7,7 @@ import {
   Font,
 } from '@react-pdf/renderer';
 import { format } from 'date-fns';
+import { forwardRef } from 'react';
 
 Font.register({
   family: 'Times New Roman',
@@ -24,7 +25,8 @@ Font.register({
 
 const styles = StyleSheet.create({
   page: {
-    padding: 48,
+    backgroundColor: '#ffffff',
+    padding: 24,
     fontFamily: 'Times New Roman',
     fontSize: 12,
   },
@@ -34,71 +36,55 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   name: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 4,
   },
   contactInfo: {
-    fontSize: 12,
+    marginTop: 4,
   },
   section: {
     marginBottom: 32,
   },
   sectionTitle: {
-    fontSize: 12,
+    fontSize: 16,
     fontWeight: 'bold',
-    textAlign: 'center',
-    paddingBottom: 8,
     borderBottomWidth: 1,
     borderBottomColor: '#000000',
+    paddingBottom: 4,
     marginBottom: 16,
-  },
-  experienceItem: {
-    marginBottom: 24,
-  },
-  organizationName: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    marginBottom: 4,
-  },
-  jobHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 8,
+    textAlign: 'center',
   },
   jobTitle: {
-    fontSize: 12,
-    fontStyle: 'italic',
+    fontWeight: 'bold',
   },
-  dates: {
-    fontSize: 12,
-  },
-  bulletPoint: {
-    flexDirection: 'row',
-    marginBottom: 4,
-  },
-  bullet: {
-    width: 10,
-    fontSize: 12,
-  },
-  bulletText: {
-    flex: 1,
-    fontSize: 12,
-  },
-  skills: {
-    fontSize: 12,
-    lineHeight: 1.5,
-  },
-  educationItem: {
+  jobDetails: {
+    display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 24,
+  },
+  jobDescription: {
+    marginTop: 8,
+    marginLeft: 16,
+  },
+  listItem: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  bulletPoint: {
+    width: 10,
+    fontSize: 10,
+  },
+  listItemContent: {
+    flex: 1,
+    fontSize: 10,
   },
 });
 
-export const MinimalisticResumeTemplate = ({ data, email }: any) => {
-  const { personal_information, work_experience, summary, skills, education } =
-    data;
+export const MinimalisticResumeTemplate = (props, ref) => {
+  const {
+    data: { personal_information, work_experience, summary, skills, education },
+    email,
+  } = props;
 
   const contactInfo = [
     personal_information?.address,
@@ -126,41 +112,43 @@ export const MinimalisticResumeTemplate = ({ data, email }: any) => {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Experience</Text>
           {work_experience?.map((job, index) => (
-            <View key={index} style={styles.experienceItem}>
-              <Text style={styles.organizationName}>
-                {job.organisation_name}
-              </Text>
-              <View style={styles.jobHeader}>
-                <Text style={styles.jobTitle}>{job.profile}</Text>
-                <Text style={styles.dates}>
+            <View key={index} style={{ marginBottom: 24 }}>
+              <Text style={styles.jobTitle}>{job.organisation_name}</Text>
+              <View style={styles.jobDetails}>
+                <Text style={{ fontStyle: 'italic' }}>{job.profile}</Text>
+                <Text>
                   {format(new Date(job.start_date), 'MMMM yyyy')} -{' '}
                   {format(new Date(job.end_date), 'MMMM yyyy')}
                 </Text>
               </View>
-              {job.job_description?.map((detail, i) => (
-                <View key={i} style={styles.bulletPoint}>
-                  <Text style={styles.bullet}>•</Text>
-                  <Text style={styles.bulletText}>{detail}</Text>
-                </View>
-              ))}
+              <View style={styles.jobDescription}>
+                {job.job_description?.map((detail, i) => (
+                  <View key={i} style={styles.listItem}>
+                    <Text style={styles.bulletPoint}>•</Text>
+                    <Text style={styles.listItemContent}>{detail}</Text>
+                  </View>
+                ))}
+              </View>
             </View>
           ))}
         </View>
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Skills</Text>
-          <Text style={styles.skills}>{skills?.join(', ')}</Text>
+          <Text>{skills?.join(', ')}</Text>
         </View>
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Education</Text>
           {education?.map((edu, index) => (
-            <View key={index} style={styles.educationItem}>
-              <Text style={styles.organizationName}>{edu.institute_name}</Text>
-              <Text style={styles.dates}>
-                {format(new Date(edu.start_date), 'MMMM yyyy')} -{' '}
-                {format(new Date(edu.end_date), 'MMMM yyyy')}
-              </Text>
+            <View key={index} style={{ marginBottom: 24 }}>
+              <View style={styles.jobDetails}>
+                <Text style={styles.jobTitle}>{edu.institute_name}</Text>
+                <Text>
+                  {format(new Date(edu.start_date), 'MMMM yyyy')} -{' '}
+                  {format(new Date(edu.end_date), 'MMMM yyyy')}
+                </Text>
+              </View>
             </View>
           ))}
         </View>
