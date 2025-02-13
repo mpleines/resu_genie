@@ -1,4 +1,5 @@
 import { ResumeResponse } from '@/lib/promptHelper';
+import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { Mail, MapPin, Phone } from 'lucide-react';
 import { forwardRef } from 'react';
@@ -6,7 +7,14 @@ import { forwardRef } from 'react';
 type TemplateProps = {
   data: ResumeResponse;
   email: string;
+  isDINA4?: boolean;
 };
+
+function getContainerClass(isDINA4?: boolean) {
+  return isDINA4
+    ? 'w-[210mm] h-[297mm] [font-size: 12px]'
+    : 'w-full h-auto max-w-[210mm] max-h-[297mm] [font-size:_clamp(12px,5vw,16px)]';
+}
 
 export const MinimalisticResumeTemplate = forwardRef<
   HTMLDivElement,
@@ -15,6 +23,7 @@ export const MinimalisticResumeTemplate = forwardRef<
   const {
     data: { personal_information, work_experience, summary, skills, education },
     email,
+    isDINA4,
   } = props;
 
   const contactInfo = [
@@ -25,11 +34,18 @@ export const MinimalisticResumeTemplate = forwardRef<
     .filter(Boolean)
     .join(' | ');
 
+  const containerClass = getContainerClass(isDINA4);
+
   return (
-    <div className="bg-white shadow-md rounded-md w-full h-auto md:w-[210mm] md:h-[297mm] border border-gray-300">
-      <div ref={ref} {...props}>
+    <div
+      className={cn(
+        'bg-white shadow-md rounded-md border border-gray-300 text-sm',
+        containerClass
+      )}
+    >
+      <div ref={ref}>
         <div
-          className="p-6 mx-auto font-serif text-xl"
+          className="p-6 mx-auto font-serif"
           style={{ fontFamily: 'Times New Roman' }}
         >
           <header className="mt-8 mb-8 text-center">
@@ -120,19 +136,25 @@ export const ProfessionalResumeTemplate = forwardRef<
   const {
     data: { personal_information, work_experience, summary, skills, education },
     email,
+    isDINA4,
   } = props;
 
+  const containerClass = getContainerClass(isDINA4);
+
   return (
-    <div className="bg-white shadow-md rounded-md w-full h-auto md:w-[210mm] md:h-[297mm] mx-auto border border-gray-300">
+    <div
+      className={cn(
+        'bg-white shadow-md rounded-md w-full h-auto mx-auto border border-gray-300',
+        containerClass
+      )}
+    >
       <div ref={ref}>
         <div className="mx-auto p-6 bg-white text-gray-800">
           <header className="mb-8 border-b-2 border-gray-300 pb-4">
-            <h1 className="text-4xl font-bold mb-2">
+            <h1 className="text-xl font-bold mb-2">
               {personal_information.name}
             </h1>
-            {/* TODO: add job title */}
-            {/* <p className="text-xl text-gray-600 mb-4">TODO: add job title here</p> */}
-            <div className="flex flex-wrap gap-4 text-sm">
+            <div className="flex flex-wrap gap-4">
               {email && (
                 <div className="flex items-center gap-1">
                   <Mail size={16} />
@@ -236,24 +258,32 @@ const ModernCreativeResume = forwardRef<HTMLDivElement, TemplateProps>(
         education,
       },
       email,
+      isDINA4,
     } = props;
 
+    const containerClass = getContainerClass(isDINA4);
+
     return (
-      <div className="bg-white shadow-md rounded-md w-full h-auto md:w-[210mm] md:h-[297mm] mx-auto border border-gray-300">
+      <div
+        className={cn(
+          'bg-white shadow-md rounded-md h-auto mx-auto border border-gray-300',
+          containerClass
+        )}
+      >
         <div ref={ref}>
           <div className="mx-auto p-6 bg-white text-gray-800">
             <header className="mb-8 relative">
               <div className="relative z-10 flex justify-between items-start">
                 <div>
-                  <h1 className="text-4xl text-blue-600 font-extrabold mb-2 tracking-tight">
+                  <h1 className="text-xl text-blue-600 font-extrabold mb-2 tracking-tight">
                     {personal_information.name}
                   </h1>
-                  <p className="text-xl text-blue-600 font-light mb-4">
+                  <p className="text-blue-600 font-light mb-4">
                     Senior Software Engineer
                   </p>
                 </div>
                 <div className="text-right">
-                  <div className="flex flex-col gap-2 text-sm">
+                  <div className="flex flex-col gap-2">
                     <div className="flex items-center gap-2 justify-end">
                       <span>{email}</span>
                       <Mail size={18} className="text-blue-600" />

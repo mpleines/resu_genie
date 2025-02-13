@@ -46,8 +46,14 @@ export default function Page() {
     setOptimizedResume(resumeData);
   }, [resumeId, supabase]);
 
+  const [isDINA4, setIsDINA4] = useState(false);
+
   async function handleDownload() {
-    toPDF();
+    setIsDINA4(true);
+    setTimeout(() => {
+      toPDF();
+      setIsDINA4(false);
+    }, 100);
   }
 
   useEffect(() => {
@@ -81,15 +87,16 @@ export default function Page() {
           </TabsTrigger>
         </TabsList>
         <p className="text-red-600 text-sm py-4">
-          <strong>Warning:</strong> the PDF might not look great on small
-          screens, we are working on that. To get a better experience, try
-          downloading the PDF on a larger screen.
+          <strong>Warning:</strong> the PDF Preview might not look great on
+          small screens, we are working on that. The PDF you will download
+          should look fine!
         </p>
         <TabsContent value="minimalistic" className="mt-4">
           <MinimalisticResumeTemplate
             ref={targetRef}
             data={optimizedResume}
             email={session.data?.user?.email ?? ''}
+            isDINA4={isDINA4}
           />
         </TabsContent>
         <TabsContent value="professional" className="mt-4">
@@ -97,6 +104,7 @@ export default function Page() {
             ref={targetRef}
             data={optimizedResume}
             email={session?.data?.user?.email ?? ''}
+            isDINA4={isDINA4}
           />
         </TabsContent>
         <TabsContent value="modern_creative" className="mt-4">
@@ -104,6 +112,7 @@ export default function Page() {
             ref={targetRef}
             data={optimizedResume}
             email={session?.data?.user?.email ?? ''}
+            isDINA4={isDINA4}
           />
         </TabsContent>
       </Tabs>
