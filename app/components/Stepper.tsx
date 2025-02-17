@@ -4,6 +4,7 @@ import { Step, useStepper } from '../(steps)/useStepper';
 import { usePathname } from 'next/navigation';
 import { Check, Circle, Dot } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useIsSmallScreen } from '@/hooks/useIsSmallScreen';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface StepperProps {}
@@ -11,6 +12,7 @@ interface StepperProps {}
 const Stepper: FunctionComponent<StepperProps> = () => {
   const { steps, comesAfterCurrentStep } = useStepper();
   const currentPath = usePathname();
+  const isSmallScreen = useIsSmallScreen();
 
   const visibleSteps = useMemo(() => {
     const currentStepIndex = steps.findIndex((s) => s.path === currentPath);
@@ -28,8 +30,6 @@ const Stepper: FunctionComponent<StepperProps> = () => {
 
     return slice;
   }, [steps, currentPath]);
-
-  const isSmallScreen = window.innerWidth < 640;
 
   if (isSmallScreen) {
     return (
