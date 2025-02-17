@@ -1,34 +1,34 @@
 'use client';
 
-import ModernCreativeResume, {
-  ProfessionalResumeTemplate,
-} from '@/app/components/PdfTemplates';
 import { Button } from '@/components/ui/button';
 import { ResumeResponse } from '@/lib/promptHelper';
 import { createClient } from '@/lib/supabase/client';
 import { useScrollToTop } from '@/lib/useScrollToTop';
-import { Download, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useReactToPrint } from 'react-to-print';
+import { useCallback, useEffect, useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { MinimalisticResumeTemplate } from '@/app/components/PdfTemplatesNew';
-import { PDFViewer } from '@react-pdf/renderer';
+import {
+  MinimalisticResumeTemplate,
+  ProfessionalResumeTemplate,
+} from '@/app/components/PdfTemplates';
+import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
+import { useIsSmallScreen } from '@/hooks/useIsSmallScreen';
 
 export default function Page() {
   const session = useSession();
   const supabase = createClient();
   const [optimizedResume, setOptimizedResume] = useState<ResumeResponse>();
 
-  const contentRef = useRef<HTMLDivElement>(null);
-  const reactToPrintFn = useReactToPrint({ contentRef });
+  const [selectedDocument, setSelectedDocument] = useState<
+    'minimalistic' | 'professional'
+  >('minimalistic');
 
   const params = useParams();
   const resumeId = Number(params['resumeId'] as string);
 
-  // FIXME: create hook to detect window size changes
-  const isSmallScreen = window.innerWidth < 640;
+  const isSmallScreen = useIsSmallScreen();
 
   useScrollToTop();
 
@@ -48,10 +48,6 @@ export default function Page() {
     setOptimizedResume(resumeData);
   }, [resumeId, supabase]);
 
-  async function handleDownload() {
-    reactToPrintFn();
-  }
-
   useEffect(() => {
     getOptimizedResumeData();
   }, [getOptimizedResumeData]);
@@ -66,11 +62,11 @@ export default function Page() {
 
   if (isSmallScreen) {
     return (
-      <Tabs orientation="horizontal" defaultValue="minimalistic">
-        <Button onClick={handleDownload} className="w-full">
-          <Download />
-          Download
-        </Button>
+      <Tabs
+        orientation="horizontal"
+        defaultValue="minimalistic"
+        className="space-y-2"
+      >
         <TabsList className="mt-2 flex flex-row justify-between">
           <TabsTrigger value="minimalistic" className="w-full">
             Minimalistic
@@ -78,33 +74,52 @@ export default function Page() {
           <TabsTrigger value="professional" className="w-full">
             Professional
           </TabsTrigger>
-          <TabsTrigger value="modern_creative" className="w-full">
+          <TabsTrigger disabled value="modern_creative" className="w-full">
             Modern & Creative
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="minimalistic" className="mt-4">
-          <PDFViewer>
+        <Button className="w-full">
+          <PDFDownloadLink
+            document={
+              selectedDocument === 'minimalistic' ? (
+                <MinimalisticResumeTemplate
+                  data={optimizedResume}
+                  email={session.data?.user?.email ?? ''}
+                />
+              ) : (
+                <ProfessionalResumeTemplate
+                  data={optimizedResume}
+                  email={session?.data?.user?.email ?? ''}
+                />
+              )
+            }
+            fileName={`${session?.data?.user?.name ?? ''}-resume.pdf`}
+          >
+            {({ loading }) =>
+              loading ? 'Preparing document...' : <span>Download PDF</span>
+            }
+          </PDFDownloadLink>
+        </Button>
+        <TabsContent value="minimalistic" className="mt-0 w-full">
+          <PDFViewer width="100%" height="500px" showToolbar={false}>
             <MinimalisticResumeTemplate
-              ref={contentRef}
               data={optimizedResume}
               email={session.data?.user?.email ?? ''}
             />
           </PDFViewer>
         </TabsContent>
-        <TabsContent value="professional" className="mt-4">
-          <ProfessionalResumeTemplate
-            ref={contentRef}
-            data={optimizedResume}
-            email={session?.data?.user?.email ?? ''}
-          />
+        <TabsContent value="professional" className="mt-0">
+          <PDFViewer width="500px" height="600px" showToolbar={false}>
+            <ProfessionalResumeTemplate
+              data={optimizedResume}
+              email={session?.data?.user?.email ?? ''}
+            />
+          </PDFViewer>
         </TabsContent>
-        <TabsContent value="modern_creative" className="mt-4">
-          <ModernCreativeResume
-            ref={contentRef}
-            data={optimizedResume}
-            email={session?.data?.user?.email ?? ''}
-          />
+        <TabsContent value="modern_creative" className="mt-0">
+          <PDFViewer width="500x" height="500px"></PDFViewer>
         </TabsContent>
+        <TabsContent value="modern_creative" className="mt-4"></TabsContent>
       </Tabs>
     );
   }
@@ -120,6 +135,7 @@ export default function Page() {
         <h2 className="font-semibold mb-4">Choose Template</h2>
         <TabsList className="flex flex-col h-auto bg-transparent gap-2">
           <TabsTrigger
+            onClick={() => setSelectedDocument('minimalistic')}
             value="minimalistic"
             className="w-full justify-start px-4 py-6 data-[state=active]:bg-background"
           >
@@ -131,6 +147,7 @@ export default function Page() {
             </div>
           </TabsTrigger>
           <TabsTrigger
+            onClick={() => setSelectedDocument('professional')}
             value="professional"
             className="w-full justify-start px-4 py-6 data-[state=active]:bg-background"
           >
@@ -142,49 +159,63 @@ export default function Page() {
             </div>
           </TabsTrigger>
           <TabsTrigger
+            disabled
             value="modern_creative"
             className="w-full justify-start px-4 py-6 data-[state=active]:bg-background"
           >
             <div className="text-left">
               <div className="font-medium">Modern & Creative</div>
-              <div className="text-xs text-muted-foreground">
-                Stand out from the crowd
-              </div>
+              <div className="text-xs text-muted-foreground">coming soon</div>
             </div>
           </TabsTrigger>
         </TabsList>
 
         <div className="mt-4">
           <h2 className="font-semibold mb-4">Download Resume</h2>
-          <Button onClick={handleDownload}>
-            <Download className="mr-2 h-4 w-4" />
-            Download
+
+          <Button>
+            <PDFDownloadLink
+              document={
+                selectedDocument === 'minimalistic' ? (
+                  <MinimalisticResumeTemplate
+                    data={optimizedResume}
+                    email={session.data?.user?.email ?? ''}
+                  />
+                ) : (
+                  <ProfessionalResumeTemplate
+                    data={optimizedResume}
+                    email={session?.data?.user?.email ?? ''}
+                  />
+                )
+              }
+              fileName={`${session?.data?.user?.name ?? ''}-resume.pdf`}
+            >
+              {({ loading }) =>
+                loading ? 'Preparing document...' : <span>Download PDF</span>
+              }
+            </PDFDownloadLink>
           </Button>
         </div>
       </div>
       <div className="px-8">
         <TabsContent value="minimalistic" className="mt-0">
-          <PDFViewer width="500px" height="500px">
+          <PDFViewer width="500px" height="600px" showToolbar={false}>
             <MinimalisticResumeTemplate
-              ref={contentRef}
               data={optimizedResume}
               email={session.data?.user?.email ?? ''}
             />
           </PDFViewer>
         </TabsContent>
         <TabsContent value="professional" className="mt-0">
-          <ProfessionalResumeTemplate
-            ref={contentRef}
-            data={optimizedResume}
-            email={session?.data?.user?.email ?? ''}
-          />
+          <PDFViewer width="500px" height="600px" showToolbar={false}>
+            <ProfessionalResumeTemplate
+              data={optimizedResume}
+              email={session?.data?.user?.email ?? ''}
+            />
+          </PDFViewer>
         </TabsContent>
         <TabsContent value="modern_creative" className="mt-0">
-          <ModernCreativeResume
-            ref={contentRef}
-            data={optimizedResume}
-            email={session?.data?.user?.email ?? ''}
-          />
+          <PDFViewer width="500x" height="500px"></PDFViewer>
         </TabsContent>
       </div>
     </Tabs>
