@@ -62,11 +62,7 @@ export default function Page() {
 
   if (isSmallScreen) {
     return (
-      <Tabs
-        orientation="horizontal"
-        defaultValue="minimalistic"
-        className="space-y-2"
-      >
+      <Tabs orientation="horizontal" defaultValue="minimalistic">
         <TabsList className="mt-2 flex flex-row justify-between">
           <TabsTrigger value="minimalistic" className="w-full">
             Minimalistic
@@ -78,29 +74,32 @@ export default function Page() {
             Modern & Creative
           </TabsTrigger>
         </TabsList>
-        <Button className="w-full">
-          <PDFDownloadLink
-            document={
-              selectedDocument === 'minimalistic' ? (
-                <MinimalisticResumeTemplate
-                  data={optimizedResume}
-                  email={session.data?.user?.email ?? ''}
-                />
-              ) : (
-                <ProfessionalResumeTemplate
-                  data={optimizedResume}
-                  email={session?.data?.user?.email ?? ''}
-                />
-              )
-            }
-            fileName={`${session?.data?.user?.name ?? ''}-resume.pdf`}
-          >
-            {({ loading }) =>
-              loading ? 'Preparing document...' : <span>Download PDF</span>
-            }
-          </PDFDownloadLink>
-        </Button>
-        <TabsContent value="minimalistic" className="mt-0 w-full">
+        <PDFDownloadLink
+          className="w-full mt-2"
+          document={
+            selectedDocument === 'minimalistic' ? (
+              <MinimalisticResumeTemplate
+                data={optimizedResume}
+                email={session.data?.user?.email ?? ''}
+              />
+            ) : (
+              <ProfessionalResumeTemplate
+                data={optimizedResume}
+                email={session?.data?.user?.email ?? ''}
+              />
+            )
+          }
+          fileName={`${session?.data?.user?.name ?? ''}-resume.pdf`}
+        >
+          {({ loading }) =>
+            loading ? (
+              'Preparing document...'
+            ) : (
+              <Button className="w-full h-full mt-2">Download PDF</Button>
+            )
+          }
+        </PDFDownloadLink>
+        <TabsContent value="minimalistic" className="w-full mt-2">
           <PDFViewer width="100%" height="500px" showToolbar={false}>
             <MinimalisticResumeTemplate
               data={optimizedResume}
@@ -170,28 +169,30 @@ export default function Page() {
         <div className="mt-4">
           <h2 className="font-semibold mb-4">Download Resume</h2>
 
-          <Button>
-            <PDFDownloadLink
-              document={
-                selectedDocument === 'minimalistic' ? (
-                  <MinimalisticResumeTemplate
-                    data={optimizedResume}
-                    email={session.data?.user?.email ?? ''}
-                  />
-                ) : (
-                  <ProfessionalResumeTemplate
-                    data={optimizedResume}
-                    email={session?.data?.user?.email ?? ''}
-                  />
-                )
-              }
-              fileName={`${session?.data?.user?.name ?? ''}-resume.pdf`}
-            >
-              {({ loading }) =>
-                loading ? 'Preparing document...' : <span>Download PDF</span>
-              }
-            </PDFDownloadLink>
-          </Button>
+          <PDFDownloadLink
+            document={
+              selectedDocument === 'minimalistic' ? (
+                <MinimalisticResumeTemplate
+                  data={optimizedResume}
+                  email={session.data?.user?.email ?? ''}
+                />
+              ) : (
+                <ProfessionalResumeTemplate
+                  data={optimizedResume}
+                  email={session?.data?.user?.email ?? ''}
+                />
+              )
+            }
+            fileName={`${session?.data?.user?.name ?? ''}-resume.pdf`}
+          >
+            {({ loading }) =>
+              loading ? (
+                'Preparing document...'
+              ) : (
+                <Button className="w-full">Download PDF</Button>
+              )
+            }
+          </PDFDownloadLink>
         </div>
       </div>
       <div className="px-8">
