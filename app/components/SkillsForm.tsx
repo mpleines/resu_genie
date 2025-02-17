@@ -15,10 +15,8 @@ import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { X } from 'lucide-react';
-import SubmitButton from './SubmitButton';
 import { useStepper } from '../(steps)/useStepper';
 import { useParams } from 'next/navigation';
-import BackButton from './BackButton';
 import { useScrollToTop } from '@/lib/useScrollToTop';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -32,6 +30,8 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { AlertDestructive } from './AlertDestructive';
+import { Skeleton } from '@/components/ui/skeleton';
+import StepperFooter from './StepperFooter';
 
 type Skill = Database['public']['Tables']['skills']['Row'];
 
@@ -61,6 +61,8 @@ export default function SkillsForm() {
   const params = useParams();
   const resumeId = Number(params['resumeId'] as string);
 
+  const [loadingSkills, setLoadingSkills] = useState(true);
+
   const fetchSkills = useCallback(async () => {
     if (userEmail == null) {
       return;
@@ -79,7 +81,7 @@ export default function SkillsForm() {
   }, [userEmail, supabase, resumeId]);
 
   useEffect(() => {
-    fetchSkills();
+    fetchSkills().then(() => setLoadingSkills(false));
   }, [userEmail, fetchSkills]);
 
   async function addSkill(formData: z.infer<typeof skillFormSchema>) {
@@ -157,9 +159,24 @@ export default function SkillsForm() {
                       <FormLabel>Skill</FormLabel>
                       <div className="flex w-full items-center space-x-2">
                         <FormControl>
-                          <Input {...field} placeholder="Add a skill" />
+                          <Input
+                            {...field}
+                            placeholder="Add a skill"
+                            disabled={
+                              form.formState.isSubmitting ||
+                              submitForm.formState.isSubmitting
+                            }
+                          />
                         </FormControl>
-                        <Button type="submit">Add</Button>
+                        <Button
+                          type="submit"
+                          disabled={
+                            form.formState.isSubmitting ||
+                            submitForm.formState.isSubmitting
+                          }
+                        >
+                          Add
+                        </Button>
                       </div>
                       <FormMessage />
                     </FormItem>
@@ -170,19 +187,31 @@ export default function SkillsForm() {
           </Form>
 
           <div className="flex flex-wrap gap-2 mt-4">
-            {skills?.map((skill) => (
-              <Badge key={skill.id} variant="secondary">
-                {skill.skill_name}
-                <button
-                  type="button"
-                  onClick={() => removeSkill(skill.id)}
-                  className="ml-2 hover:text-destructive focus:text-destructive"
-                  aria-label={`Remove ${skill}`}
-                >
-                  <X size={16} />
-                </button>
-              </Badge>
-            ))}
+            {loadingSkills &&
+              Array.from({ length: 3 }).map((_, index) => (
+                <Skeleton key={index} className="ml-2 w-16 h-6 rounded-lg " />
+              ))}
+            {!loadingSkills && skills.length === 0 ? (
+              <span className="h-6 text-sm">No skills added</span>
+            ) : (
+              skills?.map((skill) => (
+                <Badge key={skill.id} variant="secondary">
+                  {skill.skill_name}
+                  <button
+                    type="button"
+                    disabled={
+                      form.formState.isSubmitting ||
+                      submitForm.formState.isSubmitting
+                    }
+                    onClick={() => removeSkill(skill.id)}
+                    className="ml-2 hover:text-destructive focus:text-destructive"
+                    aria-label={`Remove ${skill}`}
+                  >
+                    <X size={16} />
+                  </button>
+                </Badge>
+              ))
+            )}
           </div>
         </CardContent>
       </Card>
@@ -195,13 +224,7 @@ export default function SkillsForm() {
               message={submitForm.formState.errors.root.message}
             />
           )}
-          <div className="flex justify-end">
-            <BackButton />
-            <SubmitButton
-              text="Next"
-              pending={submitForm.formState.isSubmitting}
-            />
-          </div>
+          <StepperFooter isSubmitting={submitForm.formState.isSubmitting} />
         </form>
       </Form>
     </div>

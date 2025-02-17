@@ -17,13 +17,15 @@ type Props = {
   name: string;
   onSelect: (date?: Date) => void;
   value?: Date;
+  disabled?: boolean;
 };
 
-export function DatePicker({ name, value, onSelect }: Props) {
+export function DatePicker({ name, value, onSelect, disabled }: Props) {
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button
+          disabled={disabled}
           variant={'outline'}
           className={cn(
             'w-[280px] justify-start text-left font-normal',

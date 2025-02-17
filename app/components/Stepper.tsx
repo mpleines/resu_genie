@@ -6,6 +6,7 @@ import { Check, Circle, Dot } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useIsSmallScreen } from '@/hooks/useIsSmallScreen';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface StepperProps {}
 
 const Stepper: FunctionComponent<StepperProps> = () => {
@@ -55,6 +56,10 @@ const Stepper: FunctionComponent<StepperProps> = () => {
               visibleSteps.length - 1 ===
               visibleSteps.findIndex((s) => s.path === step.path)
             }
+            isFinished={
+              steps.findIndex((s) => s.path === step.path) <
+              steps.findIndex((s) => s.path === currentPath)
+            }
           />
         );
       })}
@@ -66,6 +71,7 @@ interface StepProps {
   step: Step;
   isDisabled?: boolean;
   isActive?: boolean;
+  isFinished?: boolean;
   isLast?: boolean;
   isLastVisible?: boolean;
 }
@@ -75,8 +81,25 @@ const StepComponent: FunctionComponent<StepProps> = ({
   isDisabled,
   isActive,
   isLast,
+  isFinished,
 }) => {
   const { navigateTo } = useStepper();
+
+  function renderStatusIcon() {
+    if (isActive && isLast) {
+      return <Check />;
+    }
+
+    if (isFinished) {
+      return <Check />;
+    }
+
+    if (isActive) {
+      return <Circle />;
+    }
+
+    return <Dot />;
+  }
 
   return (
     <div className="flex flex-col items-center gap-2 py-4 w-[250px]">
@@ -93,8 +116,7 @@ const StepComponent: FunctionComponent<StepProps> = ({
           disabled={isDisabled}
           onClick={() => navigateTo(step)}
         >
-          {isActive && (isLast ? <Check /> : <Circle />)}
-          {!isActive && (!isDisabled ? <Check /> : <Dot />)}
+          {renderStatusIcon()}
         </button>
 
         {!isLast && (

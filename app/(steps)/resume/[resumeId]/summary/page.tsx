@@ -1,8 +1,6 @@
 'use client';
 
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { formatDate } from 'date-fns';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -20,6 +18,11 @@ import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import BackButton from '@/app/components/BackButton';
 import { useScrollToTop } from '@/lib/useScrollToTop';
+import {
+  SkeletonInput,
+  SkeletonTextArea,
+} from '@/app/components/SkeletonInputs';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function Page({ params }: { params: { resumeId: string } }) {
   const resumeId = Number(params.resumeId as string);
@@ -31,6 +34,8 @@ export default function Page({ params }: { params: { resumeId: string } }) {
 
   const [data, setData] = useState<ResumeData | null>(null);
   const [loading, setLoading] = useState(false);
+
+  const [initialLoading, setInitialLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -88,6 +93,7 @@ export default function Page({ params }: { params: { resumeId: string } }) {
         };
 
         setData(nonNullData);
+        setInitialLoading(false);
       }
     };
 
@@ -133,69 +139,88 @@ export default function Page({ params }: { params: { resumeId: string } }) {
   }
 
   return (
-    <form>
-      <div className="flex flex-col space-y-4">
-        <h1 className="text-xl">Summary</h1>
+    <div className="flex flex-col space-y-4">
+      <h1 className="text-xl">Summary</h1>
+      <Card>
+        <CardHeader>
+          <CardTitle>Job Advertisement</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <SkeletonTextArea
+            isLoading={initialLoading}
+            disabled
+            className="min-h-[250px]"
+            value={data?.job_advertisement}
+          />
+        </CardContent>
+      </Card>
+      <div>
         <Card>
           <CardHeader>
-            <CardTitle>Job Advertisement</CardTitle>
+            <CardTitle>Personal Information</CardTitle>
           </CardHeader>
-          <CardContent>
-            <Textarea disabled value={data?.job_advertisement} />
-          </CardContent>
-        </Card>
-        <div>
-          <Card>
-            <CardHeader>
-              <CardTitle>Personal Information</CardTitle>
-            </CardHeader>
-            <CardContent>
+          <CardContent className="space-y-4">
+            <div>
               <Label htmlFor="name">Name</Label>
-              <Input
+              <SkeletonInput
+                isLoading={initialLoading}
                 disabled
                 id="name"
                 name="name"
                 placeholder="Your Name"
                 defaultValue={data?.personal_information?.name ?? ''}
               />
+            </div>
+            <div>
               <Label htmlFor="email">E-Mail</Label>
-              <Input
+              <SkeletonInput
+                isLoading={initialLoading}
                 disabled
                 id="email"
                 name="email"
                 placeholder="Your E-Mail"
                 defaultValue={session?.data?.user?.email ?? ''}
               />
+            </div>
+            <div>
               <Label htmlFor="phone">Phone</Label>
-              <Input
+              <SkeletonInput
+                isLoading={initialLoading}
                 disabled
                 id="phone"
                 name="phone"
                 placeholder="Your Phone Number"
                 defaultValue={data?.personal_information?.phone_1 ?? ''}
               />
-              {/* <Label htmlFor="email">Email</Label>
-            <Input id="email" name="email" placeholder="Your Email" defaultValue={data?.personal_informationrmation?.email ?? ''}/> */}
+            </div>
+            <div>
               <Label htmlFor="street">Street</Label>
-              <Input
+              <SkeletonInput
+                isLoading={initialLoading}
                 disabled
                 id="street"
                 name="street"
                 placeholder="Your Street"
                 defaultValue={data?.personal_information?.address ?? ''}
               />
+            </div>
+            <div>
               <Label htmlFor="city">City</Label>
-              <Input
+              <SkeletonInput
+                isLoading={initialLoading}
                 disabled
                 id="city"
                 name="city"
                 placeholder="Your City"
                 defaultValue={data?.personal_information?.city ?? ''}
               />
+            </div>
+            <div>
               <Label htmlFor="professional-experience">
                 Professional Experience in Years
               </Label>
-              <Input
+              <SkeletonInput
+                isLoading={initialLoading}
                 disabled
                 name="professional-experience"
                 id="professional-experience"
@@ -205,101 +230,114 @@ export default function Page({ params }: { params: { resumeId: string } }) {
                     ?.professional_experience_in_years ?? ''
                 }
               />
-            </CardContent>
-          </Card>
-        </div>
-        <Card>
-          <CardHeader>
-            <CardTitle>Skills</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-wrap gap-2">
-              {data?.skills?.map((skill) => (
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Skills</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-wrap gap-2">
+            {initialLoading &&
+              Array.from({ length: 3 }).map((_, index) => (
+                <Skeleton key={index} className="ml-2 w-16 h-6 rounded-lg " />
+              ))}
+            {!initialLoading &&
+              data?.skills?.map((skill) => (
                 <Badge key={skill} variant="secondary">
                   {skill}
                 </Badge>
               ))}
-            </div>
+          </div>
+        </CardContent>
+      </Card>
+      <div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Work Experience</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {initialLoading && (
+              <>
+                <Skeleton className="h-24 w-full" />
+                <Skeleton className="h-24 w-full" />
+              </>
+            )}
+            {!initialLoading &&
+              data?.work_experience != null &&
+              data?.work_experience?.length > 0 &&
+              data?.work_experience
+                ?.sort(
+                  (a, b) =>
+                    new Date(b.start_date!).getTime() -
+                    new Date(a.start_date!).getTime()
+                )
+                .map((workExperience) => (
+                  <div key={workExperience.profile}>
+                    <div className="flex items-center">
+                      <div className="flex-1 flex flex-col border-b border-b-border py-2">
+                        <p className="text-lg font-semibold">
+                          {workExperience.organisation_name}
+                        </p>
+                        <p className="text-sm opacity-70">
+                          {workExperience.profile}
+                        </p>
+                        <p className="text-sm opacity-70">
+                          {workExperience.job_description}
+                        </p>
+                        <p className="text-sm opacity-70">
+                          {formatDate(workExperience.start_date!, 'yyyy-MM-dd')}{' '}
+                          - {formatDate(workExperience.end_date!, 'yyyy-MM-dd')}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
           </CardContent>
         </Card>
-        <div>
-          <Card className="mt-4">
-            <CardHeader>
-              <CardTitle>Work Experience</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {data?.work_experience != null &&
-                data?.work_experience?.length > 0 &&
-                data?.work_experience
-                  ?.sort(
-                    (a, b) =>
-                      new Date(b.start_date!).getTime() -
-                      new Date(a.start_date!).getTime()
-                  )
-                  .map((workExperience) => (
-                    <div key={workExperience.profile}>
-                      <div className="flex items-center">
-                        <div className="flex-1 flex flex-col border-b border-b-border py-2">
-                          <p className="text-lg font-semibold">
-                            {workExperience.organisation_name}
-                          </p>
-                          <p className="text-sm opacity-70">
-                            {workExperience.profile}
-                          </p>
-                          <p className="text-sm opacity-70">
-                            {workExperience.job_description}
-                          </p>
-                          <p className="text-sm opacity-70">
-                            {formatDate(
-                              workExperience.start_date!,
-                              'yyyy-MM-dd'
-                            )}{' '}
-                            -{' '}
-                            {formatDate(workExperience.end_date!, 'yyyy-MM-dd')}
-                          </p>
-                        </div>
+      </div>
+      <div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Education</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {initialLoading &&
+              Array.from({ length: 3 }).map((_, index) => (
+                <Skeleton key={index} className="ml-2 w-16 h-6 rounded-lg " />
+              ))}
+            {!initialLoading &&
+              data?.education != null &&
+              data?.education?.length > 0 &&
+              data?.education
+                ?.sort(
+                  (a, b) =>
+                    new Date(b.start_date!).getTime() -
+                    new Date(a.start_date!).getTime()
+                )
+                .map((education) => (
+                  <div key={education.institute_name}>
+                    <div className="flex items-center">
+                      <div className="flex-1 flex flex-col border-b border-b-border pb-4">
+                        <p className="text-lg font-semibold">
+                          {education.institute_name}
+                        </p>
+                        <p className="text-sm opacity-70">{education.degree}</p>
+                        <p className="text-sm opacity-70">
+                          {formatDate(education.start_date!, 'yyyy-MM-dd')} -{' '}
+                          {formatDate(education.end_date!, 'yyyy-MM-dd')}
+                        </p>
                       </div>
                     </div>
-                  ))}
-            </CardContent>
-          </Card>
-        </div>
-        <div>
-          <Card className="mt-4">
-            <CardHeader>
-              <CardTitle>Education</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {data?.education != null &&
-                data?.education?.length > 0 &&
-                data?.education
-                  ?.sort(
-                    (a, b) =>
-                      new Date(b.start_date!).getTime() -
-                      new Date(a.start_date!).getTime()
-                  )
-                  .map((education) => (
-                    <div key={education.institute_name}>
-                      <div className="flex items-center">
-                        <div className="flex-1 flex flex-col border-b border-b-border pb-4">
-                          <p className="text-lg font-semibold">
-                            {education.institute_name}
-                          </p>
-                          <p className="text-sm opacity-70">
-                            {education.degree}
-                          </p>
-                          <p className="text-sm opacity-70">
-                            {formatDate(education.start_date!, 'yyyy-MM-dd')} -{' '}
-                            {formatDate(education.end_date!, 'yyyy-MM-dd')}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-            </CardContent>
-          </Card>
-        </div>
-        <div className="flex justify-end">
+                  </div>
+                ))}
+          </CardContent>
+        </Card>
+      </div>
+      <footer className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4">
+        <div className="mx-auto max-w-screen-2xl flex justify-end px-0 md:px-4">
           <BackButton />
           <Button type="button" onClick={generateResume}>
             {loading ? (
@@ -310,7 +348,7 @@ export default function Page({ params }: { params: { resumeId: string } }) {
             Generate Resume
           </Button>
         </div>
-      </div>
-    </form>
+      </footer>
+    </div>
   );
 }

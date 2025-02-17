@@ -7,14 +7,11 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { createClient } from '@/lib/supabase/client';
 import { Database } from '@/types/supabase';
 import { useSession } from 'next-auth/react';
-import SubmitButton from './SubmitButton';
 import { useStepper } from '../(steps)/useStepper';
 import { useParams } from 'next/navigation';
-import BackButton from './BackButton';
 import { useScrollToTop } from '@/lib/useScrollToTop';
 import {
   Form,
@@ -27,6 +24,8 @@ import {
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { SkeletonInput } from './SkeletonInputs';
+import StepperFooter from './StepperFooter';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
@@ -126,7 +125,12 @@ export default function PersonalInformationForm() {
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="Your Name" />
+                    <SkeletonInput
+                      {...field}
+                      isLoading={form.formState.isLoading}
+                      disabled={form.formState.isSubmitting}
+                      placeholder="Your Name"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -140,7 +144,12 @@ export default function PersonalInformationForm() {
                 <FormItem>
                   <FormLabel>Phone</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="Your Phone Number" />
+                    <SkeletonInput
+                      {...field}
+                      isLoading={form.formState.isLoading}
+                      disabled={form.formState.isSubmitting}
+                      placeholder="Your Phone Number"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -154,7 +163,12 @@ export default function PersonalInformationForm() {
                 <FormItem>
                   <FormLabel>Street</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="Your Street" />
+                    <SkeletonInput
+                      {...field}
+                      isLoading={form.formState.isLoading}
+                      disabled={form.formState.isSubmitting}
+                      placeholder="Your Street"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -168,7 +182,12 @@ export default function PersonalInformationForm() {
                 <FormItem>
                   <FormLabel>City</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="Your City" />
+                    <SkeletonInput
+                      {...field}
+                      isLoading={form.formState.isLoading}
+                      disabled={form.formState.isSubmitting}
+                      placeholder="Your City"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -182,9 +201,11 @@ export default function PersonalInformationForm() {
                 <FormItem>
                   <FormLabel>Professional Experience in Years</FormLabel>
                   <FormControl>
-                    <Input
-                      type="number"
+                    <SkeletonInput
                       {...field}
+                      isLoading={form.formState.isLoading}
+                      disabled={form.formState.isSubmitting}
+                      type="number"
                       onChange={(event) => field.onChange(+event.target.value)}
                       placeholder="Your Professional Experience in Years"
                     />
@@ -195,10 +216,7 @@ export default function PersonalInformationForm() {
             />
           </CardContent>
         </Card>
-        <div className="flex justify-end">
-          <BackButton />
-          <SubmitButton text="Next" pending={form.formState.isSubmitting} />
-        </div>
+        <StepperFooter isSubmitting={form.formState.isSubmitting} />
       </form>
     </Form>
   );

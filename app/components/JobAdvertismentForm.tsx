@@ -24,6 +24,9 @@ import {
   Form,
   FormMessage,
 } from '@/components/ui/form';
+import { Skeleton } from '@/components/ui/skeleton';
+import { SkeletonTextArea } from './SkeletonInputs';
+import StepperFooter from './StepperFooter';
 
 const formSchema = z.object({
   jobAdvertisement: z.string().min(1, { message: 'This field is required' }),
@@ -109,23 +112,34 @@ export default function JobAdvertisementForm() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <FormField
-              control={form.control}
-              name="jobAdvertisement"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Textarea {...field} className="min-h-[250px]" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {form.formState.isLoading && (
+              <Skeleton className="w-full h-[250px]" />
+            )}
+            {!form.formState.isLoading && (
+              <FormField
+                control={form.control}
+                name="jobAdvertisement"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <SkeletonTextArea
+                        isLoading={form.formState.isLoading}
+                        className="min-h-[250px]"
+                        {...field}
+                        disabled={form.formState.isSubmitting}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
           </CardContent>
         </Card>
-        <div className="flex justify-end">
-          <SubmitButton text="Next" pending={form.formState.isSubmitting} />
-        </div>
+        <StepperFooter
+          showBackButton={false}
+          isSubmitting={form.formState.isSubmitting}
+        />
       </form>
     </Form>
   );

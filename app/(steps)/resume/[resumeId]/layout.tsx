@@ -78,7 +78,7 @@ export default async function DashboardLayout({
           <div>
             <Stepper />
           </div>
-          <div className="mt-4">{children}</div>
+          <div className="mt-4 pb-16">{children}</div>
         </main>
       </StepperProvider>
     </div>
