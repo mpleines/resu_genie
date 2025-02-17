@@ -109,17 +109,14 @@ export default function Page() {
           </PDFViewer>
         </TabsContent>
         <TabsContent value="professional" className="mt-0">
-          <PDFViewer width="500px" height="600px" showToolbar={false}>
+          <PDFViewer width="100%" height="500px" showToolbar={false}>
             <ProfessionalResumeTemplate
               data={optimizedResume}
               email={session?.data?.user?.email ?? ''}
             />
           </PDFViewer>
         </TabsContent>
-        <TabsContent value="modern_creative" className="mt-0">
-          <PDFViewer width="500x" height="500px"></PDFViewer>
-        </TabsContent>
-        <TabsContent value="modern_creative" className="mt-4"></TabsContent>
+        <TabsContent value="modern_creative" className="mt-0"></TabsContent>
       </Tabs>
     );
   }
