@@ -144,6 +144,7 @@ export type Database = {
           created_at: string
           id: number
           last_updated: string | null
+          payment_successful: boolean | null
           user_id: string | null
         }
         Insert: {
@@ -151,6 +152,7 @@ export type Database = {
           created_at?: string
           id?: number
           last_updated?: string | null
+          payment_successful?: boolean | null
           user_id?: string | null
         }
         Update: {
@@ -158,6 +160,7 @@ export type Database = {
           created_at?: string
           id?: number
           last_updated?: string | null
+          payment_successful?: boolean | null
           user_id?: string | null
         }
         Relationships: []
