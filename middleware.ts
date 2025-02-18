@@ -5,6 +5,11 @@ export async function middleware(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
   const { pathname } = new URL(req.url);
 
+  // Exclude the Stripe webhook route from authentication checks
+  if (pathname.startsWith('/api/stripe-webhook')) {
+    return NextResponse.next();
+  }
+
   // Allow public access to `/` and `/api/auth` (NextAuth routes)
   if (
     pathname === '/' ||
