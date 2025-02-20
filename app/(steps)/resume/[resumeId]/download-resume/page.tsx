@@ -17,6 +17,7 @@ import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 import { useIsSmallScreen } from '@/hooks/useIsSmallScreen';
 import { CheckoutDialog } from '@/app/components/Checkout';
 import { Database } from '@/types/supabase';
+import { useToast } from '@/hooks/use-toast';
 
 export default function Page() {
   const session = useSession();
@@ -67,6 +68,25 @@ export default function Page() {
     getResume();
     getOptimizedResumeData();
   }, [getOptimizedResumeData]);
+
+  const { toast } = useToast();
+  useEffect(() => {
+    if (!resume?.payment_successful) {
+      return;
+    }
+
+    const paymentSuccessId = `payment-successful-${resume?.id}`;
+
+    if (localStorage.getItem(paymentSuccessId) == null) {
+      toast({
+        title: 'Payment successful',
+        description: 'You are now able to download your resume as PDF',
+        className: 'bg-success',
+      });
+
+      localStorage.setItem(paymentSuccessId, 'true');
+    }
+  }, [resume?.payment_successful]);
 
   if (optimizedResume == null) {
     return (
