@@ -16,11 +16,9 @@ import { Database } from '@/types/supabase';
 import { Trash } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { createClient } from '@/lib/supabase/client';
-import SubmitButton from './SubmitButton';
 import { useParams } from 'next/navigation';
 import { formatDate } from 'date-fns';
 import { useStepper } from '../(steps)/useStepper';
-import BackButton from './BackButton';
 import { useScrollToTop } from '@/lib/useScrollToTop';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -50,7 +48,7 @@ const formSchema = z.object({
 export default function WorkExperienceForm() {
   const supabase = createClient();
   const session = useSession();
-  const userEmail = session?.data?.user?.email;
+  const userId = session?.data?.user?.id;
   const stepper = useStepper();
   const params = useParams();
   const resumeId = Number(params['resumeId'] as string);
@@ -79,14 +77,15 @@ export default function WorkExperienceForm() {
     const { data } = await supabase
       .from('work_experience')
       .select()
-      .eq('resume_id', resumeId);
+      .eq('resume_id', resumeId)
+      .eq('user_id', userId);
 
     setWorkExperiences(data ?? []);
   }, [supabase, resumeId]);
 
   useEffect(() => {
     fetchWorkExperiences().then(() => setWorkexperiencesLoading(false));
-  }, [fetchWorkExperiences, supabase, userEmail]);
+  }, [fetchWorkExperiences, supabase, userId]);
 
   async function addExperience(formData: z.infer<typeof formSchema>) {
     const workExperience = formData;
@@ -98,7 +97,7 @@ export default function WorkExperienceForm() {
         job_description: workExperience.job_description,
         start_date: workExperience.start_date?.toISOString(),
         end_date: workExperience.end_date?.toISOString(),
-        user_id: userEmail,
+        user_id: userId,
         resume_id: resumeId,
       };
 
@@ -108,7 +107,8 @@ export default function WorkExperienceForm() {
       .update({
         last_updated: new Date().toISOString(),
       })
-      .eq('id', resumeId);
+      .eq('id', resumeId)
+      .eq('user_id', userId!);
 
     submitForm.reset({});
     form.reset({
@@ -128,6 +128,10 @@ export default function WorkExperienceForm() {
   }
 
   async function submitWorkExperience() {
+    if (userId == null) {
+      return;
+    }
+
     if (workExperiences.length === 0) {
       submitForm.setError('root', {
         message: 'Please add at least one work experience',
@@ -140,7 +144,8 @@ export default function WorkExperienceForm() {
       .update({
         last_updated: new Date().toISOString(),
       })
-      .eq('id', resumeId);
+      .eq('id', resumeId)
+      .eq('user_id', userId);
 
     stepper.next();
   }
@@ -320,7 +325,7 @@ export default function WorkExperienceForm() {
                         {workExperience.profile}
                       </p>
                       <p className="text-sm opacity-70">
-                        {workExperience.job_description?.length > 45
+                        {(workExperience.job_description?.length ?? 0) > 45
                           ? workExperience.job_description?.slice(0, 45) + '...'
                           : workExperience.job_description}
                       </p>

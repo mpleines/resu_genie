@@ -4,8 +4,8 @@ import { StepperProvider, Steps } from '../../useStepper';
 import Stepper from '../../../components/Stepper';
 import supabaseClient from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
-import { getServerSession } from 'next-auth';
 import { cookies } from 'next/headers';
+import { auth } from '@/auth';
 
 const resumeSteps = (resumeId: string): Steps => {
   return [
@@ -55,13 +55,13 @@ export default async function DashboardLayout({
   params: any;
 }) {
   const supabase = supabaseClient(cookies);
-  const session = await getServerSession();
+  const session = await auth();
 
   const { data: resume, error } = await supabase
     .from('resume')
     .select()
     .eq('id', params.resumeId)
-    .eq('user_id', session?.user?.email)
+    .eq('user_id', session?.user?.id)
     .single();
 
   if (resume == null || error) {

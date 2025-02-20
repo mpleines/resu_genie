@@ -27,6 +27,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 export default function Page({ params }: { params: { resumeId: string } }) {
   const resumeId = Number(params.resumeId as string);
   const session = useSession();
+  const userId = session?.data?.user?.id;
   const supabase = createClient();
   const router = useRouter();
 
@@ -51,6 +52,7 @@ export default function Page({ params }: { params: { resumeId: string } }) {
         `
         )
         .eq('id', resumeId)
+        .eq('user_id', userId)
         .maybeSingle();
 
       if (error) {
@@ -128,7 +130,8 @@ export default function Page({ params }: { params: { resumeId: string } }) {
           chat_gpt_response_raw: resumeData,
           last_updated: new Date().toISOString(),
         })
-        .eq('id', resumeId);
+        .eq('id', resumeId)
+        .eq('user_id', userId);
     } catch (error) {
       console.error(error);
     } finally {

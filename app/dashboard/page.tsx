@@ -1,14 +1,14 @@
 import supabaseClient from '@/lib/supabase/server';
-import { getServerSession } from 'next-auth';
 import ResumePreview from '../components/ResumePreview';
 import { NewResume } from '../components/NewResumeCard';
 import { cookies } from 'next/headers';
+import { auth } from '@/auth';
 
 export const revalidate = 0;
 
 export default async function DashboardPage() {
-  const session = await getServerSession();
-  const userEmail = session?.user?.email;
+  const session = await auth();
+  const userId = session?.user?.id;
 
   const supabase = supabaseClient(cookies);
   const { data: resumes } = await supabase
@@ -23,7 +23,7 @@ export default async function DashboardPage() {
       education (institute_name, start_date, end_date)
     `
     )
-    .eq('user_id', userEmail!)
+    .eq('user_id', userId!) //FIXME:
     .order('last_updated', { ascending: false });
 
   return (

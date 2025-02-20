@@ -1,13 +1,13 @@
-import { getServerSession } from 'next-auth';
 import Link from 'next/link';
 import { FunctionComponent } from 'react';
 import { SignInButton } from './AuthButtons';
 import UserDropdown from './UserDropdown';
 import Image from 'next/image';
 import Logo from '@/public/logo.svg';
+import { auth } from '@/auth';
 
 const HeaderContent: FunctionComponent = async () => {
-  const session = await getServerSession();
+  const session = await auth();
 
   const renderSessionContent = () => {
     if (session?.user != null) {
