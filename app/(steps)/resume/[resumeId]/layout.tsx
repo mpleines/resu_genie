@@ -6,6 +6,7 @@ import supabaseClient from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import { getServerSession } from 'next-auth';
 import { cookies } from 'next/headers';
+import ProtectedPaidLayout from '@/app/components/ProtectedPaidLayout';
 
 const resumeSteps = (resumeId: string): Steps => {
   return [
@@ -76,9 +77,13 @@ export default async function DashboardLayout({
       <StepperProvider steps={steps}>
         <main className="mx-auto max-w-screen-2xl w-full p-4 flex-1 overflow-y-auto">
           <div>
-            <Stepper />
+            <Stepper disableAllButLast={!!resume.payment_successful} />
           </div>
-          <div className="mt-4 pb-16">{children}</div>
+          <div className="mt-4 pb-16">
+            <ProtectedPaidLayout resume={resume}>
+              {children}
+            </ProtectedPaidLayout>
+          </div>
         </main>
       </StepperProvider>
     </div>
