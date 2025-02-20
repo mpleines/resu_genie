@@ -108,13 +108,11 @@ export default function Page() {
             }
             fileName={`${session?.data?.user?.name ?? ''}-resume.pdf`}
           >
-            {({ loading }) =>
-              loading ? (
-                'Preparing document...'
-              ) : (
-                <Button className="w-full h-full mt-2">Download PDF</Button>
-              )
-            }
+            {({ loading }) => (
+              <Button className="w-full h-full mt-2">
+                {loading ? 'Preparing PDF' : 'Download PDF'}
+              </Button>
+            )}
           </PDFDownloadLink>
         ) : (
           <CheckoutDialog resumeId={resumeId} />
@@ -207,13 +205,18 @@ export default function Page() {
               }
               fileName={`${session?.data?.user?.name ?? ''}-resume.pdf`}
             >
-              {({ loading }) =>
-                loading ? (
-                  'Preparing document...'
-                ) : (
-                  <Button className="w-full h-full mt-2">Download PDF</Button>
-                )
-              }
+              {({ loading }) => (
+                <Button className="w-full h-full mt-2">
+                  {loading ? (
+                    <div className="flex items-center gap-2">
+                      <Loader2 className="mr-2 animate-spin" />
+                      Preparing PDF
+                    </div>
+                  ) : (
+                    'Download PDF'
+                  )}
+                </Button>
+              )}
             </PDFDownloadLink>
           ) : (
             <CheckoutDialog resumeId={resumeId} />
