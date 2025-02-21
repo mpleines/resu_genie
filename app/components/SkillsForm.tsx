@@ -44,7 +44,7 @@ export default function SkillsForm() {
 
   const supabase = createClient();
   const session = useSession();
-  const userEmail = session?.data?.user?.email;
+  const userId = session?.data?.user?.id;
   const stepper = useStepper();
 
   const form = useForm<z.infer<typeof skillFormSchema>>({
@@ -64,25 +64,25 @@ export default function SkillsForm() {
   const [loadingSkills, setLoadingSkills] = useState(true);
 
   const fetchSkills = useCallback(async () => {
-    if (userEmail == null) {
+    if (userId == null) {
       return;
     }
 
     await supabase
       .from('skills')
       .select()
-      .eq('user_id', userEmail)
+      .eq('user_id', userId)
       .eq('resume_id', resumeId)
       .then(({ data }) => {
         if (data != null) {
           setSkills(data);
         }
       });
-  }, [userEmail, supabase, resumeId]);
+  }, [userId, supabase, resumeId]);
 
   useEffect(() => {
     fetchSkills().then(() => setLoadingSkills(false));
-  }, [userEmail, fetchSkills]);
+  }, [userId, fetchSkills]);
 
   async function addSkill(formData: z.infer<typeof skillFormSchema>) {
     const { skill } = formData;
@@ -93,7 +93,7 @@ export default function SkillsForm() {
 
     const response = await supabase.from('skills').insert({
       skill_name: skill,
-      user_id: userEmail,
+      user_id: userId,
       resume_id: resumeId,
     });
 

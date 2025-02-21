@@ -47,7 +47,7 @@ export default function EducationForm() {
   useScrollToTop();
   const supabase = createClient();
   const session = useSession();
-  const userEmail = session?.data?.user?.email;
+  const userId = session?.data?.user?.id;
   const stepper = useStepper();
   const params = useParams();
   const resumeId = Number(params['resumeId'] as string);
@@ -79,7 +79,7 @@ export default function EducationForm() {
 
   useEffect(() => {
     fetchEducation().then(() => setEducationLoading(false));
-  }, [fetchEducation, userEmail]);
+  }, [fetchEducation, userId]);
 
   async function addEducation(education: z.infer<typeof formSchema>) {
     const newEducation: Database['public']['Tables']['education']['Insert'] = {
@@ -87,7 +87,7 @@ export default function EducationForm() {
       degree: education.degree,
       start_date: education.start_date.toISOString(),
       end_date: education.end_date.toISOString(),
-      user_id: userEmail,
+      user_id: userId,
       resume_id: resumeId,
     };
 

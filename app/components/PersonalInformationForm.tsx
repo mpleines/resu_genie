@@ -43,7 +43,7 @@ export default function PersonalInformationForm() {
 
   const supabase = createClient();
   const session = useSession();
-  const userEmail = session?.data?.user?.email;
+  const userId = session?.data?.user?.id;
   const stepper = useStepper();
   const params = useParams();
   const resumeId = Number(params['resumeId'] as string);
@@ -65,14 +65,14 @@ export default function PersonalInformationForm() {
   });
 
   async function fetchPersonalInfo() {
-    if (userEmail == null) {
+    if (userId == null) {
       return;
     }
 
     const { data } = await supabase
       .from('personal_information')
       .select()
-      .eq('user_id', userEmail)
+      .eq('user_id', userId)
       .eq('resume_id', resumeId)
       .limit(1)
       .single();
@@ -84,7 +84,7 @@ export default function PersonalInformationForm() {
     const personalInformation: Database['public']['Tables']['personal_information']['Insert'] =
       {
         ...personalInfo,
-        user_id: userEmail,
+        user_id: userId,
         resume_id: resumeId,
       };
 

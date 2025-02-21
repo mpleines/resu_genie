@@ -18,6 +18,7 @@ import { useIsSmallScreen } from '@/hooks/useIsSmallScreen';
 
 export default function Page() {
   const session = useSession();
+  const userId = session?.data?.user?.id;
   const supabase = createClient();
   const [optimizedResume, setOptimizedResume] = useState<ResumeResponse>();
 
@@ -37,6 +38,7 @@ export default function Page() {
       .from('resume')
       .select()
       .eq('id', resumeId)
+      .eq('user_id', userId)
       .single();
 
     if (data?.chat_gpt_response_raw == null) {
