@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { DatePicker } from '@/app/components/DatePicker';
@@ -36,6 +36,7 @@ import { AlertDestructive } from './AlertDestructive';
 import { Textarea } from '@/components/ui/textarea';
 import { Skeleton } from '@/components/ui/skeleton';
 import StepperFooter from './StepperFooter';
+import { fetchWorkExperiences } from '@/lib/supabase/queries';
 
 const formSchema = z.object({
   organisation_name: z.string().min(1, { message: 'This field is required' }),
@@ -73,19 +74,24 @@ export default function WorkExperienceForm() {
 
   const submitForm = useForm({});
 
-  const fetchWorkExperiences = useCallback(async () => {
-    const { data } = await supabase
-      .from('work_experience')
-      .select()
-      .eq('resume_id', resumeId)
-      .eq('user_id', userId);
+  function fetchAndSetWorkExperiences() {
+    if (!userId || !resumeId) {
+      return;
+    }
 
-    setWorkExperiences(data ?? []);
-  }, [supabase, resumeId]);
+    fetchWorkExperiences({
+      supabaseClient: supabase,
+      userId,
+      resumeId: resumeId.toString(),
+    }).then((response) => {
+      setWorkExperiences(response.data ?? []);
+      setWorkexperiencesLoading(false);
+    });
+  }
 
   useEffect(() => {
-    fetchWorkExperiences().then(() => setWorkexperiencesLoading(false));
-  }, [fetchWorkExperiences, supabase, userId]);
+    fetchAndSetWorkExperiences();
+  }, [fetchAndSetWorkExperiences]);
 
   async function addExperience(formData: z.infer<typeof formSchema>) {
     const workExperience = formData;
@@ -119,12 +125,12 @@ export default function WorkExperienceForm() {
       end_date: new Date(),
     });
 
-    await fetchWorkExperiences();
+    fetchAndSetWorkExperiences();
   }
 
   async function deleteWorkExperience(id: number) {
     await supabase.from('work_experience').delete().eq('id', id);
-    await fetchWorkExperiences();
+    fetchAndSetWorkExperiences();
   }
 
   async function submitWorkExperience() {

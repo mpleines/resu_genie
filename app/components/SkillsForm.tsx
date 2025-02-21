@@ -32,6 +32,7 @@ import {
 import { AlertDestructive } from './AlertDestructive';
 import { Skeleton } from '@/components/ui/skeleton';
 import StepperFooter from './StepperFooter';
+import { fetchSkills } from '@/lib/supabase/queries';
 
 type Skill = Database['public']['Tables']['skills']['Row'];
 
@@ -63,31 +64,24 @@ export default function SkillsForm() {
 
   const [loadingSkills, setLoadingSkills] = useState(true);
 
-  const fetchSkills = useCallback(async () => {
-    if (userId == null) {
+  useEffect(() => {
+    if (!userId || !resumeId) {
       return;
     }
-
-    await supabase
-      .from('skills')
-      .select()
-      .eq('user_id', userId)
-      .eq('resume_id', resumeId)
-      .then(({ data }) => {
-        if (data != null) {
-          setSkills(data);
-        }
-      });
-  }, [userId, supabase, resumeId]);
-
-  useEffect(() => {
-    fetchSkills().then(() => setLoadingSkills(false));
+    fetchSkills({
+      supabaseClient: supabase,
+      userId,
+      resumeId: resumeId.toString(),
+    }).then((skills) => {
+      setSkills(skills.data || []);
+      setLoadingSkills(false);
+    });
   }, [userId, fetchSkills]);
 
   async function addSkill(formData: z.infer<typeof skillFormSchema>) {
     const { skill } = formData;
 
-    if (!skill) {
+    if (!skill || !userId || !resumeId) {
       return;
     }
 
@@ -104,7 +98,14 @@ export default function SkillsForm() {
       form.reset({ skill: '' });
     }
 
-    await fetchSkills();
+    const { data } = await fetchSkills({
+      supabaseClient: supabase,
+      userId,
+      resumeId: resumeId.toString(),
+    });
+
+    setSkills(data ?? []);
+    form.setFocus('skill');
   }
 
   async function removeSkill(skillId: number) {
@@ -166,6 +167,7 @@ export default function SkillsForm() {
                               form.formState.isSubmitting ||
                               submitForm.formState.isSubmitting
                             }
+                            autoFocus
                           />
                         </FormControl>
                         <Button

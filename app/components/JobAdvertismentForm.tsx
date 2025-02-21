@@ -22,15 +22,19 @@ import {
   Form,
   FormMessage,
 } from '@/components/ui/form';
-import { Skeleton } from '@/components/ui/skeleton';
-import { SkeletonTextArea } from './SkeletonInputs';
 import StepperFooter from './StepperFooter';
+import { JobAdvertisement } from '@/types/types';
+import { Textarea } from '@/components/ui/textarea';
 
 const formSchema = z.object({
   jobAdvertisement: z.string().min(1, { message: 'This field is required' }),
 });
 
-export default function JobAdvertisementForm() {
+type Props = {
+  initialData: JobAdvertisement | null;
+};
+
+export default function JobAdvertisementForm({ initialData }: Props) {
   useScrollToTop();
 
   const session = useSession();
@@ -42,27 +46,10 @@ export default function JobAdvertisementForm() {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: async () => {
-      const jobAdvertisement = await fetchJobAdvertisement();
-      return { jobAdvertisement: jobAdvertisement ?? '' };
+    defaultValues: {
+      jobAdvertisement: initialData?.text ?? '',
     },
   });
-
-  async function fetchJobAdvertisement() {
-    if (userId == null) {
-      return;
-    }
-
-    const { data } = await supabase
-      .from('job_advertisement')
-      .select()
-      .eq('user_id', userId)
-      .eq('resume_id', resumeId)
-      .limit(1)
-      .single();
-
-    return data?.text;
-  }
 
   async function submitJobAdvertisement(jobAd: string) {
     if (userId == null) {
@@ -98,9 +85,7 @@ export default function JobAdvertisementForm() {
   }
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // TODO: handle form submission
     const { jobAdvertisement } = values;
-
     await submitJobAdvertisement(jobAdvertisement);
   }
 
@@ -115,28 +100,22 @@ export default function JobAdvertisementForm() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {form.formState.isLoading && (
-              <Skeleton className="w-full h-[250px]" />
-            )}
-            {!form.formState.isLoading && (
-              <FormField
-                control={form.control}
-                name="jobAdvertisement"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <SkeletonTextArea
-                        isLoading={form.formState.isLoading}
-                        className="min-h-[250px]"
-                        {...field}
-                        disabled={form.formState.isSubmitting}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
+            <FormField
+              control={form.control}
+              name="jobAdvertisement"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Textarea
+                      className="min-h-[250px]"
+                      {...field}
+                      disabled={form.formState.isSubmitting}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </CardContent>
         </Card>
         <StepperFooter
