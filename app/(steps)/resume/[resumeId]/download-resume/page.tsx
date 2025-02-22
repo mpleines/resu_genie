@@ -40,28 +40,43 @@ export default function Page() {
   useScrollToTop();
 
   const getOptimizedResumeData = useCallback(async () => {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('resume')
       .select()
       .eq('id', resumeId)
       .eq('user_id', userId)
       .single();
 
+    if (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to fetch resume. Please try again',
+        className: 'bg-error',
+      });
+    }
+
     if (data?.chat_gpt_response_raw == null) {
       return;
     }
 
-    // FIXME: handle possible errors
     const resumeData = data?.chat_gpt_response_raw as ResumeResponse;
     setOptimizedResume(resumeData);
   }, [resumeId, supabase]);
 
   const getResume = useCallback(async () => {
-    const { data: resume } = await supabase
+    const { data: resume, error } = await supabase
       .from('resume')
       .select()
       .eq('id', resumeId)
-      .single(); // FIXME: handle possible errors
+      .single();
+
+    if (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to fetch resume. Please try again',
+        className: 'bg-error',
+      });
+    }
 
     setResume(resume!);
   }, [resumeId, supabase]);
