@@ -42,6 +42,8 @@ body {
     /* custom colors */
     --ice-blue: 180, 89%, 78%;
     --lavender-pink: 324, 52%, 81%;
+    /* signal colors */
+    --success: 141, 68%, 46%;
   }
 
   .dark {

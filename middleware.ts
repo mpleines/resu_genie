@@ -4,6 +4,11 @@ import { auth } from './auth';
 export default auth(async (req) => {
   const { pathname } = new URL(req.url);
 
+  // Exclude the Stripe webhook route from authentication checks
+  if (pathname.startsWith('/api/stripe-webhook')) {
+    return NextResponse.next();
+  }
+
   // Allow public access to `/` and `/api/auth` (NextAuth routes)
   if (
     pathname === '/' ||

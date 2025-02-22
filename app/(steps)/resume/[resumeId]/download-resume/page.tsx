@@ -15,11 +15,17 @@ import {
 } from '@/app/components/PdfTemplates';
 import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 import { useIsSmallScreen } from '@/hooks/useIsSmallScreen';
+import { CheckoutDialog } from '@/app/components/Checkout';
+import { Database } from '@/types/supabase';
+import { useToast } from '@/hooks/use-toast';
 
 export default function Page() {
   const session = useSession();
   const userId = session?.data?.user?.id;
   const supabase = createClient();
+
+  const [resume, setResume] =
+    useState<Database['public']['Tables']['resume']['Row']>();
   const [optimizedResume, setOptimizedResume] = useState<ResumeResponse>();
 
   const [selectedDocument, setSelectedDocument] = useState<
@@ -34,25 +40,78 @@ export default function Page() {
   useScrollToTop();
 
   const getOptimizedResumeData = useCallback(async () => {
-    const { data } = await supabase
+    if (!userId) {
+      return;
+    }
+    const { data, error } = await supabase
       .from('resume')
       .select()
       .eq('id', resumeId)
       .eq('user_id', userId)
       .single();
 
+    if (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to fetch resume. Please try again',
+        className: 'bg-error',
+      });
+    }
+
     if (data?.chat_gpt_response_raw == null) {
       return;
     }
 
-    // FIXME: handle possible errors
     const resumeData = data?.chat_gpt_response_raw as ResumeResponse;
     setOptimizedResume(resumeData);
-  }, [resumeId, supabase]);
+  }, [resumeId, supabase, userId]);
+
+  const getResume = useCallback(async () => {
+    if (!userId) {
+      return;
+    }
+
+    const { data: resume, error } = await supabase
+      .from('resume')
+      .select()
+      .eq('id', resumeId)
+      .eq('user_id', userId)
+      .single();
+
+    if (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to fetch resume. Please try again',
+        className: 'bg-error',
+      });
+    }
+
+    setResume(resume!);
+  }, [resumeId, supabase, userId]);
 
   useEffect(() => {
+    getResume();
     getOptimizedResumeData();
   }, [getOptimizedResumeData]);
+
+  const { toast } = useToast();
+  useEffect(() => {
+    if (!resume?.payment_successful) {
+      return;
+    }
+
+    const paymentSuccessId = `payment-successful-${resume?.id}`;
+
+    if (localStorage.getItem(paymentSuccessId) == null) {
+      toast({
+        title: 'Payment successful',
+        description: 'You are now able to download your resume as PDF',
+        className: 'bg-success',
+      });
+
+      localStorage.setItem(paymentSuccessId, 'true');
+    }
+  }, [resume?.payment_successful]);
 
   if (optimizedResume == null) {
     return (
@@ -76,31 +135,33 @@ export default function Page() {
             Modern & Creative
           </TabsTrigger>
         </TabsList>
-        <PDFDownloadLink
-          className="w-full mt-2"
-          document={
-            selectedDocument === 'minimalistic' ? (
-              <MinimalisticResumeTemplate
-                data={optimizedResume}
-                email={session.data?.user?.email ?? ''}
-              />
-            ) : (
-              <ProfessionalResumeTemplate
-                data={optimizedResume}
-                email={session?.data?.user?.email ?? ''}
-              />
-            )
-          }
-          fileName={`${session?.data?.user?.name ?? ''}-resume.pdf`}
-        >
-          {({ loading }) =>
-            loading ? (
-              'Preparing document...'
-            ) : (
-              <Button className="w-full h-full mt-2">Download PDF</Button>
-            )
-          }
-        </PDFDownloadLink>
+        {resume?.payment_successful ? (
+          <PDFDownloadLink
+            className="w-full mt-2"
+            document={
+              selectedDocument === 'minimalistic' ? (
+                <MinimalisticResumeTemplate
+                  data={optimizedResume}
+                  email={session.data?.user?.email ?? ''}
+                />
+              ) : (
+                <ProfessionalResumeTemplate
+                  data={optimizedResume}
+                  email={session?.data?.user?.email ?? ''}
+                />
+              )
+            }
+            fileName={`${session?.data?.user?.name ?? ''}-resume.pdf`}
+          >
+            {({ loading }) => (
+              <Button className="w-full h-full mt-2">
+                {loading ? 'Preparing PDF' : 'Download PDF'}
+              </Button>
+            )}
+          </PDFDownloadLink>
+        ) : (
+          <CheckoutDialog resumeId={resumeId} />
+        )}
         <TabsContent value="minimalistic" className="w-full mt-2">
           <PDFViewer width="100%" height="500px" showToolbar={false}>
             <MinimalisticResumeTemplate
@@ -171,30 +232,40 @@ export default function Page() {
         <div className="mt-4">
           <h2 className="font-semibold mb-4">Download Resume</h2>
 
-          <PDFDownloadLink
-            document={
-              selectedDocument === 'minimalistic' ? (
-                <MinimalisticResumeTemplate
-                  data={optimizedResume}
-                  email={session.data?.user?.email ?? ''}
-                />
-              ) : (
-                <ProfessionalResumeTemplate
-                  data={optimizedResume}
-                  email={session?.data?.user?.email ?? ''}
-                />
-              )
-            }
-            fileName={`${session?.data?.user?.name ?? ''}-resume.pdf`}
-          >
-            {({ loading }) =>
-              loading ? (
-                'Preparing document...'
-              ) : (
-                <Button className="w-full">Download PDF</Button>
-              )
-            }
-          </PDFDownloadLink>
+          {resume?.payment_successful ? (
+            <PDFDownloadLink
+              className="w-full mt-2"
+              document={
+                selectedDocument === 'minimalistic' ? (
+                  <MinimalisticResumeTemplate
+                    data={optimizedResume}
+                    email={session.data?.user?.email ?? ''}
+                  />
+                ) : (
+                  <ProfessionalResumeTemplate
+                    data={optimizedResume}
+                    email={session?.data?.user?.email ?? ''}
+                  />
+                )
+              }
+              fileName={`${session?.data?.user?.name ?? ''}-resume.pdf`}
+            >
+              {({ loading }) => (
+                <Button className="w-full h-full mt-2">
+                  {loading ? (
+                    <div className="flex items-center gap-2">
+                      <Loader2 className="mr-2 animate-spin" />
+                      Preparing PDF
+                    </div>
+                  ) : (
+                    'Download PDF'
+                  )}
+                </Button>
+              )}
+            </PDFDownloadLink>
+          ) : (
+            <CheckoutDialog resumeId={resumeId} />
+          )}
         </div>
       </div>
       <div className="px-8">

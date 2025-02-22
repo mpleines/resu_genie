@@ -38,6 +38,7 @@ const config: Config = {
         },
         'ice-blue': 'hsl(var(--ice-blue))',
         'lavender-pink': 'hsl(var(--lavender-pink))',
+        success: 'hsl(var(--success))',
         destructive: {
           DEFAULT: 'hsl(var(--destructive))',
           foreground: 'hsl(var(--destructive-foreground))',
