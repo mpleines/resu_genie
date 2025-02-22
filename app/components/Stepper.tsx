@@ -7,9 +7,11 @@ import { cn } from '@/lib/utils';
 import { useIsSmallScreen } from '@/hooks/useIsSmallScreen';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-interface StepperProps {}
+interface StepperProps {
+  disableAllButLast?: boolean;
+}
 
-const Stepper: FunctionComponent<StepperProps> = () => {
+const Stepper: FunctionComponent<StepperProps> = ({ disableAllButLast }) => {
   const { steps, comesAfterCurrentStep } = useStepper();
   const currentPath = usePathname();
   const isSmallScreen = useIsSmallScreen();
@@ -40,6 +42,12 @@ const Stepper: FunctionComponent<StepperProps> = () => {
     );
   }
 
+  const isDisabledStep = (step: Step) => {
+    const lastStep = steps[steps.length - 1];
+    const isLastStep = step.path === lastStep.path;
+    return comesAfterCurrentStep(step) || (disableAllButLast && !isLastStep);
+  };
+
   return (
     <div className="flex gap-4 justify-center items-center overflow-hidden">
       {steps.map((step) => {
@@ -47,7 +55,7 @@ const Stepper: FunctionComponent<StepperProps> = () => {
           <StepComponent
             key={step.path}
             step={step}
-            isDisabled={comesAfterCurrentStep(step)}
+            isDisabled={isDisabledStep(step)}
             isActive={currentPath === step.path}
             isLast={
               steps.length - 1 === steps.findIndex((s) => s.path === step.path)
