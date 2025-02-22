@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
       ],
       mode: 'payment',
       success_url: `${origin}/resume/${resumeId}/download-resume`,
-      cancel_url: `${origin}/order-cancelled`, // TODO: define route
+      cancel_url: `${origin}/resume/${resumeId}/order-cancelled`,
       automatic_tax: { enabled: true },
       metadata: {
         resumeId,
