@@ -40,6 +40,9 @@ export default function Page() {
   useScrollToTop();
 
   const getOptimizedResumeData = useCallback(async () => {
+    if (!userId) {
+      return;
+    }
     const { data, error } = await supabase
       .from('resume')
       .select()
@@ -61,13 +64,18 @@ export default function Page() {
 
     const resumeData = data?.chat_gpt_response_raw as ResumeResponse;
     setOptimizedResume(resumeData);
-  }, [resumeId, supabase]);
+  }, [resumeId, supabase, userId]);
 
   const getResume = useCallback(async () => {
+    if (!userId) {
+      return;
+    }
+
     const { data: resume, error } = await supabase
       .from('resume')
       .select()
       .eq('id', resumeId)
+      .eq('user_id', userId)
       .single();
 
     if (error) {
@@ -79,7 +87,7 @@ export default function Page() {
     }
 
     setResume(resume!);
-  }, [resumeId, supabase]);
+  }, [resumeId, supabase, userId]);
 
   useEffect(() => {
     getResume();
