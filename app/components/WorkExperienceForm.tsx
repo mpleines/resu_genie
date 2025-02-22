@@ -37,6 +37,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Skeleton } from '@/components/ui/skeleton';
 import StepperFooter from './StepperFooter';
 import { fetchWorkExperiences } from '@/lib/supabase/queries';
+import { WorkExperience } from '@/types/types';
 
 const formSchema = z.object({
   organisation_name: z.string().min(1, { message: 'This field is required' }),
@@ -57,9 +58,7 @@ export default function WorkExperienceForm() {
   useScrollToTop();
 
   const [workexperiencesLoading, setWorkexperiencesLoading] = useState(true);
-  const [workExperiences, setWorkExperiences] = useState<
-    Database['public']['Tables']['work_experience']['Row'][]
-  >([]);
+  const [workExperiences, setWorkExperiences] = useState<WorkExperience[]>([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

@@ -13,13 +13,11 @@ import {
 import { Database } from '@/types/supabase';
 import { Trash } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { formatDate } from 'date-fns';
 import { createClient } from '@/lib/supabase/client';
-import SubmitButton from './SubmitButton';
 import { useStepper } from '../(steps)/useStepper';
 import { useParams } from 'next/navigation';
-import BackButton from './BackButton';
 import { useScrollToTop } from '@/lib/useScrollToTop';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -36,6 +34,7 @@ import { AlertDestructive } from './AlertDestructive';
 import { Skeleton } from '@/components/ui/skeleton';
 import StepperFooter from './StepperFooter';
 import { fetchEducation } from '@/lib/supabase/queries';
+import { Education } from '@/types/types';
 
 const formSchema = z.object({
   institute_name: z.string().min(1, { message: 'This field is required' }),
@@ -54,9 +53,7 @@ export default function EducationForm() {
   const resumeId = Number(params['resumeId'] as string);
 
   const [educationLoading, setEducationLoading] = useState(true);
-  const [educations, setEducations] = useState<
-    Database['public']['Tables']['education']['Row'][]
-  >([]);
+  const [educations, setEducations] = useState<Education[]>([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

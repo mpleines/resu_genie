@@ -33,8 +33,7 @@ import { AlertDestructive } from './AlertDestructive';
 import { Skeleton } from '@/components/ui/skeleton';
 import StepperFooter from './StepperFooter';
 import { fetchSkills } from '@/lib/supabase/queries';
-
-type Skill = Database['public']['Tables']['skills']['Row'];
+import { Skill } from '@/types/types';
 
 const skillFormSchema = z.object({
   skill: z.string().min(1, { message: 'This field is required' }),
