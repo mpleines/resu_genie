@@ -26,6 +26,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SkeletonInput } from './SkeletonInputs';
 import StepperFooter from './StepperFooter';
+import { PersonalInformation } from '@/types/types';
+import { Input } from '@/components/ui/input';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
@@ -38,7 +40,11 @@ const formSchema = z.object({
     .nullable(),
 });
 
-export default function PersonalInformationForm() {
+type Props = {
+  initialData: PersonalInformation | null;
+};
+
+export default function PersonalInformationForm({ initialData }: Props) {
   useScrollToTop();
 
   const supabase = createClient();
@@ -50,35 +56,15 @@ export default function PersonalInformationForm() {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: async () => {
-      const personalInfo = await fetchPersonalInfo();
-
-      return {
-        name: personalInfo?.name ?? '',
-        phone_1: personalInfo?.phone_1 ?? '',
-        address: personalInfo?.address ?? '',
-        city: personalInfo?.city ?? '',
-        professional_experience_in_years:
-          personalInfo?.professional_experience_in_years ?? null,
-      };
+    defaultValues: {
+      name: initialData?.name ?? '',
+      phone_1: initialData?.phone_1 ?? '',
+      address: initialData?.address ?? '',
+      city: initialData?.city ?? '',
+      professional_experience_in_years:
+        initialData?.professional_experience_in_years ?? null,
     },
   });
-
-  async function fetchPersonalInfo() {
-    if (userId == null) {
-      return;
-    }
-
-    const { data } = await supabase
-      .from('personal_information')
-      .select()
-      .eq('user_id', userId)
-      .eq('resume_id', resumeId)
-      .limit(1)
-      .single();
-
-    return data;
-  }
 
   async function submitPersonalInfo(personalInfo: z.infer<typeof formSchema>) {
     const personalInformation: Database['public']['Tables']['personal_information']['Insert'] =
@@ -125,9 +111,8 @@ export default function PersonalInformationForm() {
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <SkeletonInput
+                    <Input
                       {...field}
-                      isLoading={form.formState.isLoading}
                       disabled={form.formState.isSubmitting}
                       placeholder="Your Name"
                     />
@@ -144,9 +129,8 @@ export default function PersonalInformationForm() {
                 <FormItem>
                   <FormLabel>Phone</FormLabel>
                   <FormControl>
-                    <SkeletonInput
+                    <Input
                       {...field}
-                      isLoading={form.formState.isLoading}
                       disabled={form.formState.isSubmitting}
                       placeholder="Your Phone Number"
                     />
@@ -163,9 +147,8 @@ export default function PersonalInformationForm() {
                 <FormItem>
                   <FormLabel>Street</FormLabel>
                   <FormControl>
-                    <SkeletonInput
+                    <Input
                       {...field}
-                      isLoading={form.formState.isLoading}
                       disabled={form.formState.isSubmitting}
                       placeholder="Your Street"
                     />
@@ -182,9 +165,8 @@ export default function PersonalInformationForm() {
                 <FormItem>
                   <FormLabel>City</FormLabel>
                   <FormControl>
-                    <SkeletonInput
+                    <Input
                       {...field}
-                      isLoading={form.formState.isLoading}
                       disabled={form.formState.isSubmitting}
                       placeholder="Your City"
                     />
@@ -201,9 +183,8 @@ export default function PersonalInformationForm() {
                 <FormItem>
                   <FormLabel>Professional Experience in Years</FormLabel>
                   <FormControl>
-                    <SkeletonInput
+                    <Input
                       {...field}
-                      isLoading={form.formState.isLoading}
                       disabled={form.formState.isSubmitting}
                       type="number"
                       onChange={(event) => field.onChange(+event.target.value)}

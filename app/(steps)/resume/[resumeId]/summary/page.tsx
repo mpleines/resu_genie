@@ -1,144 +1,39 @@
-'use client';
-
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { formatDate } from 'date-fns';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  createResumePrompt,
-  ResumeData,
-  ResumeResponse,
-} from '@/lib/promptHelper';
-import openAiClient from '@/lib/openaiClient';
-import { useRouter } from 'next/navigation';
-import { FileText, Loader2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { createClient } from '@/lib/supabase/client';
-import { useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
+import { notFound } from 'next/navigation';
 import BackButton from '@/app/components/BackButton';
-import { useScrollToTop } from '@/lib/useScrollToTop';
-import {
-  SkeletonInput,
-  SkeletonTextArea,
-} from '@/app/components/SkeletonInputs';
-import { Skeleton } from '@/components/ui/skeleton';
+import { auth } from '@/auth';
+import { cookies } from 'next/headers';
+import supabaseClient from '@/lib/supabase/server';
+import { fetchSummary } from '@/lib/supabase/queries';
+import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
+import { SubmitResume } from './SubmitResume';
 
-export default function Page({ params }: { params: { resumeId: string } }) {
+export default async function Page({
+  params,
+}: {
+  params: { resumeId: string };
+}) {
   const resumeId = Number(params.resumeId as string);
-  const session = useSession();
-  const userId = session?.data?.user?.id;
-  const supabase = createClient();
-  const router = useRouter();
+  const session = await auth();
+  const userId = session?.user?.id;
+  const supabase = supabaseClient(cookies);
 
-  useScrollToTop();
+  if (!userId || !resumeId) {
+    return notFound();
+  }
 
-  const [data, setData] = useState<ResumeData | null>(null);
-  const [loading, setLoading] = useState(false);
+  const { data, error: summaryError } = await fetchSummary({
+    supabaseClient: supabase,
+    userId,
+    resumeId: resumeId.toString(),
+  });
 
-  const [initialLoading, setInitialLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const { data, error } = await supabase
-        .from('resume')
-        .select(
-          `
-          job_advertisement (text),
-          personal_information (name, phone_1, address, city, professional_experience_in_years),
-          skills (skill_name),
-          work_experience (organisation_name, profile, job_description ,start_date, end_date),
-          education (institute_name, degree, start_date, end_date)
-        `
-        )
-        .eq('id', resumeId)
-        .eq('user_id', userId)
-        .maybeSingle();
-
-      if (error) {
-        console.error(error);
-        return;
-      }
-
-      if (data) {
-        // FIXME: type
-        const nonNullData = {
-          ...data,
-          job_advertisement: data.job_advertisement?.text,
-          skills: data.skills.map((skill) => skill.skill_name),
-          personal_information: {
-            ...data.personal_information,
-            email: session.data?.user?.email,
-          },
-        } as {
-          job_advertisement: string;
-          personal_information: {
-            name: string;
-            phone_1: string;
-            address: string;
-            city: string;
-            professional_experience_in_years: number;
-            email: string;
-          };
-          skills: string[];
-          work_experience: {
-            organisation_name: string;
-            profile: string;
-            start_date: string;
-            end_date: string;
-          }[];
-          education: {
-            institute_name: string;
-            start_date: string;
-            end_date: string;
-          }[];
-        };
-
-        setData(nonNullData);
-        setInitialLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [resumeId]);
-
-  async function generateResume() {
-    // FIXME: type errors
-    const resumePromptData = {
-      job_advertisement: data?.job_advertisement ?? '',
-      personal_information: {
-        ...data?.personal_information!,
-        email: session.data?.user?.email!,
-      },
-      skills: data?.skills!,
-      work_experience: data?.work_experience!,
-      education: data?.education ?? [],
-    };
-
-    setLoading(true);
-
-    const prompt = createResumePrompt(resumePromptData);
-    const response = await openAiClient.completions(prompt);
-    const resumeResponseStr = response.data.choices[0].message.content;
-    const resumeData: ResumeResponse = JSON.parse(resumeResponseStr);
-
-    // save resume data to supabase
-    try {
-      await supabase
-        .from('resume')
-        .update({
-          chat_gpt_response_raw: resumeData,
-          last_updated: new Date().toISOString(),
-        })
-        .eq('id', resumeId)
-        .eq('user_id', userId);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-      // navigate to resume page
-      router.push(`/resume/${resumeId}/download-resume`);
-    }
+  if (data == null) {
+    return notFound();
   }
 
   return (
@@ -149,11 +44,10 @@ export default function Page({ params }: { params: { resumeId: string } }) {
           <CardTitle>Job Advertisement</CardTitle>
         </CardHeader>
         <CardContent>
-          <SkeletonTextArea
-            isLoading={initialLoading}
+          <Textarea
             disabled
             className="min-h-[250px]"
-            value={data?.job_advertisement}
+            value={data?.job_advertisement.text}
           />
         </CardContent>
       </Card>
@@ -165,8 +59,7 @@ export default function Page({ params }: { params: { resumeId: string } }) {
           <CardContent className="space-y-4">
             <div>
               <Label htmlFor="name">Name</Label>
-              <SkeletonInput
-                isLoading={initialLoading}
+              <Input
                 disabled
                 id="name"
                 name="name"
@@ -176,19 +69,17 @@ export default function Page({ params }: { params: { resumeId: string } }) {
             </div>
             <div>
               <Label htmlFor="email">E-Mail</Label>
-              <SkeletonInput
-                isLoading={initialLoading}
+              <Input
                 disabled
                 id="email"
                 name="email"
                 placeholder="Your E-Mail"
-                defaultValue={session?.data?.user?.email ?? ''}
+                defaultValue={session?.user?.email ?? ''}
               />
             </div>
             <div>
               <Label htmlFor="phone">Phone</Label>
-              <SkeletonInput
-                isLoading={initialLoading}
+              <Input
                 disabled
                 id="phone"
                 name="phone"
@@ -198,8 +89,7 @@ export default function Page({ params }: { params: { resumeId: string } }) {
             </div>
             <div>
               <Label htmlFor="street">Street</Label>
-              <SkeletonInput
-                isLoading={initialLoading}
+              <Input
                 disabled
                 id="street"
                 name="street"
@@ -209,8 +99,7 @@ export default function Page({ params }: { params: { resumeId: string } }) {
             </div>
             <div>
               <Label htmlFor="city">City</Label>
-              <SkeletonInput
-                isLoading={initialLoading}
+              <Input
                 disabled
                 id="city"
                 name="city"
@@ -222,8 +111,7 @@ export default function Page({ params }: { params: { resumeId: string } }) {
               <Label htmlFor="professional-experience">
                 Professional Experience in Years
               </Label>
-              <SkeletonInput
-                isLoading={initialLoading}
+              <Input
                 disabled
                 name="professional-experience"
                 id="professional-experience"
@@ -243,16 +131,11 @@ export default function Page({ params }: { params: { resumeId: string } }) {
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-2">
-            {initialLoading &&
-              Array.from({ length: 3 }).map((_, index) => (
-                <Skeleton key={index} className="ml-2 w-16 h-6 rounded-lg " />
-              ))}
-            {!initialLoading &&
-              data?.skills?.map((skill) => (
-                <Badge key={skill} variant="secondary">
-                  {skill}
-                </Badge>
-              ))}
+            {data?.skills?.map((skill) => (
+              <Badge key={skill.skill_name} variant="secondary">
+                {skill.skill_name}
+              </Badge>
+            ))}
           </div>
         </CardContent>
       </Card>
@@ -262,14 +145,7 @@ export default function Page({ params }: { params: { resumeId: string } }) {
             <CardTitle>Work Experience</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
-            {initialLoading && (
-              <>
-                <Skeleton className="h-24 w-full" />
-                <Skeleton className="h-24 w-full" />
-              </>
-            )}
-            {!initialLoading &&
-              data?.work_experience != null &&
+            {data?.work_experience != null &&
               data?.work_experience?.length > 0 &&
               data?.work_experience
                 ?.sort(
@@ -307,12 +183,7 @@ export default function Page({ params }: { params: { resumeId: string } }) {
             <CardTitle>Education</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
-            {initialLoading &&
-              Array.from({ length: 3 }).map((_, index) => (
-                <Skeleton key={index} className="ml-2 w-16 h-6 rounded-lg " />
-              ))}
-            {!initialLoading &&
-              data?.education != null &&
+            {data?.education != null &&
               data?.education?.length > 0 &&
               data?.education
                 ?.sort(
@@ -342,14 +213,12 @@ export default function Page({ params }: { params: { resumeId: string } }) {
       <footer className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4">
         <div className="mx-auto max-w-screen-2xl flex justify-end px-0 md:px-4">
           <BackButton />
-          <Button type="button" onClick={generateResume}>
-            {loading ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            ) : (
-              <FileText className="h-6 w-6 mr-2" />
-            )}
-            Generate Resume
-          </Button>
+
+          <SubmitResume
+            resumeId={params.resumeId}
+            data={data}
+            user={session.user!}
+          />
         </div>
       </footer>
     </div>
