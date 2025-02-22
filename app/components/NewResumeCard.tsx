@@ -13,13 +13,13 @@ export const NewResume: FunctionComponent<ResumePreviewProps> = () => {
   const supabase = createClient();
   const router = useRouter();
   const session = useSession();
-  const userEmail = session?.data?.user?.email;
+  const userId = session?.data?.user?.id;
 
   const onClick = async () => {
     const { data: resume, error } = await supabase
       .from('resume')
       .insert({
-        user_id: userEmail,
+        user_id: userId,
       })
       .select()
       .maybeSingle();

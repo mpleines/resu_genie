@@ -7,10 +7,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Textarea } from '@/components/ui/textarea';
 import { createClient } from '@/lib/supabase/client';
 import { useSession } from 'next-auth/react';
-import SubmitButton from './SubmitButton';
 import { useStepper } from '../(steps)/useStepper';
 import { useParams } from 'next/navigation';
 import { useScrollToTop } from '@/lib/useScrollToTop';
@@ -36,7 +34,7 @@ export default function JobAdvertisementForm() {
   useScrollToTop();
 
   const session = useSession();
-  const userEmail = session?.data?.user?.email;
+  const userId = session?.data?.user?.id;
   const supabase = createClient();
   const stepper = useStepper();
   const params = useParams();
@@ -51,14 +49,14 @@ export default function JobAdvertisementForm() {
   });
 
   async function fetchJobAdvertisement() {
-    if (userEmail == null) {
+    if (userId == null) {
       return;
     }
 
     const { data } = await supabase
       .from('job_advertisement')
       .select()
-      .eq('user_id', userEmail)
+      .eq('user_id', userId)
       .eq('resume_id', resumeId)
       .limit(1)
       .single();
@@ -67,9 +65,13 @@ export default function JobAdvertisementForm() {
   }
 
   async function submitJobAdvertisement(jobAd: string) {
+    if (userId == null) {
+      return;
+    }
+
     const jobAdvertisement = {
       text: jobAd,
-      user_id: userEmail,
+      user_id: userId,
       created_at: new Date().toISOString(),
       resume_id: resumeId,
     };
@@ -86,7 +88,8 @@ export default function JobAdvertisementForm() {
         .update({
           last_updated: new Date().toISOString(),
         })
-        .eq('id', resumeId);
+        .eq('id', resumeId)
+        .eq('user_id', userId);
 
       stepper.next();
     } catch (error) {

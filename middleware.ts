@@ -1,8 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getToken } from 'next-auth/jwt';
+import { NextResponse } from 'next/server';
+import { auth } from './auth';
 
-export async function middleware(req: NextRequest) {
-  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+export default auth(async (req) => {
   const { pathname } = new URL(req.url);
 
   // Exclude the Stripe webhook route from authentication checks
@@ -19,15 +18,17 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
+  const session = await auth();
+
   // Redirect unauthenticated users to the login page
-  if (!token) {
+  if (!session?.user) {
     const loginUrl = new URL('/api/auth/signin', req.url);
     loginUrl.searchParams.set('callbackUrl', req.url); // Save redirect after login
     return NextResponse.redirect(loginUrl);
   }
 
   return NextResponse.next();
-}
+});
 
 // Ensure middleware runs for all routes
 export const config = {
