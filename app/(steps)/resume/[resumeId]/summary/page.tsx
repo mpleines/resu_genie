@@ -14,7 +14,7 @@ import { useRouter } from 'next/navigation';
 import { FileText, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { createClient } from '@/lib/supabase/client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, use } from 'react';
 import { useSession } from 'next-auth/react';
 import BackButton from '@/app/components/BackButton';
 import { useScrollToTop } from '@/lib/useScrollToTop';
@@ -24,7 +24,8 @@ import {
 } from '@/app/components/SkeletonInputs';
 import { Skeleton } from '@/components/ui/skeleton';
 
-export default function Page({ params }: { params: { resumeId: string } }) {
+export default function Page(props: { params: Promise<{ resumeId: string }> }) {
+  const params = use(props.params);
   const resumeId = Number(params.resumeId as string);
   const session = useSession();
   const userId = session?.data?.user?.id;
