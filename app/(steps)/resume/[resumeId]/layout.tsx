@@ -48,13 +48,18 @@ const resumeSteps = (resumeId: string): Steps => {
   ];
 };
 
-export default async function DashboardLayout({
-  children,
-  params,
-}: {
-  children: ReactNode;
-  params: any;
-}) {
+export default async function DashboardLayout(
+  props: {
+    children: ReactNode;
+    params: Promise<any>;
+  }
+) {
+  const params = await props.params;
+
+  const {
+    children
+  } = props;
+
   const supabase = supabaseClient(cookies);
   const session = await auth();
 

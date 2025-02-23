@@ -8,11 +8,12 @@ import {
 import { XCircle } from 'lucide-react';
 import Link from 'next/link';
 
-export default async function Page({
-  params,
-}: {
-  params: { resumeId: string };
-}) {
+export default async function Page(
+  props: {
+    params: Promise<{ resumeId: string }>;
+  }
+) {
+  const params = await props.params;
   return (
     <div className="flex justify-center mt-8">
       <Card className="max-w-md w-full text-center">
