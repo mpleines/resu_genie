@@ -31,12 +31,12 @@
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
     "lucide-react": "^0.446.0",
-    "next": "14.2.13",
+    "next": "15.1.7",
     "next-auth": "^5.0.0-beta.25",
     "openai": "^4.64.0",
-    "react": "^18",
+    "react": "19.0.0",
     "react-day-picker": "^8.10.1",
-    "react-dom": "^18",
+    "react-dom": "19.0.0",
     "react-hook-form": "^7.54.2",
     "react-to-pdf": "^1.0.1",
     "stripe": "^17.6.0",
@@ -46,12 +46,16 @@
   },
   "devDependencies": {
     "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
+    "@types/react": "19.0.10",
+    "@types/react-dom": "19.0.4",
     "eslint": "^8",
-    "eslint-config-next": "14.2.13",
+    "eslint-config-next": "15.1.7",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
+  },
+  "overrides": {
+    "@types/react": "19.0.10",
+    "@types/react-dom": "19.0.4"
   }
 }

@@ -12,11 +12,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { SubmitResume } from './SubmitResume';
 
-export default async function Page({
-  params,
-}: {
-  params: { resumeId: string };
+export default async function Page(props: {
+  params: Promise<{ resumeId: string }>;
 }) {
+  const params = await props.params;
   const resumeId = Number(params.resumeId as string);
   const session = await auth();
   const userId = session?.user?.id;
@@ -26,7 +25,7 @@ export default async function Page({
     return notFound();
   }
 
-  const { data, error: summaryError } = await fetchSummary({
+  const { data } = await fetchSummary({
     supabaseClient: supabase,
     userId,
     resumeId: resumeId.toString(),
