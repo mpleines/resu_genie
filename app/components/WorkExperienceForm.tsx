@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { DatePicker } from '@/app/components/DatePicker';
@@ -38,6 +38,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import StepperFooter from './StepperFooter';
 import { fetchWorkExperiences } from '@/lib/supabase/queries';
 import { WorkExperience } from '@/types/types';
+import useScrollToElement from '@/hooks/useScrollToElement';
 
 const formSchema = z.object({
   organisation_name: z.string().min(1, { message: 'This field is required' }),
@@ -57,6 +58,8 @@ export default function WorkExperienceForm() {
 
   useScrollToTop();
 
+  const { ref, scrollToElement: scrollToError } = useScrollToElement();
+
   const [workexperiencesLoading, setWorkexperiencesLoading] = useState(true);
   const [workExperiences, setWorkExperiences] = useState<WorkExperience[]>([]);
 
@@ -73,7 +76,7 @@ export default function WorkExperienceForm() {
 
   const submitForm = useForm({});
 
-  function fetchAndSetWorkExperiences() {
+  const fetchAndSetWorkExperiences = useCallback(() => {
     if (!userId || !resumeId) {
       return;
     }
@@ -86,7 +89,13 @@ export default function WorkExperienceForm() {
       setWorkExperiences(response.data ?? []);
       setWorkexperiencesLoading(false);
     });
-  }
+  }, [
+    resumeId,
+    setWorkExperiences,
+    setWorkexperiencesLoading,
+    supabase,
+    userId,
+  ]);
 
   useEffect(() => {
     fetchAndSetWorkExperiences();
@@ -141,6 +150,8 @@ export default function WorkExperienceForm() {
       submitForm.setError('root', {
         message: 'Please add at least one work experience',
       });
+
+      scrollToError();
       return;
     }
 
@@ -357,6 +368,7 @@ export default function WorkExperienceForm() {
         <form onSubmit={submitForm.handleSubmit(submitWorkExperience)}>
           {submitForm.formState.errors.root?.message && (
             <AlertDestructive
+              ref={ref}
               className="my-2"
               message={submitForm.formState.errors.root.message}
             />
