@@ -40,9 +40,12 @@ export default async function RootLayout({
             <Copyright size={16} />
             {new Date().getFullYear()}
           </div>
-          <div>
+          <div className="flex gap-2">
             <Link href="/legal" className="underline">
               Legal Notice
+            </Link>
+            <Link href="/privacy-policy" className="underline">
+              Privacy Policy
             </Link>
           </div>
         </div>

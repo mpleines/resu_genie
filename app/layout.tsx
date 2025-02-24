@@ -4,6 +4,7 @@ import './globals.css';
 import Providers from './components/Providers';
 import { Toaster } from '@/components/ui/toaster';
 import Header from './components/Header';
+import CookieBanner from './components/CookieBanner';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -40,6 +41,7 @@ export default function RootLayout({
           {children}
         </Providers>
         <Toaster />
+        <CookieBanner />
       </body>
     </html>
   );
