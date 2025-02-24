@@ -55,9 +55,9 @@ export default function Loading() {
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-2">
-            {Array.from({ length: 3 }).map((_, index) => (
-              <Skeleton key={index} className="ml-2 w-16 h-6 rounded-lg " />
-            ))}
+            <Skeleton className="ml-2 w-16 h-6 rounded-lg " />
+            <Skeleton className="ml-2 w-16 h-6 rounded-lg " />
+            <Skeleton className="ml-2 w-16 h-6 rounded-lg " />
           </div>
         </CardContent>
       </Card>
