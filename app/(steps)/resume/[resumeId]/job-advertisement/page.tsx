@@ -2,21 +2,21 @@ import JobAdvertisementForm from '@/app/components/JobAdvertismentForm';
 import { auth } from '@/auth';
 import { fetchJobAdvertisementByResumeId } from '@/lib/supabase/queries';
 import supabaseClient from '@/lib/supabase/server';
-import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 
 export default async function Page({
-  params: { resumeId },
+  params,
 }: {
-  params: { resumeId: string };
+  params: Promise<{ resumeId: string }>;
 }) {
+  const resumeId = (await params).resumeId;
   const session = await auth();
   const userId = session?.user?.id;
   if (userId == null) {
     return notFound();
   }
 
-  const supabase = supabaseClient(cookies);
+  const supabase = supabaseClient();
   const response = await fetchJobAdvertisementByResumeId({
     supabaseClient: supabase,
     userId,
@@ -26,7 +26,6 @@ export default async function Page({
   const { error, data } = response;
 
   if (error) {
-    console.error(error);
     return notFound();
   }
 

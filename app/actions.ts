@@ -5,7 +5,6 @@ import { createResumePrompt, ResumeResponse } from '@/lib/promptHelper';
 import supabaseClient from '@/lib/supabase/server';
 import { Summary } from '@/types/types';
 import { Session } from 'next-auth';
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 export async function generateResume(
@@ -13,7 +12,7 @@ export async function generateResume(
   data: Summary,
   user: Session['user']
 ) {
-  const supabase = supabaseClient(cookies);
+  const supabase = supabaseClient();
   // FIXME: type errors
   const resumePromptData = {
     // Job advertisement

@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import '../globals.css';
 import Providers from '../components/Providers';
-import Header from '../components/Header';
 import { Copyright } from 'lucide-react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
@@ -25,7 +24,6 @@ export default async function RootLayout({
   return (
     <div>
       <Providers>
-        <Header />
         <div className="min-h-screen">
           <div className="min-h-full w-full font-[family-name:var(--font-geist-sans)]">
             {children}

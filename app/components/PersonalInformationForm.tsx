@@ -24,7 +24,6 @@ import {
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SkeletonInput } from './SkeletonInputs';
 import StepperFooter from './StepperFooter';
 import { PersonalInformation } from '@/types/types';
 import { Input } from '@/components/ui/input';
@@ -62,7 +61,7 @@ export default function PersonalInformationForm({ initialData }: Props) {
       address: initialData?.address ?? '',
       city: initialData?.city ?? '',
       professional_experience_in_years:
-        initialData?.professional_experience_in_years ?? null,
+        initialData?.professional_experience_in_years ?? 0,
     },
   });
 

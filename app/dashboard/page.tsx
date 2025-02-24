@@ -1,16 +1,13 @@
 import supabaseClient from '@/lib/supabase/server';
 import ResumePreview from '../components/ResumePreview';
 import { NewResume } from '../components/NewResumeCard';
-import { cookies } from 'next/headers';
 import { auth } from '@/auth';
-
-export const revalidate = 0;
 
 export default async function DashboardPage() {
   const session = await auth();
   const userId = session?.user?.id;
 
-  const supabase = supabaseClient(cookies);
+  const supabase = supabaseClient();
   const { data: resumes } = await supabase
     .from('resume')
     .select(

@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { notFound } from 'next/navigation';
 import BackButton from '@/app/components/BackButton';
 import { auth } from '@/auth';
-import { cookies } from 'next/headers';
 import supabaseClient from '@/lib/supabase/server';
 import { fetchSummary } from '@/lib/supabase/queries';
 import { Textarea } from '@/components/ui/textarea';
@@ -19,7 +18,7 @@ export default async function Page(props: {
   const resumeId = Number(params.resumeId as string);
   const session = await auth();
   const userId = session?.user?.id;
-  const supabase = supabaseClient(cookies);
+  const supabase = supabaseClient();
 
   if (!userId || !resumeId) {
     return notFound();
@@ -56,7 +55,7 @@ export default async function Page(props: {
             <CardTitle>Personal Information</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div>
+            <div className="space-y-2">
               <Label htmlFor="name">Name</Label>
               <Input
                 disabled
@@ -66,7 +65,7 @@ export default async function Page(props: {
                 defaultValue={data?.personal_information?.name ?? ''}
               />
             </div>
-            <div>
+            <div className="space-y-2">
               <Label htmlFor="email">E-Mail</Label>
               <Input
                 disabled
@@ -76,7 +75,7 @@ export default async function Page(props: {
                 defaultValue={session?.user?.email ?? ''}
               />
             </div>
-            <div>
+            <div className="space-y-2">
               <Label htmlFor="phone">Phone</Label>
               <Input
                 disabled
@@ -86,7 +85,7 @@ export default async function Page(props: {
                 defaultValue={data?.personal_information?.phone_1 ?? ''}
               />
             </div>
-            <div>
+            <div className="space-y-2">
               <Label htmlFor="street">Street</Label>
               <Input
                 disabled
@@ -96,7 +95,7 @@ export default async function Page(props: {
                 defaultValue={data?.personal_information?.address ?? ''}
               />
             </div>
-            <div>
+            <div className="space-y-2">
               <Label htmlFor="city">City</Label>
               <Input
                 disabled
@@ -106,7 +105,7 @@ export default async function Page(props: {
                 defaultValue={data?.personal_information?.city ?? ''}
               />
             </div>
-            <div>
+            <div className="space-y-2">
               <Label htmlFor="professional-experience">
                 Professional Experience in Years
               </Label>

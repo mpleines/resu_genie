@@ -75,7 +75,6 @@ const StepperProvider = ({ steps, children }: StepperProviderProps) => {
     const previousStep = steps[previousStepIndex];
     setCurrentStep(previousStep);
     router.push(previousStep.path);
-    router.refresh();
   };
 
   const navigateTo = (step: Step) => {
@@ -83,7 +82,6 @@ const StepperProvider = ({ steps, children }: StepperProviderProps) => {
     const nextStep = steps[stepIndex];
     setCurrentStep(nextStep);
     router.push(nextStep.path);
-    router.refresh();
   };
 
   const comesAfterCurrentStep = (step: Step) => {
