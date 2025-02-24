@@ -230,7 +230,7 @@ export default function WorkExperienceForm() {
                 }}
               />
 
-              <div className="flex flex-row items-center flex-wrap space-x-4 sm:space-x-">
+              <div className="flex flex-col my-2">
                 <FormField
                   control={form.control}
                   name="start_date"

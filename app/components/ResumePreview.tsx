@@ -48,48 +48,46 @@ const ResumePreview: FunctionComponent<ResumePreviewProps> = ({
   };
 
   return (
-    <div className="relative">
-      <Card
-        className="relative w-full md:w-[250px] h-[250px] md:h-[300px] cursor-pointer hover:shadow-lg transition-shadow grid place-items-center"
-        onClick={onClick}
-      >
-        <div className="absolute top-2 right-2 z-2">
-          <ResumePreviewActions resumeId={resumeId} />
+    <Card
+      className="relative w-full h-[250px] md:h-[300px] cursor-pointer hover:shadow-lg transition-shadow grid place-items-center"
+      onClick={onClick}
+    >
+      <div className="absolute top-2 right-2 z-2">
+        <ResumePreviewActions resumeId={resumeId} />
+      </div>
+      <CardContent className="p-4 flex flex-col items-center justify-center h-full">
+        <FileText className="w-12 h-12 text-primary mb-2" />
+        <h3 className="text-lg font-semibold text-center mb-1">
+          {name ? name : 'Unnamed Resume'}
+        </h3>
+        <p className="text-sm text-muted-foreground text-center">
+          {'Unknown Job Title'}
+        </p>
+        <span className="text-sm text-muted-foreground mb-4">
+          Last updated: {formatDate(new Date(last_updated))}
+        </span>
+        <div className="flex flex-wrap items-center justify-center gap-1 min-h-[1.5rem]">
+          {skills.length > 0 ? (
+            <>
+              {skills.slice(0, 4).map((skill, index) => (
+                <Badge key={index} variant="secondary" className="text-xs">
+                  {skill}
+                </Badge>
+              ))}
+              {skills.length > 4 && (
+                <Badge variant="secondary" className="text-xs">
+                  +{skills.length - 4} more
+                </Badge>
+              )}
+            </>
+          ) : (
+            <span className="text-xs text-muted-foreground">
+              No skills listed
+            </span>
+          )}
         </div>
-        <CardContent className="p-4 flex flex-col items-center justify-center h-full">
-          <FileText className="w-12 h-12 text-primary mb-2" />
-          <h3 className="text-lg font-semibold text-center mb-1">
-            {name ? name : 'Unnamed Resume'}
-          </h3>
-          <p className="text-sm text-muted-foreground text-center">
-            {'Unknown Job Title'}
-          </p>
-          <span className="text-sm text-muted-foreground mb-4">
-            Last updated: {formatDate(new Date(last_updated))}
-          </span>
-          <div className="flex flex-wrap items-center justify-center gap-1 min-h-[1.5rem]">
-            {skills.length > 0 ? (
-              <>
-                {skills.slice(0, 4).map((skill, index) => (
-                  <Badge key={index} variant="secondary" className="text-xs">
-                    {skill}
-                  </Badge>
-                ))}
-                {skills.length > 4 && (
-                  <Badge variant="secondary" className="text-xs">
-                    +{skills.length - 4} more
-                  </Badge>
-                )}
-              </>
-            ) : (
-              <span className="text-xs text-muted-foreground">
-                No skills listed
-              </span>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 
