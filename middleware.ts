@@ -13,7 +13,8 @@ export default auth(async (req) => {
   if (
     pathname === '/' ||
     pathname.startsWith('/api/auth') ||
-    pathname === '/legal'
+    pathname === '/legal' ||
+    pathname === '/privacy-policy'
   ) {
     return NextResponse.next();
   }
