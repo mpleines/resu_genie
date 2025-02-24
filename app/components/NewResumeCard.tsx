@@ -1,6 +1,7 @@
 'use client';
 
 import { Card, CardContent } from '@/components/ui/card';
+import { useToast } from '@/hooks/use-toast';
 import { createClient } from '@/lib/supabase/client';
 import { PlusCircle } from 'lucide-react';
 import { useSession } from 'next-auth/react';
@@ -14,6 +15,7 @@ export const NewResume: FunctionComponent<ResumePreviewProps> = () => {
   const router = useRouter();
   const session = useSession();
   const userId = session?.data?.user?.id;
+  const { toast } = useToast();
 
   const onClick = async () => {
     const { data: resume, error } = await supabase
@@ -22,14 +24,18 @@ export const NewResume: FunctionComponent<ResumePreviewProps> = () => {
         user_id: userId,
       })
       .select()
-      .maybeSingle();
+      .single();
 
-    if (error) {
-      console.error(error);
+    if (error || resume == null) {
+      toast({
+        title: 'Error',
+        description: 'Failed to create resume',
+        variant: 'destructive',
+      });
       return;
+    } else {
+      router.push(`/resume/${resume?.id}/job-advertisement`);
     }
-
-    router.push(`/resume/${resume?.id}/job-advertisement`);
   };
 
   return (

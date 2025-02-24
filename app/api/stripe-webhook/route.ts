@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
 import supabaseClient from '@/lib/supabase/server';
-import { cookies } from 'next/headers';
 
 export async function POST(req: NextRequest) {
   const rawBody = await req.text();
@@ -39,7 +38,7 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      const supabase = supabaseClient(cookies);
+      const supabase = supabaseClient();
       // update the resume and set payment_successful to true
       const supabaseResponse = await supabase
         .from('resume')

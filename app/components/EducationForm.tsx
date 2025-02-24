@@ -13,13 +13,11 @@ import {
 import { Database } from '@/types/supabase';
 import { Trash } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { formatDate } from 'date-fns';
 import { createClient } from '@/lib/supabase/client';
-import SubmitButton from './SubmitButton';
 import { useStepper } from '../(steps)/useStepper';
 import { useParams } from 'next/navigation';
-import BackButton from './BackButton';
 import { useScrollToTop } from '@/lib/useScrollToTop';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -35,6 +33,8 @@ import {
 import { AlertDestructive } from './AlertDestructive';
 import { Skeleton } from '@/components/ui/skeleton';
 import StepperFooter from './StepperFooter';
+import { fetchEducation } from '@/lib/supabase/queries';
+import { Education } from '@/types/types';
 
 const formSchema = z.object({
   institute_name: z.string().min(1, { message: 'This field is required' }),
@@ -53,9 +53,7 @@ export default function EducationForm() {
   const resumeId = Number(params['resumeId'] as string);
 
   const [educationLoading, setEducationLoading] = useState(true);
-  const [educations, setEducations] = useState<
-    Database['public']['Tables']['education']['Row'][]
-  >([]);
+  const [educations, setEducations] = useState<Education[]>([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -68,18 +66,22 @@ export default function EducationForm() {
   });
   const submitForm = useForm({});
 
-  const fetchEducation = useCallback(async () => {
-    const { data } = await supabase
-      .from('education')
-      .select()
-      .eq('resume_id', resumeId);
+  const fetchAndSetEducation = async () => {
+    if (!userId || !resumeId) {
+      return;
+    }
+    const { data } = await fetchEducation({
+      supabaseClient: supabase,
+      userId,
+      resumeId: resumeId.toString(),
+    });
 
     setEducations(data ?? []);
-  }, [resumeId, supabase]);
+  };
 
   useEffect(() => {
-    fetchEducation().then(() => setEducationLoading(false));
-  }, [fetchEducation, userId]);
+    fetchAndSetEducation().then(() => setEducationLoading(false));
+  }, [fetchAndSetEducation, userId]);
 
   async function addEducation(education: z.infer<typeof formSchema>) {
     const newEducation: Database['public']['Tables']['education']['Insert'] = {
@@ -93,7 +95,7 @@ export default function EducationForm() {
 
     try {
       await supabase.from('education').insert(newEducation);
-      fetchEducation();
+      fetchAndSetEducation();
       form.reset({
         institute_name: '',
         degree: '',
@@ -109,7 +111,7 @@ export default function EducationForm() {
   async function deleteEducation(id: number) {
     try {
       await supabase.from('education').delete().eq('id', id);
-      fetchEducation();
+      fetchAndSetEducation();
     } catch (error) {
       console.error(error);
     }

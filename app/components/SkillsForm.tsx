@@ -8,9 +8,8 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Database } from '@/types/supabase';
 import { useSession } from 'next-auth/react';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -32,8 +31,8 @@ import {
 import { AlertDestructive } from './AlertDestructive';
 import { Skeleton } from '@/components/ui/skeleton';
 import StepperFooter from './StepperFooter';
-
-type Skill = Database['public']['Tables']['skills']['Row'];
+import { fetchSkills } from '@/lib/supabase/queries';
+import { Skill } from '@/types/types';
 
 const skillFormSchema = z.object({
   skill: z.string().min(1, { message: 'This field is required' }),
@@ -63,31 +62,24 @@ export default function SkillsForm() {
 
   const [loadingSkills, setLoadingSkills] = useState(true);
 
-  const fetchSkills = useCallback(async () => {
-    if (userId == null) {
+  useEffect(() => {
+    if (!userId || !resumeId) {
       return;
     }
-
-    await supabase
-      .from('skills')
-      .select()
-      .eq('user_id', userId)
-      .eq('resume_id', resumeId)
-      .then(({ data }) => {
-        if (data != null) {
-          setSkills(data);
-        }
-      });
-  }, [userId, supabase, resumeId]);
-
-  useEffect(() => {
-    fetchSkills().then(() => setLoadingSkills(false));
+    fetchSkills({
+      supabaseClient: supabase,
+      userId,
+      resumeId: resumeId.toString(),
+    }).then((skills) => {
+      setSkills(skills.data || []);
+      setLoadingSkills(false);
+    });
   }, [userId, fetchSkills]);
 
   async function addSkill(formData: z.infer<typeof skillFormSchema>) {
     const { skill } = formData;
 
-    if (!skill) {
+    if (!skill || !userId || !resumeId) {
       return;
     }
 
@@ -104,7 +96,14 @@ export default function SkillsForm() {
       form.reset({ skill: '' });
     }
 
-    await fetchSkills();
+    const { data } = await fetchSkills({
+      supabaseClient: supabase,
+      userId,
+      resumeId: resumeId.toString(),
+    });
+
+    setSkills(data ?? []);
+    form.setFocus('skill');
   }
 
   async function removeSkill(skillId: number) {
@@ -166,6 +165,7 @@ export default function SkillsForm() {
                               form.formState.isSubmitting ||
                               submitForm.formState.isSubmitting
                             }
+                            autoFocus
                           />
                         </FormControl>
                         <Button

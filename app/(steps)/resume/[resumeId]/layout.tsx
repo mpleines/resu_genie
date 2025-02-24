@@ -1,10 +1,8 @@
 import { ReactNode } from 'react';
-import Header from '../../../components/Header';
 import { StepperProvider, Steps } from '../../useStepper';
 import Stepper from '../../../components/Stepper';
 import supabaseClient from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
-import { cookies } from 'next/headers';
 import ProtectedPaidLayout from '@/app/components/ProtectedPaidLayout';
 import { auth } from '@/auth';
 
@@ -48,19 +46,15 @@ const resumeSteps = (resumeId: string): Steps => {
   ];
 };
 
-export default async function DashboardLayout(
-  props: {
-    children: ReactNode;
-    params: Promise<any>;
-  }
-) {
+export default async function DashboardLayout(props: {
+  children: ReactNode;
+  params: Promise<any>;
+}) {
   const params = await props.params;
 
-  const {
-    children
-  } = props;
+  const { children } = props;
 
-  const supabase = supabaseClient(cookies);
+  const supabase = supabaseClient();
   const session = await auth();
 
   const { data: resume, error } = await supabase
@@ -78,7 +72,6 @@ export default async function DashboardLayout(
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
       <StepperProvider steps={steps}>
         <main className="mx-auto max-w-screen-2xl w-full p-4 flex-1 overflow-y-auto">
           <div>
