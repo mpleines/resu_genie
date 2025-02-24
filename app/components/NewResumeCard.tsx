@@ -40,7 +40,7 @@ export const NewResume: FunctionComponent<ResumePreviewProps> = () => {
 
   return (
     <Card
-      className="w-full md:w-[250px] h-[250px] md:h-[300px] cursor-pointer hover:shadow-lg transition-shadow grid place-items-center"
+      className="w-full h-[250px] md:h-[300px] cursor-pointer hover:shadow-lg transition-shadow grid place-items-center"
       onClick={onClick}
     >
       <CardContent className="grid place-items-center">
