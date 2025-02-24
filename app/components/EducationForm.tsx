@@ -35,6 +35,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import StepperFooter from './StepperFooter';
 import { fetchEducation } from '@/lib/supabase/queries';
 import { Education } from '@/types/types';
+import useScrollToElement from '@/hooks/useScrollToElement';
 
 const formSchema = z.object({
   institute_name: z.string().min(1, { message: 'This field is required' }),
@@ -65,6 +66,9 @@ export default function EducationForm() {
     },
   });
   const submitForm = useForm({});
+
+  const { ref: errorRef, scrollToElement: scrollToError } =
+    useScrollToElement();
 
   const fetchAndSetEducation = async () => {
     if (!userId || !resumeId) {
@@ -122,6 +126,7 @@ export default function EducationForm() {
       submitForm.setError('root', {
         message: 'Please add at least one education',
       });
+      scrollToError();
       return;
     }
 
@@ -304,6 +309,7 @@ export default function EducationForm() {
             <AlertDestructive
               className="my-2"
               message={submitForm.formState.errors.root.message}
+              ref={errorRef}
             />
           )}
           <StepperFooter isSubmitting={submitForm.formState.isSubmitting} />
