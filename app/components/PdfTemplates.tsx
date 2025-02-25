@@ -1,3 +1,4 @@
+import { formatDate } from '@/lib/utils';
 import {
   Page,
   Text,
@@ -7,7 +8,6 @@ import {
   Font,
   Link,
 } from '@react-pdf/renderer';
-import { format } from 'date-fns';
 
 Font.register({
   family: 'Times New Roman',
@@ -110,8 +110,8 @@ export const MinimalisticResumeTemplate = (props, ref) => {
               <View style={styles.jobDetails}>
                 <Text style={{ fontStyle: 'italic' }}>{job.profile}</Text>
                 <Text>
-                  {format(new Date(job.start_date), 'MMMM yyyy')} -{' '}
-                  {format(new Date(job.end_date), 'MMMM yyyy')}
+                  {formatDate(new Date(job.start_date))} -{' '}
+                  {formatDate(new Date(job.end_date))}
                 </Text>
               </View>
               <View style={styles.jobDescription}>
@@ -138,8 +138,8 @@ export const MinimalisticResumeTemplate = (props, ref) => {
               <View style={styles.jobDetails}>
                 <Text style={styles.jobTitle}>{edu.institute_name}</Text>
                 <Text>
-                  {format(new Date(edu.start_date), 'MMMM yyyy')} -{' '}
-                  {format(new Date(edu.end_date), 'MMMM yyyy')}
+                  {formatDate(new Date(edu.start_date))} -{' '}
+                  {formatDate(new Date(edu.end_date))}
                 </Text>
               </View>
               <View>
@@ -279,8 +279,8 @@ export const ProfessionalResumeTemplate = ({ data, email }) => {
                   {job.organisation_name}
                 </Text>{' '}
                 <Text>
-                  {job.profile} ({format(new Date(job.start_date), 'MMMM yyyy')}{' '}
-                  - {format(new Date(job.end_date), 'MMMM yyyy')})
+                  {job.profile} ({formatDate(new Date(job.start_date))} -{' '}
+                  {formatDate(new Date(job.end_date))})
                 </Text>
               </View>
               <View style={{ marginLeft: 16 }}>
@@ -301,8 +301,8 @@ export const ProfessionalResumeTemplate = ({ data, email }) => {
               <View style={professionalStyles.text}>
                 <Text style={{ fontWeight: 'bold' }}>{edu.institute_name}</Text>{' '}
                 <Text>
-                  {edu.degree} ({format(new Date(edu.start_date), 'MMMM yyyy')}{' '}
-                  - {format(new Date(edu.end_date), 'MMMM yyyy')})
+                  {edu.degree} ({formatDate(new Date(edu.start_date))} -{' '}
+                  {formatDate(new Date(edu.end_date))})
                 </Text>
               </View>
             </View>

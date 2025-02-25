@@ -64,7 +64,10 @@ const ResumePreview: FunctionComponent<ResumePreviewProps> = ({
           {'Unknown Job Title'}
         </p>
         <span className="text-sm text-muted-foreground mb-4">
-          Last updated: {formatDate(new Date(last_updated))}
+          Last updated:{' '}
+          {formatDate(new Date(last_updated), {
+            displayTodayAndYesterdayAsString: true,
+          })}
         </span>
         <div className="flex flex-wrap items-center justify-center gap-1 min-h-[1.5rem]">
           {skills.length > 0 ? (

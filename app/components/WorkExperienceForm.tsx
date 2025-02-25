@@ -17,7 +17,6 @@ import { Trash } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { createClient } from '@/lib/supabase/client';
 import { useParams } from 'next/navigation';
-import { formatDate } from 'date-fns';
 import { useStepper } from '../(steps)/useStepper';
 import { useScrollToTop } from '@/lib/useScrollToTop';
 import { z } from 'zod';
@@ -39,6 +38,7 @@ import StepperFooter from './StepperFooter';
 import { fetchWorkExperiences } from '@/lib/supabase/queries';
 import { WorkExperience } from '@/types/types';
 import useScrollToElement from '@/hooks/useScrollToElement';
+import { formatDate } from '@/lib/utils';
 
 const formSchema = z.object({
   organisation_name: z.string().min(1, { message: 'This field is required' }),
@@ -346,8 +346,8 @@ export default function WorkExperienceForm() {
                           : workExperience.job_description}
                       </p>
                       <p className="text-sm opacity-70">
-                        {formatDate(workExperience.start_date!, 'yyyy-MM-dd')} -{' '}
-                        {formatDate(workExperience.end_date!, 'yyyy-MM-dd')}
+                        {formatDate(new Date(workExperience.start_date!))} -{' '}
+                        {formatDate(new Date(workExperience.end_date!))}
                       </p>
                     </div>
 
