@@ -1,6 +1,5 @@
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { formatDate } from 'date-fns';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { notFound } from 'next/navigation';
 import BackButton from '@/app/components/BackButton';
@@ -10,6 +9,7 @@ import { fetchSummary } from '@/lib/supabase/queries';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { SubmitResume } from './SubmitResume';
+import { formatDate } from '@/lib/utils';
 
 export default async function Page(props: {
   params: Promise<{ resumeId: string }>;
@@ -165,8 +165,8 @@ export default async function Page(props: {
                           {workExperience.job_description}
                         </p>
                         <p className="text-sm opacity-70">
-                          {formatDate(workExperience.start_date!, 'yyyy-MM-dd')}{' '}
-                          - {formatDate(workExperience.end_date!, 'yyyy-MM-dd')}
+                          {formatDate(new Date(workExperience.start_date!))} -{' '}
+                          {formatDate(new Date(workExperience.end_date!))}
                         </p>
                       </div>
                     </div>
@@ -198,8 +198,8 @@ export default async function Page(props: {
                         </p>
                         <p className="text-sm opacity-70">{education.degree}</p>
                         <p className="text-sm opacity-70">
-                          {formatDate(education.start_date!, 'yyyy-MM-dd')} -{' '}
-                          {formatDate(education.end_date!, 'yyyy-MM-dd')}
+                          {formatDate(new Date(education.start_date!))} -{' '}
+                          {formatDate(new Date(education.end_date!))}
                         </p>
                       </div>
                     </div>

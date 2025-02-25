@@ -1,4 +1,4 @@
-import { formatDate, parse } from 'date-fns';
+import { formatDate } from '@/lib/utils';
 import Link from 'next/link';
 
 export default function page() {
@@ -9,7 +9,7 @@ export default function page() {
   return (
     <div className="space-y-4 mt-8 max-w-screen-2xl mx-auto">
       <h1 className="text-3xl font-bold">Legal Notice</h1>
-      <p>Last updated {formatDate(lastUpdated, ' dd. MMMM yyyy')}</p>
+      <p>Last updated {formatDate(lastUpdated)}</p>
       <h2 className="text-2xl font-bold">Contact</h2>
       <p>
         Email:{' '}

@@ -14,7 +14,6 @@ import { Database } from '@/types/supabase';
 import { Trash } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
-import { formatDate } from 'date-fns';
 import { createClient } from '@/lib/supabase/client';
 import { useStepper } from '../(steps)/useStepper';
 import { useParams } from 'next/navigation';
@@ -36,6 +35,7 @@ import StepperFooter from './StepperFooter';
 import { fetchEducation } from '@/lib/supabase/queries';
 import { Education } from '@/types/types';
 import useScrollToElement from '@/hooks/useScrollToElement';
+import { formatDate } from '@/lib/utils';
 
 const formSchema = z.object({
   institute_name: z.string().min(1, { message: 'This field is required' }),
@@ -284,8 +284,8 @@ export default function EducationForm() {
                             {education.degree}
                           </p>
                           <p className="text-sm opacity-70">
-                            {formatDate(education.start_date!, 'yyyy-MM-dd')} -{' '}
-                            {formatDate(education.end_date!, 'yyyy-MM-dd')}
+                            {formatDate(new Date(education.start_date!))} -{' '}
+                            {formatDate(new Date(education.end_date!))}
                           </p>
                         </div>
 
