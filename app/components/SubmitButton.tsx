@@ -20,7 +20,7 @@ const SubmitButton: FunctionComponent<SubmitButtonProps> = ({
   disabled,
 }) => {
   return (
-    <Button type="submit" className="w-24" disabled={disabled}>
+    <Button type="submit" className="w-24" disabled={pending || disabled}>
       {pending ? (
         <>
           <Loader2 className="animate-spin" /> <span>{text}</span>

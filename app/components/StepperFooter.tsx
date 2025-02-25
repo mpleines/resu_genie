@@ -15,7 +15,7 @@ const StepperFooter: React.FC<StepperFooterProps> = ({
   return (
     <footer className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4">
       <div className="mx-auto max-w-screen-2xl flex justify-end px-0 md:px-4">
-        {showBackButton && <BackButton disabled={isDisabled} />}
+        {showBackButton && <BackButton disabled={isSubmitting || isDisabled} />}
         <SubmitButton
           text="Next"
           pending={isSubmitting}
