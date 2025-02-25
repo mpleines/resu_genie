@@ -9,7 +9,6 @@ interface SubmitButtonProps {
   iconLeft?: ReactNode;
   showChevronRight?: boolean;
   pending?: boolean;
-  disabled?: boolean;
 }
 
 const SubmitButton: FunctionComponent<SubmitButtonProps> = ({
@@ -17,10 +16,9 @@ const SubmitButton: FunctionComponent<SubmitButtonProps> = ({
   iconLeft,
   showChevronRight = true,
   pending,
-  disabled,
 }) => {
   return (
-    <Button type="submit" className="w-24" disabled={disabled}>
+    <Button type="submit" className="w-24">
       {pending ? (
         <>
           <Loader2 className="animate-spin" /> <span>{text}</span>

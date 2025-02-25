@@ -5,11 +5,7 @@ import { FunctionComponent } from 'react';
 import { useStepper } from '../(steps)/useStepper';
 import { ChevronLeft } from 'lucide-react';
 
-type Props = {
-  disabled?: boolean;
-};
-
-const BackButton: FunctionComponent<Props> = ({ disabled }) => {
+const BackButton: FunctionComponent = () => {
   const stepper = useStepper();
 
   return (
@@ -18,7 +14,6 @@ const BackButton: FunctionComponent<Props> = ({ disabled }) => {
       variant="outline"
       className="mr-2 w-24"
       onClick={stepper.previous}
-      disabled={disabled}
     >
       <ChevronLeft />
       Prev
