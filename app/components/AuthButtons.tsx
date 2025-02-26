@@ -13,10 +13,7 @@ export const SignoutButton = () => {
 
 export const SignInButton = () => {
   return (
-    <Button
-      variant="secondary"
-      onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
-    >
+    <Button variant="secondary" onClick={() => signIn()}>
       Sign In{' '}
     </Button>
   );

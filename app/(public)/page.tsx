@@ -37,10 +37,7 @@ export default function Home() {
             lasting impression—effortlessly.
           </p>
         </div>
-        <GradientButton
-          size="lg"
-          onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
-        >
+        <GradientButton size="lg" onClick={() => signIn()}>
           <SparklesIcon />
           <span>Create Your Resume</span>
           <ArrowRight className="transition duration-300 ease-in-out" />
