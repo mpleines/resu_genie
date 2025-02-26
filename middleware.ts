@@ -14,7 +14,8 @@ export default auth(async (req) => {
     pathname === '/' ||
     pathname.startsWith('/api/auth') ||
     pathname === '/legal' ||
-    pathname === '/privacy-policy'
+    pathname === '/privacy-policy' ||
+    pathname === '/signin'
   ) {
     return NextResponse.next();
   }
