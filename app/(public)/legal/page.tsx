@@ -17,9 +17,6 @@ export default function page() {
           service.mpleines@gmail.com
         </Link>
       </p>
-      <p>
-        This app is a personal project and not operated for commercial purposes.
-      </p>
     </div>
   );
 }
