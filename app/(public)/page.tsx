@@ -20,15 +20,14 @@ export default function Home() {
       <section className="mx-auto max-w-screen-lg relative flex flex-col items-center justify-center space-y-6 pt-24">
         <div className="space-y-4 text-center">
           <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl">
-            Your platform for crafting
+            Create Your Resume with AI –
             <span className="block bg-gradient-to-r from-foreground to-muted-foreground/80 bg-clip-text text-transparent">
-              standout resumes.
+              Fast, Easy, & Effective
             </span>
           </h1>
           <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-            Transform your job search with tailored, professional resumes
-            crafted by advanced AI. Save time, showcase your skills, and make a
-            lasting impression—effortlessly.
+            Create a Professional, AI-Generated Resume in Under 10 Minutes –
+            Fast, Tailored, and Job-Winning!
           </p>
         </div>
         <GradientButton size="lg" onClick={() => signIn()}>
