@@ -18,8 +18,10 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: 'ResuGenie',
-  description: 'AI Resume Generator',
+  title:
+    'resugenie | AI Resume Builder | Create a Job-Winning Resume in Minutes',
+  description:
+    'Build a professional resume with AI. Get expert recommendations and Application Tracking System optimizations. Choose from different professional templates.',
 };
 
 export const viewport: Viewport = {

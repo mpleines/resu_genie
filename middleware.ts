@@ -16,7 +16,8 @@ export default auth(async (req) => {
     pathname === '/legal' ||
     pathname === '/privacy-policy' ||
     pathname === '/signin' ||
-    pathname === '/about'
+    pathname === '/about' ||
+    pathname === '/sitemap.xml'
   ) {
     return NextResponse.next();
   }
