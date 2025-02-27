@@ -1,7 +1,16 @@
+'use client';
+import { useCookieConsent } from '@/app/components/CookieBanner';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { useToast } from '@/hooks/use-toast';
 import { Globe, Mail } from 'lucide-react';
 
 export default function Page() {
+  const { analyticsConsent, setAnalyticsConsent, acceptCookies, isLoading } =
+    useCookieConsent();
+  const { toast } = useToast();
+
   return (
     <div className="min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-3xl space-y-8">
@@ -10,6 +19,39 @@ export default function Page() {
           <p className="mt-2 text-muted-foreground">
             Effective Date: February 24, 2025
           </p>
+        </div>
+
+        <div className="mx-auto w-full">
+          <h1>Cookie Preferences</h1>
+          <div className="flex items-center gap-4 flex-wrap">
+            <div className="flex items-center gap-2">
+              <label
+                htmlFor="analytics-consent"
+                className="text-sm text-muted-foreground"
+              >
+                Enable Analytics Cookies
+              </label>
+              <Checkbox
+                defaultChecked={analyticsConsent}
+                id="analytics-consent"
+                disabled={isLoading}
+                checked={!isLoading && analyticsConsent}
+                onCheckedChange={setAnalyticsConsent}
+                className="toggle"
+              />
+            </div>
+
+            <Button
+              className="shrink-0"
+              onClick={() => {
+                acceptCookies();
+                toast({ title: 'Cookie Preferences saved' });
+              }}
+              aria-label="Accept cookies"
+            >
+              Save Preferences
+            </Button>
+          </div>
         </div>
 
         <div className="prose prose-gray dark:prose-invert max-w-none">
