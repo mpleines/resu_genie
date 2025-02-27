@@ -127,6 +127,16 @@ export default function Page() {
               <li>
                 <strong>OpenAI:</strong> For generating resume content.
               </li>
+              <li>
+                <strong>Google Analytics:</strong> To collect data on how you
+                use our website, which helps us improve its design and
+                functionality. With your consent, Google Analytics processes and
+                collects your personal data, including cookies and IP addresses,
+                to provide us with valuable insights. Please note that Google
+                Analytics transfers your data to the United States and stores it
+                for a specified period. For more information on Google's data
+                transfer policies, please refer to their documentation.
+              </li>
             </ul>
             <p className="mt-4">
               We only share data necessary to provide the service and do not use
