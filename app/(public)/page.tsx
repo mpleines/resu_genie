@@ -18,12 +18,6 @@ export default function Home() {
   return (
     <main className="mx-auto py-16 px-4 flex-1 grid grid-row-1">
       <section className="mx-auto max-w-screen-lg relative flex flex-col items-center justify-center space-y-6 pt-24">
-        <div>
-          <Badge variant="secondary">
-            <Dot className="text-orange-500" />
-            Alpha Version
-          </Badge>
-        </div>
         <div className="space-y-4 text-center">
           <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl">
             Your platform for crafting

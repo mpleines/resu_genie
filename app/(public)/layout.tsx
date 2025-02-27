@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
 import '../globals.css';
 import Providers from '../components/Providers';
-import { Copyright } from 'lucide-react';
+import { Copyright, Dot } from 'lucide-react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { auth } from '@/auth';
+import { Badge } from '@/components/ui/badge';
+import Footer from '../components/Footer';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -30,26 +32,7 @@ export default async function RootLayout({
           </div>
         </div>
       </Providers>
-      <footer className="p-4 border-t">
-        <div className="max-w-screen-2xl mx-auto md:flex md:justify-between">
-          <div className="flex items-center gap-2 font-bold">
-            ResuGenie by{' '}
-            <Link href="https://maikpleines.com" className="underline">
-              Maik Pleines
-            </Link>
-            <Copyright size={16} />
-            {new Date().getFullYear()}
-          </div>
-          <div className="flex gap-2">
-            <Link href="/legal" className="underline">
-              Legal Notice
-            </Link>
-            <Link href="/privacy-policy" className="underline">
-              Privacy Policy
-            </Link>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
