@@ -1,5 +1,5 @@
 export async function GET() {
-  const siteUrl = 'https://resugenie.com';
+  const siteUrl = 'https://resugenie.app';
 
   const staticPages = ['', 'about', 'legal', 'privacy-policy', 'signin'];
 
