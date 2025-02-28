@@ -13,7 +13,7 @@ import {
 import { Database } from '@/types/supabase';
 import { Trash } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useStepper } from '../(steps)/useStepper';
 import { useParams } from 'next/navigation';
@@ -70,7 +70,7 @@ export default function EducationForm() {
   const { ref: errorRef, scrollToElement: scrollToError } =
     useScrollToElement();
 
-  const fetchAndSetEducation = async () => {
+  const fetchAndSetEducation = useCallback(async () => {
     if (!userId || !resumeId) {
       return;
     }
@@ -81,7 +81,7 @@ export default function EducationForm() {
     });
 
     setEducations(data ?? []);
-  };
+  }, [userId, resumeId, fetchEducation]);
 
   useEffect(() => {
     fetchAndSetEducation().then(() => setEducationLoading(false));
