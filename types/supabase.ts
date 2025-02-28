@@ -197,30 +197,24 @@ export type Database = {
           },
         ]
       }
-      users: {
+      welcome_emails: {
         Row: {
           created_at: string
-          email: string | null
-          first_login: boolean | null
           id: number
-          name: string | null
-          username: string | null
+          sent_at: string | null
+          user_id: string | null
         }
         Insert: {
           created_at?: string
-          email?: string | null
-          first_login?: boolean | null
           id?: number
-          name?: string | null
-          username?: string | null
+          sent_at?: string | null
+          user_id?: string | null
         }
         Update: {
           created_at?: string
-          email?: string | null
-          first_login?: boolean | null
           id?: number
-          name?: string | null
-          username?: string | null
+          sent_at?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
