@@ -3,6 +3,7 @@ import { SupabaseAdapter } from '@auth/supabase-adapter';
 import GoogleProvider from 'next-auth/providers/google';
 import Discord from 'next-auth/providers/discord';
 import type { Provider } from 'next-auth/providers';
+import { checkIfWelcomeEmailAlreadySent, sendWelcomeEmail } from './lib/emails';
 
 const providers: Provider[] = [
   GoogleProvider({
@@ -22,6 +23,25 @@ export const authOptions = {
     async session({ session }) {
       session.user.id = session.user.id;
       return session;
+    },
+    async signIn({ user }) {
+      // FIXME: refactor this, this is blocking the sign and can be scheduled somewhere else
+      try {
+        const welcomeMailAlreadySent = await checkIfWelcomeEmailAlreadySent(
+          user.id
+        );
+        if (welcomeMailAlreadySent) {
+          return true;
+        }
+
+        await sendWelcomeEmail(user);
+      } catch (error) {
+        console.log(error);
+        return true;
+      }
+
+      // always allow signing in
+      return true;
     },
   },
   pages: {
