@@ -33,10 +33,11 @@ const formSchema = z.object({
   phone_1: z.string(),
   address: z.string(),
   city: z.string(),
-  professional_experience_in_years: z
+  professional_experience_in_years: z.coerce
     .number()
-    .positive({ message: 'Number must be positive' })
-    .nullable(),
+    .min(0)
+    .max(100)
+    .optional(),
 });
 
 type Props = {
@@ -61,7 +62,7 @@ export default function PersonalInformationForm({ initialData }: Props) {
       address: initialData?.address ?? '',
       city: initialData?.city ?? '',
       professional_experience_in_years:
-        initialData?.professional_experience_in_years ?? 0,
+        initialData?.professional_experience_in_years ?? '', // FIXME: default value cannot be undefined because controlled input, and has to be string because react-hook-form
     },
   });
 
@@ -186,8 +187,8 @@ export default function PersonalInformationForm({ initialData }: Props) {
                       {...field}
                       disabled={form.formState.isSubmitting}
                       type="number"
-                      onChange={(event) => field.onChange(+event.target.value)}
                       placeholder="Your Professional Experience in Years"
+                      min={0}
                     />
                   </FormControl>
                   <FormMessage />
