@@ -5,12 +5,14 @@ type StepperFooterProps = {
   isSubmitting?: boolean;
   showBackButton?: boolean;
   isDisabled?: boolean;
+  formRef?: React.RefObject<HTMLFormElement | null>;
 };
 
 const StepperFooter: React.FC<StepperFooterProps> = ({
   isSubmitting,
   showBackButton = true,
   isDisabled,
+  formRef,
 }) => {
   return (
     <footer className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4">
@@ -20,6 +22,7 @@ const StepperFooter: React.FC<StepperFooterProps> = ({
           text="Next"
           pending={isSubmitting}
           disabled={isDisabled}
+          formRef={formRef}
         />
       </div>
     </footer>
