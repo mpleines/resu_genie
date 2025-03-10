@@ -5,9 +5,10 @@ import { stripe } from '../../../lib/stripe';
 export async function POST(request: NextRequest) {
   const formData = await request.formData();
   const resumeId = formData.get('resumeId') as string;
-  const stripePriceId = (process.env.STRIPE_TEST_MODE_ENABLED = 1
-    ? process.env.STRIPE_PRICE_ID_TEST
-    : process.env.STRIPE_PRICE_ID);
+  const stripePriceId =
+    process.env.STRIPE_TEST_MODE_ENABLED === 'TRUE'
+      ? process.env.STRIPE_PRICE_ID_TEST
+      : process.env.STRIPE_PRICE_ID;
 
   try {
     const headersList = await headers();
