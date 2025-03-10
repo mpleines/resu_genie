@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer-core';
 import * as cheerio from 'cheerio';
 
 const unwantedSelectors = [
@@ -21,9 +21,8 @@ const unwantedSelectors = [
 export async function scrapeWithPuppeteer(url: string) {
   let browser = null;
   try {
-    browser = await puppeteer.launch({
-      // Use headless mode
-      headless: true,
+    browser = await puppeteer.connect({
+      browserWSEndpoint: `wss://chrome.browserless.io?token=${process.env.BROWSERLESS_API_KEY}`,
     });
 
     const page = await browser.newPage();
