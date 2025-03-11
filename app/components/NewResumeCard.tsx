@@ -5,6 +5,7 @@ import { useToast } from '@/hooks/use-toast';
 import { createClient } from '@/lib/supabase/client';
 import { PlusCircle } from 'lucide-react';
 import { useSession } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { FunctionComponent } from 'react';
 
@@ -16,6 +17,7 @@ export const NewResume: FunctionComponent<ResumePreviewProps> = () => {
   const session = useSession();
   const userId = session?.data?.user?.id;
   const { toast } = useToast();
+  const t = useTranslations('newResumeCard');
 
   const onClick = async () => {
     const { data: resume, error } = await supabase
@@ -47,10 +49,10 @@ export const NewResume: FunctionComponent<ResumePreviewProps> = () => {
         <>
           <PlusCircle className="w-12 h-12 text-primary mb-4" />
           <h3 className="text-lg font-semibold text-center mb-1">
-            Create New Resume
+            {t('title')}
           </h3>
           <p className="text-sm text-muted-foreground text-center">
-            Click to get started
+            {t('description')}
           </p>
         </>
       </CardContent>

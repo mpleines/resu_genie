@@ -2,8 +2,8 @@
 
 import { Button } from '@/components/ui/button';
 import { FunctionComponent } from 'react';
-import { useStepper } from '../(steps)/useStepper';
 import { ChevronLeft } from 'lucide-react';
+import { useStepper } from '../../hooks/useStepper';
 
 type Props = {
   disabled?: boolean;

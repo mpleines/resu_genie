@@ -10,7 +10,6 @@ import {
 import { createClient } from '@/lib/supabase/client';
 import { Database } from '@/types/supabase';
 import { useSession } from 'next-auth/react';
-import { useStepper } from '../(steps)/useStepper';
 import { useParams } from 'next/navigation';
 import { useScrollToTop } from '@/lib/useScrollToTop';
 import {
@@ -27,6 +26,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import StepperFooter from './StepperFooter';
 import { PersonalInformation } from '@/types/types';
 import { Input } from '@/components/ui/input';
+import { useStepper } from '@/hooks/useStepper';
+import { useTranslations } from 'use-intl';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
@@ -53,6 +54,7 @@ export default function PersonalInformationForm({ initialData }: Props) {
   const stepper = useStepper();
   const params = useParams();
   const resumeId = Number(params['resumeId'] as string);
+  const t = useTranslations();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -98,9 +100,9 @@ export default function PersonalInformationForm({ initialData }: Props) {
       >
         <Card>
           <CardHeader>
-            <CardTitle>Contact Information</CardTitle>
+            <CardTitle>{t('personalInformation.title')}</CardTitle>
             <CardDescription>
-              Enter you Contact Information to start
+              {t('personalInformation.description')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -109,12 +111,12 @@ export default function PersonalInformationForm({ initialData }: Props) {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>{t('global.name')}</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
                       disabled={form.formState.isSubmitting}
-                      placeholder="Your Name"
+                      placeholder={t('placeholder.name')}
                     />
                   </FormControl>
                   <FormMessage />
@@ -127,12 +129,12 @@ export default function PersonalInformationForm({ initialData }: Props) {
               name="phone_1"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phone</FormLabel>
+                  <FormLabel>{t('global.phone')}</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
                       disabled={form.formState.isSubmitting}
-                      placeholder="Your Phone Number"
+                      placeholder={t('placeholder.phone')}
                     />
                   </FormControl>
                   <FormMessage />
@@ -145,12 +147,12 @@ export default function PersonalInformationForm({ initialData }: Props) {
               name="address"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Street</FormLabel>
+                  <FormLabel>{t('global.street')}</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
                       disabled={form.formState.isSubmitting}
-                      placeholder="Your Street"
+                      placeholder={t('placeholder.street')}
                     />
                   </FormControl>
                   <FormMessage />
@@ -163,12 +165,12 @@ export default function PersonalInformationForm({ initialData }: Props) {
               name="city"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>City</FormLabel>
+                  <FormLabel>{t('global.city')}</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
                       disabled={form.formState.isSubmitting}
-                      placeholder="Your City"
+                      placeholder={t('placeholder.city')}
                     />
                   </FormControl>
                   <FormMessage />
@@ -181,13 +183,17 @@ export default function PersonalInformationForm({ initialData }: Props) {
               name="professional_experience_in_years"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Professional Experience in Years</FormLabel>
+                  <FormLabel>
+                    {t('global.professionalExperienceInYears')}
+                  </FormLabel>
                   <FormControl>
                     <Input
                       {...field}
                       disabled={form.formState.isSubmitting}
                       type="number"
-                      placeholder="Your Professional Experience in Years"
+                      placeholder={t(
+                        'placeholder.professionalExperienceInYears'
+                      )}
                       min={0}
                     />
                   </FormControl>

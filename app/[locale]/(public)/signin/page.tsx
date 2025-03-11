@@ -2,11 +2,12 @@ import { redirect } from 'next/navigation';
 import { AuthError } from 'next-auth';
 import { providerMap, signIn } from '@/auth';
 import { Button } from '@/components/ui/button';
-import { DiscordLogoIcon } from '@radix-ui/react-icons';
-import { AlertDestructive } from '../../components/AlertDestructive';
 import Image from 'next/image';
 import GoogleIcon from '/public/google.svg';
 import DiscordIcon from '/public/discord.svg';
+import { AlertDestructive } from '@/app/components/AlertDestructive';
+import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 
 export default async function SignInPage(props: {
   searchParams: { callbackUrl: string | undefined; error: string | undefined };
@@ -17,16 +18,16 @@ export default async function SignInPage(props: {
       ? 'An account with this email address already exists. Did you log in using a different provider last time?'
       : props.searchParams.error;
 
+  const t = await getTranslations('signin');
+
   return (
     <div className="py-12 px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-xl space-y-8">
         <div className="flex flex-col space-y-4">
           <h1 className="text-center text-3xl font-bold tracking-tight">
-            Sign in to resugenie.
+            {t('title')}
           </h1>
-          <p className="text-center">
-            To use resugenie, you'll have to sign in first.
-          </p>
+          <p className="text-center">{t('description')}</p>
         </div>
 
         <div className="flex flex-col space-y-4">
@@ -70,7 +71,7 @@ export default async function SignInPage(props: {
                     height={24}
                   />
                 ) : undefined}
-                <span>Sign in with {provider.name}</span>
+                <span>{t(provider.id)}</span>
               </Button>
             </form>
           ))}

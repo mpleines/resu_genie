@@ -1,10 +1,10 @@
 import { ReactNode } from 'react';
-import { StepperProvider, Steps } from '../../useStepper';
-import Stepper from '../../../components/Stepper';
+import { StepperProvider, Steps } from '../../../../../hooks/useStepper';
 import supabaseClient from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import ProtectedPaidLayout from '@/app/components/ProtectedPaidLayout';
 import { auth } from '@/auth';
+import Stepper from '@/app/components/Stepper';
 
 const resumeSteps = (resumeId: string): Steps => {
   return [

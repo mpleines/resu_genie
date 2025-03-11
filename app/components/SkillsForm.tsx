@@ -14,7 +14,6 @@ import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { X } from 'lucide-react';
-import { useStepper } from '../(steps)/useStepper';
 import { useParams } from 'next/navigation';
 import { useScrollToTop } from '@/lib/useScrollToTop';
 import { z } from 'zod';
@@ -33,6 +32,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import StepperFooter from './StepperFooter';
 import { fetchSkills } from '@/lib/supabase/queries';
 import { Skill } from '@/types/types';
+import { useStepper } from '@/hooks/useStepper';
 
 const skillFormSchema = z.object({
   skill: z.string().min(1, { message: 'This field is required' }),

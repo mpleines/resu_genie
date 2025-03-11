@@ -15,7 +15,6 @@ import { Trash } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useCallback, useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import { useStepper } from '../(steps)/useStepper';
 import { useParams } from 'next/navigation';
 import { useScrollToTop } from '@/lib/useScrollToTop';
 import { z } from 'zod';
@@ -36,6 +35,7 @@ import { fetchEducation } from '@/lib/supabase/queries';
 import { Education } from '@/types/types';
 import useScrollToElement from '@/hooks/useScrollToElement';
 import { formatDate } from '@/lib/utils';
+import { useStepper } from '@/hooks/useStepper';
 
 const formSchema = z.object({
   institute_name: z.string().min(1, { message: 'This field is required' }),

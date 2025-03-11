@@ -9,7 +9,6 @@ import {
 } from '@/components/ui/card';
 import { createClient } from '@/lib/supabase/client';
 import { useSession } from 'next-auth/react';
-import { useStepper } from '../(steps)/useStepper';
 import { useParams } from 'next/navigation';
 import { useScrollToTop } from '@/lib/useScrollToTop';
 import { z } from 'zod';
@@ -25,6 +24,8 @@ import {
 import StepperFooter from './StepperFooter';
 import { JobAdvertisement } from '@/types/types';
 import { Textarea } from '@/components/ui/textarea';
+import { useStepper } from '@/hooks/useStepper';
+import { useTranslations } from 'next-intl';
 
 const formSchema = z.object({
   jobAdvertisement: z.string().min(1, { message: 'This field is required' }),
@@ -43,6 +44,7 @@ export default function JobAdvertisementForm({ initialData }: Props) {
   const stepper = useStepper();
   const params = useParams();
   const resumeId = Number(params['resumeId'] as string);
+  const t = useTranslations('jobAdvertisement');
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -94,10 +96,8 @@ export default function JobAdvertisementForm({ initialData }: Props) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <Card>
           <CardHeader>
-            <CardTitle>Job Advertisement</CardTitle>
-            <CardDescription>
-              Copy the Job Advertisement Text in here to get started
-            </CardDescription>
+            <CardTitle>{t('title')}</CardTitle>
+            <CardDescription>{t('description')}</CardDescription>
           </CardHeader>
           <CardContent>
             <FormField

@@ -1,19 +1,23 @@
 import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
-import './globals.css';
-import Providers from './components/Providers';
+import '../globals.css';
+import Providers from '../components/Providers';
 import { Toaster } from '@/components/ui/toaster';
-import Header from './components/Header';
-import CookieBanner from './components/CookieBanner';
-import Analytics from './components/Analytics';
+import Header from '../components/Header';
+import CookieBanner from '../components/CookieBanner';
+import Analytics from '../components/Analytics';
+import { routing } from '@/i18n/routing';
+import { notFound } from 'next/navigation';
+import { getMessages } from 'next-intl/server';
+import { NextIntlClientProvider } from 'next-intl';
 
 const geistSans = localFont({
-  src: './fonts/GeistVF.woff',
+  src: '../fonts/GeistVF.woff',
   variable: '--font-geist-sans',
   weight: '100 900',
 });
 const geistMono = localFont({
-  src: './fonts/GeistMonoVF.woff',
+  src: '../fonts/GeistMonoVF.woff',
   variable: '--font-geist-mono',
   weight: '100 900',
 });
@@ -29,22 +33,33 @@ export const viewport: Viewport = {
   maximumScale: 1,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
+  params,
 }: Readonly<{
   children: React.ReactNode;
+  params: Promise<{ locale: string }>;
 }>) {
+  const { locale } = await params;
+  if (!routing.locales.includes(locale as any)) {
+    notFound();
+  }
+
+  const messages = await getMessages();
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
-          <Header />
-          {children}
+          <NextIntlClientProvider messages={messages}>
+            <Header />
+            {children}
+            <Toaster />
+            <CookieBanner />
+          </NextIntlClientProvider>
         </Providers>
-        <Toaster />
-        <CookieBanner />
       </body>
       <Analytics />
     </html>

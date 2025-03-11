@@ -1,0 +1,90 @@
+{
+  "header": {
+    "switchTo": {
+      "en": "Switch to English",
+      "de": "Auf Deutsch wechseln"
+    }
+  },
+  "landing": {
+    "heroNormal": "Erstelle deinen Lebenslauf mit KI ",
+    "heroShade": "Schnell, Einfach & Effektiv",
+    "subhero": "Erstelle in weniger als 10 Minuten einen professionellen, KI-generierten Lebenslauf – schnell, maßgeschneidert und jobgewinnend!",
+    "createResume": "Erstelle deinen Lebenslauf",
+    "templates": {
+      "minimalistic": {
+        "title": "Minimalistisches Template",
+        "description": "Für diejenigen, die ein sauberes und einfaches Design bevorzugen."
+      },
+      "professional": {
+        "title": "Professionelles Template",
+        "description": "Für diejenigen, die es schlicht & professionell mögen."
+      },
+      "comingSoon": {
+        "title": "Demnächst verfügbar",
+        "description": "Demnächst verfügbar"
+      }
+    },
+    "howItWorks": "So funktioniert es",
+    "inputDetails": {
+      "title": "Gib deine Daten ein",
+      "description": "Gib deine beruflichen Informationen und Erfahrungen mit unserer benutzerfreundlichen Oberfläche ein."
+    },
+    "aiOptimization": {
+      "title": "KI-Optimierung",
+      "description": "Unsere fortschrittliche KI analysiert und verbessert deinen Lebenslauf für maximale Wirkung."
+    },
+    "downloadAndApply": {
+      "title": "Herunterladen & Bewerben",
+      "description": "Erhalte sofort deinen optimierten, ATS-freundlichen, professionellen Lebenslauf und beginne mit der Jobsuche."
+    },
+    "faq": "FAQ",
+    "isDataSecure": {
+      "title": "Sind meine Daten sicher?",
+      "description": "Ja, wir schätzen deine Privatsphäre und stellen die Sicherheit deiner Daten sicher. Deine Informationen sind jederzeit geschützt. Wir arbeiten mit Drittanbietern wie ChatGPT und Supabase zusammen, um das höchste Maß an Datensicherheit zu gewährleisten."
+    },
+    "howDoesAiWork": {
+      "title": "Wie funktioniert die KI?",
+      "description": "Wir senden deine Informationen an ChatGPT, ein leistungsstarkes Sprachmodell, um deinen Lebenslauf zu analysieren und zu verbessern. Dieser KI-generierte Inhalt wird dann für ATS-Plattformen optimiert und an die Stelle angepasst, auf die du dich bewirbst. Wir generieren oder übertreiben keine Informationen. Wir glauben daran, deinen Lebenslauf authentisch und ehrlich zu halten. Wir verbessern nur das, was du bereits geschrieben hast."
+    },
+    "howToSignup": {
+      "title": "Wie melde ich mich an?",
+      "description": "Du kannst dich anmelden, indem du oben auf die Schaltfläche \"Erstelle deinen Lebenslauf\" oder auf \"Anmelden\" in der oberen rechten Ecke klickst. Derzeit unterstützen wir die Anmeldung über Google."
+    }
+  },
+  "signin": {
+    "title": "Anmelden bei resugenie.",
+    "description": "Um resugenie zu nutzen, musst du dich zuerst anmelden",
+    "google": "Mit Google anmelden",
+    "discord": "Mit Discord anmelden",
+    "error.alreadyRegistered": "Ein Konto mit dieser E-Mail-Adresse existiert bereits. Hast du dich beim letzten Mal mit einem anderen Anbieter angemeldet?"
+  },
+  "dashboard": {
+    "title": "Meine Lebensläufe"
+  },
+  "newResumeCard": {
+    "title": "Neuen Lebenslauf erstellen",
+    "description": "Klicke um einen neuen Lebenslauf zu erstellen"
+  },
+  "resumePreview": {
+    "unnamedResume": "Unbenannter Lebenslauf",
+    "unknownJobTitle": "Unbekannte Berufsbezeichnung",
+    "lastUpdated": "Zuletzt aktualisiert",
+    "noSkillsListed": "Keine Fähigkeiten aufgelistet",
+    "deleteError": {
+      "title": "Fehler beim Löschen des Lebenslaufs",
+      "description": "Bitte versuche es erneut"
+    },
+    "deleteSuccess": {
+      "title": "Lebenslauf gelöscht",
+      "description": "Dein Lebenslauf wurde gelöscht"
+    },
+    "deletePending": {
+      "title": "Lebenslauf wird gelöscht",
+      "description": "Bitte warten"
+    },
+    "deleteDialog": {
+      "title": "Bist du absolut sicher?",
+      "description": "Diese Aktion kann nicht rückgängig gemacht werden. Dein Lebenslauf wird dauerhaft gelöscht."
+    }
+  }
+}
