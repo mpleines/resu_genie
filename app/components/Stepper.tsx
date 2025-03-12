@@ -1,10 +1,10 @@
 'use client';
 import React, { FunctionComponent, useMemo } from 'react';
-import { usePathname } from 'next/navigation';
 import { Check, Circle, Dot } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useIsSmallScreen } from '@/hooks/useIsSmallScreen';
 import { Step, useStepper } from '@/hooks/useStepper';
+import { usePathname } from '@/i18n/navigation';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface StepperProps {
