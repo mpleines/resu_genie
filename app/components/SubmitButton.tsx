@@ -10,6 +10,7 @@ interface SubmitButtonProps {
   showChevronRight?: boolean;
   pending?: boolean;
   disabled?: boolean;
+  formRef?: React.RefObject<HTMLFormElement | null>;
 }
 
 const SubmitButton: FunctionComponent<SubmitButtonProps> = ({
@@ -18,7 +19,30 @@ const SubmitButton: FunctionComponent<SubmitButtonProps> = ({
   showChevronRight = true,
   pending,
   disabled,
+  formRef,
 }) => {
+  if (formRef?.current != null) {
+    return (
+      <Button
+        type="button"
+        onClick={() => formRef?.current?.requestSubmit()}
+        className="w-24"
+        disabled={pending || disabled}
+      >
+        {pending ? (
+          <>
+            <Loader2 className="animate-spin" /> <span>{text}</span>
+          </>
+        ) : (
+          <>
+            {iconLeft && iconLeft}
+            {text}
+          </>
+        )}
+        {showChevronRight && <ChevronRight />}
+      </Button>
+    );
+  }
   return (
     <Button type="submit" className="w-24" disabled={pending || disabled}>
       {pending ? (
