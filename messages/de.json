@@ -1,4 +1,17 @@
 {
+  "global": {
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "name": "Name",
+    "phone": "Phone",
+    "street": "Street",
+    "city": "City",
+    "professionalExperienceInYears": "Professional Experience in Years"
+  },
+  "locales": {
+    "en": "English",
+    "de": "Deutsch"
+  },
   "header": {
     "switchTo": {
       "en": "Switch to English",
@@ -56,7 +69,7 @@
     "description": "Um resugenie zu nutzen, musst du dich zuerst anmelden",
     "google": "Mit Google anmelden",
     "discord": "Mit Discord anmelden",
-    "error.alreadyRegistered": "Ein Konto mit dieser E-Mail-Adresse existiert bereits. Hast du dich beim letzten Mal mit einem anderen Anbieter angemeldet?"
+    "alreadyRegistered": "Ein Konto mit dieser E-Mail-Adresse existiert bereits. Hast du dich beim letzten Mal mit einem anderen Anbieter angemeldet?"
   },
   "dashboard": {
     "title": "Meine Lebensläufe"

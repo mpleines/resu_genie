@@ -8,6 +8,10 @@
     "city": "City",
     "professionalExperienceInYears": "Professional Experience in Years"
   },
+  "locales": {
+    "en": "English",
+    "de": "Deutsch"
+  },
   "placeholder": {
     "name": "Your Name",
     "phone": "Your Phone Number",
@@ -73,7 +77,7 @@
     "description": "To use resugenie, you'll have to sign in first",
     "google": "Sign in with Google",
     "discord": "Sign in with Discord",
-    "error.alreadyRegistered": "An account with this email address already exists. Did you log in using a different provider last time?"
+    "alreadyRegistered": "An account with this email address already exists. Did you log in using a different provider last time?"
   },
   "dashboard": {
     "title": "My Resumes"

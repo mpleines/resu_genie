@@ -9,6 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useIsSmallScreen } from '@/hooks/useIsSmallScreen';
 import { LogOut } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 interface UserDropdownProps {
@@ -17,6 +18,8 @@ interface UserDropdownProps {
 }
 
 export function UserDropdown({ username, avatarUrl }: UserDropdownProps) {
+  const isSmallScreen = useIsSmallScreen();
+
   const getInitials = (name: string) => {
     return name
       .split(' ')
@@ -36,9 +39,11 @@ export function UserDropdown({ username, avatarUrl }: UserDropdownProps) {
               {getInitials(username)}
             </AvatarFallback>
           </Avatar>
-          <span className="text-sm font-medium text-foreground">
-            {username}
-          </span>
+          {!isSmallScreen && (
+            <span className="text-sm font-medium text-foreground">
+              {username}
+            </span>
+          )}
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent>

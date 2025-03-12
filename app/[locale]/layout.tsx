@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
 import '../globals.css';
+import '/node_modules/flag-icons/css/flag-icons.min.css';
 import Providers from '../components/Providers';
 import { Toaster } from '@/components/ui/toaster';
 import Header from '../components/Header';
