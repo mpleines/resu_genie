@@ -6,19 +6,17 @@ import Image from 'next/image';
 import GoogleIcon from '/public/google.svg';
 import DiscordIcon from '/public/discord.svg';
 import { AlertDestructive } from '@/app/components/AlertDestructive';
-import { useTranslations } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 
 export default async function SignInPage(props: {
   searchParams: { callbackUrl: string | undefined; error: string | undefined };
 }) {
+  const t = await getTranslations('signin');
   // FIXME: refactor this
   const errorMessage =
     props.searchParams.error === 'OAuthAccountNotLinked'
-      ? 'An account with this email address already exists. Did you log in using a different provider last time?'
+      ? t('alreadyRegistered')
       : props.searchParams.error;
-
-  const t = await getTranslations('signin');
 
   return (
     <div className="py-12 px-4 sm:px-6 lg:px-8">

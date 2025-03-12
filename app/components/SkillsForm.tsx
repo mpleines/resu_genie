@@ -33,6 +33,7 @@ import StepperFooter from './StepperFooter';
 import { fetchSkills } from '@/lib/supabase/queries';
 import { Skill } from '@/types/types';
 import { useStepper } from '@/hooks/useStepper';
+import { useTranslations } from 'next-intl';
 
 const skillFormSchema = z.object({
   skill: z.string().min(1, { message: 'This field is required' }),
@@ -40,6 +41,7 @@ const skillFormSchema = z.object({
 
 export default function SkillsForm() {
   useScrollToTop();
+  const t = useTranslations('skills');
 
   const supabase = createClient();
   const session = useSession();
@@ -122,7 +124,7 @@ export default function SkillsForm() {
   async function submitSkills() {
     if (skills.length === 0) {
       submitForm.setError('root', {
-        message: 'You need to add at least one skill',
+        message: t('atLeastOneSkills'),
       });
       return;
     }
@@ -141,10 +143,8 @@ export default function SkillsForm() {
     <div className="space-y-4">
       <Card>
         <CardHeader>
-          <CardTitle>Skills</CardTitle>
-          <CardDescription>
-            Enter the Skills you have that are relevant to the job advertisement
-          </CardDescription>
+          <CardTitle>{t('title')}</CardTitle>
+          <CardDescription>{t('description')}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <Form {...form}>
@@ -155,12 +155,12 @@ export default function SkillsForm() {
                 render={({ field }) => {
                   return (
                     <FormItem>
-                      <FormLabel>Skill</FormLabel>
+                      <FormLabel>{t('title')}</FormLabel>
                       <div className="flex w-full items-center space-x-2">
                         <FormControl>
                           <Input
                             {...field}
-                            placeholder="Add a skill"
+                            placeholder={t('addASkill')}
                             disabled={
                               form.formState.isSubmitting ||
                               submitForm.formState.isSubmitting
@@ -175,7 +175,7 @@ export default function SkillsForm() {
                             submitForm.formState.isSubmitting
                           }
                         >
-                          Add
+                          {t('add')}
                         </Button>
                       </div>
                       <FormMessage />
@@ -192,7 +192,7 @@ export default function SkillsForm() {
                 <Skeleton key={index} className="ml-2 w-16 h-6 rounded-lg " />
               ))}
             {!loadingSkills && skills.length === 0 ? (
-              <span className="h-6 text-sm">No skills added</span>
+              <span className="h-6 text-sm">{t('noSkillsAdded')}</span>
             ) : (
               skills?.map((skill) => (
                 <Badge key={skill.id} variant="secondary">
@@ -205,7 +205,7 @@ export default function SkillsForm() {
                     }
                     onClick={() => removeSkill(skill.id)}
                     className="ml-2 hover:text-destructive focus:text-destructive"
-                    aria-label={`Remove ${skill}`}
+                    aria-label={`${t('remove')} ${skill}`}
                   >
                     <X size={16} />
                   </button>

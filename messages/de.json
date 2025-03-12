@@ -1,12 +1,19 @@
 {
   "global": {
-    "delete": "Delete",
-    "cancel": "Cancel",
+    "delete": "Löschen",
+    "cancel": "Abbrechen",
     "name": "Name",
-    "phone": "Phone",
-    "street": "Street",
-    "city": "City",
-    "professionalExperienceInYears": "Professional Experience in Years"
+    "phone": "Mobilfunknummer",
+    "street": "Straße",
+    "city": "Stadt",
+    "professionalExperienceInYears": "Professionelle Erfahrung in Jahren"
+  },
+  "placeholder": {
+    "name": "Dein Name",
+    "phone": "Deine Telefonnummer",
+    "street": "Deine Straße",
+    "city": "Deine Stadt",
+    "professionalExperienceInYears": "Deine professionelle Erfahrung in Jahren"
   },
   "locales": {
     "en": "English",
@@ -99,5 +106,22 @@
       "title": "Bist du absolut sicher?",
       "description": "Diese Aktion kann nicht rückgängig gemacht werden. Dein Lebenslauf wird dauerhaft gelöscht."
     }
+  },
+  "jobAdvertisement": {
+    "title": "Stellenanzeige",
+    "description": "Kopiere den Text der Stellenanzeige hierher, um zu beginnen"
+  },
+  "personalInformation": {
+    "title": "Persönliche Informationen",
+    "description": "Gib deine Kontaktinformationen ein, um zu starten"
+  },
+  "skills": {
+    "title": "Fähigkeiten",
+    "description": "Gib deine Fähigkeiten ein, die für die Stellenanzeige relevant sind",
+    "addASkill": "Fähigkeit hinzufügen",
+    "add": "Hinzufügen",
+    "noSkillsAdded": "Keine Fähigkeiten hinzugefügt",
+    "remove": "Entfernen",
+    "atLeastOneSkill": "Du musst mindestens eine Fähigkeit hinzufügen"
   }
 }

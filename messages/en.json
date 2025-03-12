@@ -115,5 +115,14 @@
   "personalInformation": {
     "title": "Personal Information",
     "description": "Enter your Contact Information to start"
+  },
+  "skills": {
+    "title": "Skills",
+    "description": "Enter the Skills you have that are relevant to the job advertisement",
+    "addASkill": "Add a Skill",
+    "add": "Add",
+    "noSkillsAdded": "No Skills added",
+    "remove": "Remove",
+    "atLeastOneSkill": "You need to add at least one skill"
   }
 }
