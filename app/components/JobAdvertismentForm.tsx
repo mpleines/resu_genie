@@ -200,7 +200,7 @@ export default function JobAdvertisementForm({ initialData }: Props) {
                         {crawlStatus === 'pending' && (
                           <Loader2 className="animate-spin" />
                         )}
-                        Submit URL
+                        {t('submitUrl')}
                       </Button>
                     </div>
                   </form>

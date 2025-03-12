@@ -110,7 +110,15 @@
   },
   "jobAdvertisement": {
     "title": "Job Advertisement",
-    "description": "Copy the Job Advertisement Text in here to get started"
+    "description": "Paste a link to a job advertisement or enter the job details manually",
+    "jobUrl": "Job URL",
+    "jobUrlDescription": "Paste a link to the job advertisement you want to create a resume for",
+    "submitUrl": "Submit URL",
+    "clearAndRetry": "Clear & Try another",
+    "manualEntry": "Manual Entry",
+    "manualDescription": "Enter the complete job description including requirements, responsibilities, and any other details",
+    "crawlError": "Could not fetch job advertisement",
+    "crawlSuccess": "Job advertisement successfully fetched!"
   },
   "personalInformation": {
     "title": "Personal Information",

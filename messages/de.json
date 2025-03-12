@@ -109,7 +109,15 @@
   },
   "jobAdvertisement": {
     "title": "Stellenanzeige",
-    "description": "Kopiere den Text der Stellenanzeige hierher, um zu beginnen"
+    "description": "Füge einen Link zu einer Stellenanzeige ein oder gib die Jobdetails manuell ein",
+    "jobUrl": "Job-URL",
+    "jobUrlDescription": "Füge einen Link zur Stellenanzeige ein, für die du einen Lebenslauf erstellen möchtest",
+    "submitUrl": "URL absenden",
+    "clearAndRetry": "Löschen & erneut versuchen",
+    "manualEntry": "Manuelle Eingabe",
+    "manualDescription": "Gib die vollständige Stellenbeschreibung ein, einschließlich Anforderungen, Verantwortlichkeiten und weiterer Details",
+    "crawlError": "Stellenanzeige konnte nicht abgerufen werden",
+    "crawlSuccess": "Stellenanzeige erfolgreich abgerufen!"
   },
   "personalInformation": {
     "title": "Persönliche Informationen",
