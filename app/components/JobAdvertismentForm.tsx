@@ -35,13 +35,28 @@ import AlertSuccess from './AlertSuccess';
 import { useTranslations } from 'next-intl';
 import { useStepper } from '@/hooks/useStepper';
 
-const formSchema = z.object({
-  jobAdvertisement: z.string().min(1, { message: 'This field is required' }),
-});
+const useFormSchema = () => {
+  const t = useTranslations('error');
 
-const crawlerFormSchema = z.object({
-  jobUrl: z.string().min(1).url(),
-});
+  const schema = z.object({
+    jobAdvertisement: z.string().min(1, { message: t('required') }),
+  });
+
+  return schema;
+};
+
+const useCrawlerSchema = () => {
+  const t = useTranslations('error');
+
+  const crawlerFormSchema = z.object({
+    jobUrl: z
+      .string()
+      .min(1, { message: t('required') })
+      .url({ message: t('invalidUrl') }),
+  });
+
+  return crawlerFormSchema;
+};
 
 type InputMethod = 'url' | 'manual';
 
@@ -51,6 +66,9 @@ type Props = {
 
 export default function JobAdvertisementForm({ initialData }: Props) {
   useScrollToTop();
+
+  const crawlerFormSchema = useCrawlerSchema();
+  const formSchema = useFormSchema();
 
   const session = useSession();
   const userId = session?.data?.user?.id;

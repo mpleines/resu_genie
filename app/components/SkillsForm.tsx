@@ -35,9 +35,14 @@ import { Skill } from '@/types/types';
 import { useStepper } from '@/hooks/useStepper';
 import { useTranslations } from 'next-intl';
 
-const skillFormSchema = z.object({
-  skill: z.string().min(1, { message: 'This field is required' }),
-});
+const useSkillFormSchema = () => {
+  const t = useTranslations('error');
+  const form = z.object({
+    skill: z.string().min(1, { message: t('required') }),
+  });
+
+  return form;
+};
 
 export default function SkillsForm() {
   useScrollToTop();
@@ -47,6 +52,8 @@ export default function SkillsForm() {
   const session = useSession();
   const userId = session?.data?.user?.id;
   const stepper = useStepper();
+
+  const skillFormSchema = useSkillFormSchema();
 
   const form = useForm<z.infer<typeof skillFormSchema>>({
     resolver: zodResolver(skillFormSchema),
@@ -124,7 +131,7 @@ export default function SkillsForm() {
   async function submitSkills() {
     if (skills.length === 0) {
       submitForm.setError('root', {
-        message: t('atLeastOneSkills'),
+        message: t('atLeastOneSkill'),
       });
       return;
     }

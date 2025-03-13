@@ -29,17 +29,22 @@ import { Input } from '@/components/ui/input';
 import { useStepper } from '@/hooks/useStepper';
 import { useTranslations } from 'use-intl';
 
-const formSchema = z.object({
-  name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
-  phone_1: z.string(),
-  address: z.string(),
-  city: z.string(),
-  professional_experience_in_years: z.coerce
-    .number()
-    .min(0)
-    .max(100)
-    .optional(),
-});
+const useFormSchema = () => {
+  const t = useTranslations('error');
+  const schema = z.object({
+    name: z.string().min(2, { message: t('nameTooShort') }),
+    phone_1: z.string(),
+    address: z.string(),
+    city: z.string(),
+    professional_experience_in_years: z.coerce
+      .number()
+      .min(0)
+      .max(100)
+      .optional(),
+  });
+
+  return schema;
+};
 
 type Props = {
   initialData: PersonalInformation | null;
@@ -55,6 +60,8 @@ export default function PersonalInformationForm({ initialData }: Props) {
   const params = useParams();
   const resumeId = Number(params['resumeId'] as string);
   const t = useTranslations();
+
+  const formSchema = useFormSchema();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

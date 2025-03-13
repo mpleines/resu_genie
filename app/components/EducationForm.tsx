@@ -38,12 +38,17 @@ import { formatDate } from '@/lib/utils';
 import { useStepper } from '@/hooks/useStepper';
 import { useTranslations } from 'next-intl';
 
-const formSchema = z.object({
-  institute_name: z.string().min(1, { message: 'This field is required' }),
-  degree: z.string(),
-  start_date: z.date(),
-  end_date: z.date(),
-});
+const useFormSchema = () => {
+  const t = useTranslations('error');
+  const schema = z.object({
+    institute_name: z.string().min(1, { message: t('required') }),
+    degree: z.string(),
+    start_date: z.date(),
+    end_date: z.date(),
+  });
+
+  return schema;
+};
 
 export default function EducationForm() {
   useScrollToTop();
@@ -54,6 +59,8 @@ export default function EducationForm() {
   const params = useParams();
   const resumeId = Number(params['resumeId'] as string);
   const t = useTranslations();
+
+  const formSchema = useFormSchema();
 
   const [educationLoading, setEducationLoading] = useState(true);
   const [educations, setEducations] = useState<Education[]>([]);

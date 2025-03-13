@@ -40,13 +40,18 @@ import { formatDate } from '@/lib/utils';
 import { useStepper } from '@/hooks/useStepper';
 import { useTranslations } from 'use-intl';
 
-const formSchema = z.object({
-  organisation_name: z.string().min(1, { message: 'This field is required' }),
-  profile: z.string().min(1, { message: 'This field is required' }),
-  job_description: z.string(),
-  start_date: z.date(),
-  end_date: z.date().optional(),
-});
+const useFormSchema = () => {
+  const t = useTranslations('error');
+  const schema = z.object({
+    organisation_name: z.string().min(1, { message: t('required') }),
+    profile: z.string().min(1, { message: t('required') }),
+    job_description: z.string(),
+    start_date: z.date(),
+    end_date: z.date().optional(),
+  });
+
+  return schema;
+};
 
 export default function WorkExperienceForm() {
   const supabase = createClient();
@@ -56,6 +61,8 @@ export default function WorkExperienceForm() {
   const params = useParams();
   const resumeId = Number(params['resumeId'] as string);
   const t = useTranslations();
+
+  const formSchema = useFormSchema();
 
   useScrollToTop();
 

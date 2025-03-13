@@ -19,6 +19,17 @@
     "email": "E-Mail",
     "generateResume": "Lebenslauf erstellen"
   },
+  "error": {
+    "required": "Dieses Feld ist erforderlich",
+    "invalidUrl": "Ungültige URL",
+    "nameTooShort": "Name muss mindestens 2 Zeichen lang sein"
+  },
+  "errorBoundary": {
+    "title": "Etwas ist schiefgelaufen!",
+    "description": "Ein kritischer Fehler ist aufgetreten. Unser Team wurde benachrichtigt.",
+    "tryAgain": "Erneut versuchen",
+    "goToDashboard": "Zurück zum Dashboard"
+  },
   "locales": {
     "en": "Englisch",
     "de": "Deutsch"
@@ -187,6 +198,11 @@
     "checkout": {
       "title": "Checkout",
       "description": "Durch den Kauf schaltest du den PDF-Download für diesen Lebenslauf frei. Nach dem Kauf kannst du das Layout weiterhin ändern, wenn du möchtest."
+    },
+    "errorLoadingResume": "Fehler beim Laden des Lebenslaufs. Bitte versuche es erneut.",
+    "paymentSuccessful": {
+      "title": "Zahlung erfolgreich",
+      "description": "Du kannst nun den Lebenslauf herunterladen"
     }
   }
 }

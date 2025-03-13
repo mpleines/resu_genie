@@ -55,7 +55,7 @@ export default function Page() {
     if (error) {
       toast({
         title: 'Error',
-        description: 'Failed to fetch resume. Please try again',
+        description: t('errorLoadingResume'),
         className: 'bg-error',
       });
     }
@@ -83,7 +83,7 @@ export default function Page() {
     if (error) {
       toast({
         title: 'Error',
-        description: 'Failed to fetch resume. Please try again',
+        description: t('errorLoadingResume'),
         className: 'bg-error',
       });
     }
@@ -106,8 +106,8 @@ export default function Page() {
 
     if (localStorage.getItem(paymentSuccessId) == null) {
       toast({
-        title: 'Payment successful',
-        description: 'You are now able to download your resume as PDF',
+        title: t('paymentSuccessful.title'),
+        description: t('paymentSuccessful.description'),
         className: 'bg-success',
       });
 

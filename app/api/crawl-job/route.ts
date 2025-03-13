@@ -60,7 +60,6 @@ export async function scrapeWithPuppeteer(url: string) {
 
     return cleanText;
   } catch (error) {
-    console.error('Puppeteer scraping failed:', error);
     throw error;
   } finally {
     if (browser) {

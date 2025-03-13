@@ -19,6 +19,17 @@
     "email": "E-Mail",
     "generateResume": "Generate Resume"
   },
+  "error": {
+    "required": "This field is required",
+    "invalidUrl": "Invalid URL",
+    "nameTooShort": "Name must be at least 2 characters"
+  },
+  "errorBoundary": {
+    "title": "Something went wrong!",
+    "description": "We've encountered a critical error. Our team has been notified.",
+    "tryAgain": "Try again",
+    "goToDashboard": "Go to Dashboard"
+  },
   "locales": {
     "en": "English",
     "de": "Deutsch"
@@ -187,6 +198,11 @@
     "checkout": {
       "title": "Checkout",
       "description": "By purchasing, you will unlock the PDF download for this resume. After purchasing, you can still change the layout if you want to."
+    },
+    "errorLoadingResume": "Failed to fetch resume. Please try again",
+    "paymentSuccessfull": {
+      "title": "Payment successful",
+      "description": "You are now able to download your resume as PDF"
     }
   }
 }
