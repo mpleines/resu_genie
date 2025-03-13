@@ -9,8 +9,7 @@ import CookieBanner from '../components/CookieBanner';
 import Analytics from '../components/Analytics';
 import { routing } from '@/i18n/routing';
 import { notFound } from 'next/navigation';
-import { getMessages } from 'next-intl/server';
-import { NextIntlClientProvider } from 'next-intl';
+import { NextIntlClientProvider, hasLocale } from 'next-intl';
 
 const geistSans = localFont({
   src: '../fonts/GeistVF.woff',
@@ -42,19 +41,17 @@ export default async function RootLayout({
   params: Promise<{ locale: string }>;
 }>) {
   const { locale } = await params;
-  if (!routing.locales.includes(locale as any)) {
+  if (!hasLocale(routing.locales, locale)) {
     notFound();
   }
 
-  const messages = await getMessages();
-
   return (
-    <html lang="en">
+    <html lang={locale}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
-          <NextIntlClientProvider messages={messages}>
+          <NextIntlClientProvider>
             <Header />
             {children}
             <Toaster />
