@@ -141,7 +141,7 @@ const StepComponent: FunctionComponent<StepProps> = ({
           <span className="block truncate">{step.label}</span>
         </div>
         <div className="text-muted-foreground text-sm w-full text-center flex-grow">
-          <span className="block truncate">{step?.description}</span>
+          <span className="block truncate max-w-48">{step?.description}</span>
         </div>
       </div>
     </div>

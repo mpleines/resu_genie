@@ -174,9 +174,12 @@
     "atLeastOneEducation": "Bitte füge mindestens einen Eintrag zur Ausbildung hinzu."
   },
   "summary": {
-    "title": "Zusammenfassung"
+    "title": "Zusammenfassung",
+    "description": "Zusammenfassung deiner Eingaben"
   },
   "downloadResume": {
+    "title": "Bezahlen & Herunterladen",
+    "description": "Bezahle und schalte den PDF-Download deines Lebenslaufs frei",
     "chooseTemplate": "Wähle ein Template",
     "templates": {
       "minimalistic": {

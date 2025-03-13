@@ -174,9 +174,12 @@
     "atLeastOneEducation": "Please add at least one education entry."
   },
   "summary": {
-    "title": "Summary"
+    "title": "Summary",
+    "description": "Summary of your Inputs"
   },
   "downloadResume": {
+    "title": "Pay & Download",
+    "description": "Purchase the PDF Download of your Resume",
     "chooseTemplate": "Choose Template",
     "templates": {
       "minimalistic": {
