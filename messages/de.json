@@ -3,133 +3,190 @@
     "delete": "Löschen",
     "cancel": "Abbrechen",
     "name": "Name",
-    "phone": "Mobilfunknummer",
+    "phone": "Telefon",
     "street": "Straße",
     "city": "Stadt",
-    "professionalExperienceInYears": "Professionelle Erfahrung in Jahren"
-  },
-  "placeholder": {
-    "name": "Dein Name",
-    "phone": "Deine Telefonnummer",
-    "street": "Deine Straße",
-    "city": "Deine Stadt",
-    "professionalExperienceInYears": "Deine professionelle Erfahrung in Jahren"
+    "professionalExperienceInYears": "Jahre Berufserfahrung",
+    "company": "Unternehmen",
+    "jobTitle": "Berufsbezeichnung",
+    "jobDescription": "Jobbeschreibung",
+    "startDate": "Startdatum",
+    "endDate": "Enddatum",
+    "workExperience": "Berufserfahrung",
+    "education": "Ausbildung",
+    "institution": "Institution",
+    "degree": "Abschluss",
+    "email": "E-Mail",
+    "generateResume": "Lebenslauf erstellen"
   },
   "locales": {
-    "en": "English",
+    "en": "Englisch",
     "de": "Deutsch"
+  },
+  "placeholder": {
+    "name": "Geben Sie Ihren Namen ein",
+    "phone": "Geben Sie Ihre Telefonnummer ein",
+    "street": "Geben Sie Ihre Straße ein",
+    "city": "Geben Sie Ihre Stadt ein",
+    "professionalExperienceInYears": "Geben Sie Ihre Berufserfahrung in Jahren ein",
+    "company": "Unternehmensname eingeben",
+    "jobTitle": "z. B. Softwareentwickler, Data Scientist, Klempner",
+    "jobDescription": "z. B. Entwicklung einer Firmenwebsite, Teamleitung, Erstellung eines neuen Produkts",
+    "institution": "Name der Institution eingeben",
+    "degree": "z. B. Ausbildung in digitaler Fotografie, Bachelor of Arts"
   },
   "header": {
     "switchTo": {
-      "en": "Switch to English",
+      "en": "Zu Englisch wechseln",
       "de": "Auf Deutsch wechseln"
     }
   },
   "landing": {
-    "heroNormal": "Erstelle deinen Lebenslauf mit KI ",
+    "heroNormal": "Erstellen Sie Ihren Lebenslauf mit KI",
     "heroShade": "Schnell, Einfach & Effektiv",
-    "subhero": "Erstelle in weniger als 10 Minuten einen professionellen, KI-generierten Lebenslauf – schnell, maßgeschneidert und jobgewinnend!",
-    "createResume": "Erstelle deinen Lebenslauf",
+    "subhero": "Erstellen Sie in weniger als 10 Minuten einen professionellen, KI-optimierten Lebenslauf – maßgeschneidert und jobgewinnend!",
+    "createResume": "Lebenslauf erstellen",
     "templates": {
       "minimalistic": {
         "title": "Minimalistisches Template",
-        "description": "Für diejenigen, die ein sauberes und einfaches Design bevorzugen."
+        "description": "Ein klares und einfaches Design für einen professionellen Look."
       },
       "professional": {
         "title": "Professionelles Template",
-        "description": "Für diejenigen, die es schlicht & professionell mögen."
+        "description": "Ein strukturiertes und poliertes Design für eine seriöse Präsentation."
       },
       "comingSoon": {
         "title": "Demnächst verfügbar",
-        "description": "Demnächst verfügbar"
+        "description": "Neue Templates folgen bald!"
       }
     },
     "howItWorks": "So funktioniert es",
     "inputDetails": {
-      "title": "Gib deine Daten ein",
-      "description": "Gib deine beruflichen Informationen und Erfahrungen mit unserer benutzerfreundlichen Oberfläche ein."
+      "title": "Geben Sie Ihre Daten ein",
+      "description": "Tragen Sie Ihre beruflichen Informationen und Erfahrungen mit unserer benutzerfreundlichen Oberfläche ein."
     },
     "aiOptimization": {
       "title": "KI-Optimierung",
-      "description": "Unsere fortschrittliche KI analysiert und verbessert deinen Lebenslauf für maximale Wirkung."
+      "description": "Unsere fortschrittliche KI verbessert Ihren Lebenslauf, um Ihre Jobchancen zu maximieren."
     },
     "downloadAndApply": {
       "title": "Herunterladen & Bewerben",
-      "description": "Erhalte sofort deinen optimierten, ATS-freundlichen, professionellen Lebenslauf und beginne mit der Jobsuche."
+      "description": "Erhalten Sie sofort einen ATS-optimierten Lebenslauf und bewerben Sie sich mit Selbstvertrauen."
     },
-    "faq": "FAQ",
+    "faq": "Häufig gestellte Fragen",
     "isDataSecure": {
       "title": "Sind meine Daten sicher?",
-      "description": "Ja, wir schätzen deine Privatsphäre und stellen die Sicherheit deiner Daten sicher. Deine Informationen sind jederzeit geschützt. Wir arbeiten mit Drittanbietern wie ChatGPT und Supabase zusammen, um das höchste Maß an Datensicherheit zu gewährleisten."
+      "description": "Ja! Wir legen großen Wert auf Datenschutz und arbeiten mit vertrauenswürdigen Drittanbietern wie ChatGPT und Supabase zusammen, um höchste Sicherheit zu gewährleisten."
     },
     "howDoesAiWork": {
       "title": "Wie funktioniert die KI?",
-      "description": "Wir senden deine Informationen an ChatGPT, ein leistungsstarkes Sprachmodell, um deinen Lebenslauf zu analysieren und zu verbessern. Dieser KI-generierte Inhalt wird dann für ATS-Plattformen optimiert und an die Stelle angepasst, auf die du dich bewirbst. Wir generieren oder übertreiben keine Informationen. Wir glauben daran, deinen Lebenslauf authentisch und ehrlich zu halten. Wir verbessern nur das, was du bereits geschrieben hast."
+      "description": "Wir senden Ihre Daten an ChatGPT zur Analyse und Optimierung, damit Ihr Lebenslauf authentisch bleibt und für ATS-Systeme optimiert wird."
     },
     "howToSignup": {
       "title": "Wie melde ich mich an?",
-      "description": "Du kannst dich anmelden, indem du oben auf die Schaltfläche \"Erstelle deinen Lebenslauf\" oder auf \"Anmelden\" in der oberen rechten Ecke klickst. Derzeit unterstützen wir die Anmeldung über Google."
+      "description": "Klicken Sie auf 'Lebenslauf erstellen' oder 'Anmelden' oben rechts. Derzeit unterstützen wir Google-Anmeldung."
     }
   },
   "signin": {
-    "title": "Anmelden bei resugenie.",
-    "description": "Um resugenie zu nutzen, musst du dich zuerst anmelden",
+    "title": "Bei ResuGenie anmelden",
+    "description": "Melden Sie sich an, um auf ResuGenie zuzugreifen und Ihren KI-optimierten Lebenslauf zu erstellen.",
     "google": "Mit Google anmelden",
     "discord": "Mit Discord anmelden",
-    "alreadyRegistered": "Ein Konto mit dieser E-Mail-Adresse existiert bereits. Hast du dich beim letzten Mal mit einem anderen Anbieter angemeldet?"
+    "alreadyRegistered": "Ein Konto mit dieser E-Mail existiert bereits. Haben Sie sich zuletzt mit einem anderen Anbieter angemeldet?"
   },
   "dashboard": {
     "title": "Meine Lebensläufe"
   },
   "newResumeCard": {
     "title": "Neuen Lebenslauf erstellen",
-    "description": "Klicke um einen neuen Lebenslauf zu erstellen"
+    "description": "Klicken Sie, um Ihren Lebenslauf zu erstellen."
   },
   "resumePreview": {
     "unnamedResume": "Unbenannter Lebenslauf",
     "unknownJobTitle": "Unbekannte Berufsbezeichnung",
     "lastUpdated": "Zuletzt aktualisiert",
-    "noSkillsListed": "Keine Fähigkeiten aufgelistet",
+    "noSkillsListed": "Keine Fähigkeiten angegeben",
     "deleteError": {
       "title": "Fehler beim Löschen des Lebenslaufs",
-      "description": "Bitte versuche es erneut"
+      "description": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
     },
     "deleteSuccess": {
       "title": "Lebenslauf gelöscht",
-      "description": "Dein Lebenslauf wurde gelöscht"
+      "description": "Ihr Lebenslauf wurde erfolgreich gelöscht."
     },
     "deletePending": {
-      "title": "Lebenslauf wird gelöscht",
-      "description": "Bitte warten"
+      "title": "Löschung des Lebenslaufs",
+      "description": "Bitte warten Sie, während wir Ihren Lebenslauf löschen."
     },
     "deleteDialog": {
-      "title": "Bist du absolut sicher?",
-      "description": "Diese Aktion kann nicht rückgängig gemacht werden. Dein Lebenslauf wird dauerhaft gelöscht."
+      "title": "Sind Sie sicher?",
+      "description": "Diese Aktion kann nicht rückgängig gemacht werden. Ihr Lebenslauf wird dauerhaft gelöscht."
     }
   },
   "jobAdvertisement": {
     "title": "Stellenanzeige",
-    "description": "Füge einen Link zu einer Stellenanzeige ein oder gib die Jobdetails manuell ein",
+    "description": "Fügen Sie einen Link zur Stellenanzeige ein oder geben Sie die Details manuell ein.",
     "jobUrl": "Job-URL",
-    "jobUrlDescription": "Füge einen Link zur Stellenanzeige ein, für die du einen Lebenslauf erstellen möchtest",
-    "submitUrl": "URL absenden",
-    "clearAndRetry": "Löschen & erneut versuchen",
+    "jobUrlDescription": "Fügen Sie den Link zur Stellenanzeige ein, um einen passenden Lebenslauf zu erstellen.",
+    "submitUrl": "URL einreichen",
+    "clearAndRetry": "Löschen & Neu versuchen",
     "manualEntry": "Manuelle Eingabe",
-    "manualDescription": "Gib die vollständige Stellenbeschreibung ein, einschließlich Anforderungen, Verantwortlichkeiten und weiterer Details",
-    "crawlError": "Stellenanzeige konnte nicht abgerufen werden",
+    "manualDescription": "Geben Sie die vollständige Stellenbeschreibung mit Anforderungen und Aufgaben ein.",
+    "crawlError": "Stellenanzeige konnte nicht abgerufen werden.",
     "crawlSuccess": "Stellenanzeige erfolgreich abgerufen!"
   },
   "personalInformation": {
     "title": "Persönliche Informationen",
-    "description": "Gib deine Kontaktinformationen ein, um zu starten"
+    "description": "Gib deine Kontaktdaten ein, um zu beginnen."
   },
   "skills": {
     "title": "Fähigkeiten",
-    "description": "Gib deine Fähigkeiten ein, die für die Stellenanzeige relevant sind",
+    "description": "Liste deine relevanten Fähigkeiten für den Job auf.",
     "addASkill": "Fähigkeit hinzufügen",
     "add": "Hinzufügen",
-    "noSkillsAdded": "Keine Fähigkeiten hinzugefügt",
+    "noSkillsAdded": "Noch keine Fähigkeiten hinzugefügt",
     "remove": "Entfernen",
-    "atLeastOneSkill": "Du musst mindestens eine Fähigkeit hinzufügen"
+    "atLeastOneSkill": "Bitte füge mindestens eine Fähigkeit hinzu."
+  },
+  "workExperience": {
+    "title": "Berufserfahrung",
+    "description": "Liste deine vorherigen Jobs und Rollen auf.",
+    "addWorkExperience": "Berufserfahrung hinzufügen",
+    "noWorkExperienceYet": "Noch keine Berufserfahrung hinzugefügt.",
+    "atLeastOneWorkExperience": "Bitte füge mindestens einen Eintrag zur Berufserfahrung hinzu."
+  },
+  "education": {
+    "title": "Ausbildung",
+    "description": "Liste deinen akademischen Hintergrund auf.",
+    "addEducation": "Ausbildung hinzufügen",
+    "noEducationYet": "Noch keine Ausbildung hinzugefügt.",
+    "atLeastOneEducation": "Bitte füge mindestens einen Eintrag zur Ausbildung hinzu."
+  },
+  "summary": {
+    "title": "Zusammenfassung"
+  },
+  "downloadResume": {
+    "chooseTemplate": "Wähle ein Template",
+    "templates": {
+      "minimalistic": {
+        "title": "Minimalistisch",
+        "description": "Schlicht & Elegant"
+      },
+      "professional": {
+        "title": "Professionell",
+        "description": "Traditioneller Geschäfts-Stil"
+      },
+      "modernCreative": {
+        "title": "Modern & Kreativ",
+        "description": "Demnächst verfügbar"
+      }
+    },
+    "purchaseNow": "Jetzt kaufen (2,99€)",
+    "download": "Lebenslauf herunterladen",
+    "preparingPdf": "PDF wird vorbereitet",
+    "checkout": {
+      "title": "Checkout",
+      "description": "Durch den Kauf schaltest du den PDF-Download für diesen Lebenslauf frei. Nach dem Kauf kannst du das Layout weiterhin ändern, wenn du möchtest."
+    }
   }
 }

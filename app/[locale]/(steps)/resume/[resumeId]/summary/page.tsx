@@ -10,6 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { SubmitResume } from './SubmitResume';
 import { formatDate } from '@/lib/utils';
+import { getTranslations } from 'next-intl/server';
 
 export default async function Page(props: {
   params: Promise<{ resumeId: string }>;
@@ -19,6 +20,7 @@ export default async function Page(props: {
   const session = await auth();
   const userId = session?.user?.id;
   const supabase = supabaseClient();
+  const t = await getTranslations();
 
   if (!userId || !resumeId) {
     return notFound();
@@ -36,10 +38,10 @@ export default async function Page(props: {
 
   return (
     <div className="flex flex-col space-y-4">
-      <h1 className="text-xl">Summary</h1>
+      <h1 className="text-xl">{t('summary.title')}</h1>
       <Card>
         <CardHeader>
-          <CardTitle>Job Advertisement</CardTitle>
+          <CardTitle>{t('jobAdvertisement.title')}</CardTitle>
         </CardHeader>
         <CardContent>
           <Textarea
@@ -52,68 +54,62 @@ export default async function Page(props: {
       <div>
         <Card>
           <CardHeader>
-            <CardTitle>Personal Information</CardTitle>
+            <CardTitle>{t('personalInformation.title')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Name</Label>
+              <Label htmlFor="name">{t('global.name')}</Label>
               <Input
                 disabled
                 id="name"
                 name="name"
-                placeholder="Your Name"
                 defaultValue={data?.personal_information?.name ?? ''}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email">E-Mail</Label>
+              <Label htmlFor="email">{t('global.email')}</Label>
               <Input
                 disabled
                 id="email"
                 name="email"
-                placeholder="Your E-Mail"
                 defaultValue={session?.user?.email ?? ''}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="phone">Phone</Label>
+              <Label htmlFor="phone">{t('global.phone')}</Label>
               <Input
                 disabled
                 id="phone"
                 name="phone"
-                placeholder="Your Phone Number"
                 defaultValue={data?.personal_information?.phone_1 ?? ''}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="street">Street</Label>
+              <Label htmlFor="street">{t('global.street')}</Label>
               <Input
                 disabled
                 id="street"
                 name="street"
-                placeholder="Your Street"
                 defaultValue={data?.personal_information?.address ?? ''}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="city">City</Label>
+              <Label htmlFor="city">{t('global.city')}</Label>
               <Input
                 disabled
                 id="city"
                 name="city"
-                placeholder="Your City"
                 defaultValue={data?.personal_information?.city ?? ''}
               />
             </div>
             <div className="space-y-2">
               <Label htmlFor="professional-experience">
-                Professional Experience in Years
+                {t('global.professionalExperienceInYears')}
               </Label>
               <Input
                 disabled
                 name="professional-experience"
                 id="professional-experience"
-                placeholder="Your Professional Experience in Years"
                 defaultValue={
                   data?.personal_information
                     ?.professional_experience_in_years ?? ''
@@ -125,7 +121,7 @@ export default async function Page(props: {
       </div>
       <Card>
         <CardHeader>
-          <CardTitle>Skills</CardTitle>
+          <CardTitle>{t('skills.title')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-2">
@@ -140,7 +136,7 @@ export default async function Page(props: {
       <div>
         <Card>
           <CardHeader>
-            <CardTitle>Work Experience</CardTitle>
+            <CardTitle>{t('workExperience.title')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
             {data?.work_experience != null &&
@@ -178,7 +174,7 @@ export default async function Page(props: {
       <div>
         <Card>
           <CardHeader>
-            <CardTitle>Education</CardTitle>
+            <CardTitle>{t('education.title')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
             {data?.education != null &&

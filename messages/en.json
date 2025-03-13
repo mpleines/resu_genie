@@ -6,18 +6,34 @@
     "phone": "Phone",
     "street": "Street",
     "city": "City",
-    "professionalExperienceInYears": "Professional Experience in Years"
+    "professionalExperienceInYears": "Years of Professional Experience",
+    "company": "Company",
+    "jobTitle": "Job Title",
+    "jobDescription": "Job Description",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "workExperience": "Work Experience",
+    "education": "Education",
+    "institution": "Institution",
+    "degree": "Degree",
+    "email": "E-Mail",
+    "generateResume": "Generate Resume"
   },
   "locales": {
     "en": "English",
     "de": "Deutsch"
   },
   "placeholder": {
-    "name": "Your Name",
-    "phone": "Your Phone Number",
-    "street": "Your Street",
-    "city": "Your City",
-    "professionalExperienceInYears": "Your professional experience in years"
+    "name": "Enter your name",
+    "phone": "Enter your phone number",
+    "street": "Enter your street",
+    "city": "Enter your city",
+    "professionalExperienceInYears": "Enter your years of professional experience",
+    "company": "Enter company name",
+    "jobTitle": "e.g., Software Engineer, Data Scientist, Plumber",
+    "jobDescription": "e.g., Developed a company website, led a team, created a new product",
+    "institution": "Enter institution name",
+    "degree": "e.g., Associate Degree in Digital Photography, Bachelor of Arts"
   },
   "header": {
     "switchTo": {
@@ -26,111 +42,151 @@
     }
   },
   "landing": {
-    "heroNormal": "Create Your Resume with AI ",
-    "heroShade": "Fast, Easy, & Effective",
-    "subhero": "Create a Professional, AI-Generated Resume in Under 10 Minutes – Fast, Tailored, and Job-Winning!",
+    "heroNormal": "Build Your Resume with AI",
+    "heroShade": "Fast, Easy & Effective",
+    "subhero": "Generate a professional AI-enhanced resume in under 10 minutes – tailored and job-winning!",
     "createResume": "Create Your Resume",
     "templates": {
       "minimalistic": {
-        "title": "Minimalistic Template",
-        "description": "For those who prefer a clean and simple design."
+        "title": "Minimalist Template",
+        "description": "A clean and simple design for a professional look."
       },
       "professional": {
         "title": "Professional Template",
-        "description": "For those who like it basic & professional."
+        "description": "A structured and polished design for a corporate feel."
       },
-
       "comingSoon": {
         "title": "Coming Soon",
-        "description": "Coming Soon"
+        "description": "Stay tuned for new templates!"
       }
     },
-    "howItWorks": "How it works",
+    "howItWorks": "How It Works",
     "inputDetails": {
-      "title": "Input your details",
-      "description": "Enter your professional information and experience with our user-friendly interface."
+      "title": "Enter Your Details",
+      "description": "Provide your professional background and experience with our easy-to-use interface."
     },
     "aiOptimization": {
       "title": "AI Optimization",
-      "description": "Our advanced AI analyzes and enhances your resume content for maximum impact."
+      "description": "Our advanced AI enhances your resume to maximize your job prospects."
     },
     "downloadAndApply": {
       "title": "Download & Apply",
-      "description": "Get your polished, ATS optimized, professional resume instantly and start applying to jobs."
+      "description": "Get an ATS-optimized resume instantly and start applying with confidence."
     },
     "faq": "FAQ",
     "isDataSecure": {
-      "title": "Is my data secure?",
-      "description": "Yes, we value your privacy and ensure the security of your data. Your information is protected at all times. We work with third-party services like ChatGPT and Supabase to ensure the highest level of data safety and security."
+      "title": "Is My Data Secure?",
+      "description": "Absolutely! We prioritize your privacy and work with trusted third-party services like ChatGPT and Supabase to ensure top-tier security."
     },
     "howDoesAiWork": {
-      "title": "How does the AI work?",
-      "description": "We send your information to ChatGPT, a powerful language model, to analyze and enhance your resume. This AI-generated content is then optimized for ATS platforms and tailored to the job you're applying to. We make sure to not generate or inflate any information. We believe in keeping your resume authentic and honest. We only enhance what you've already written."
+      "title": "How Does the AI Work?",
+      "description": "We send your details to ChatGPT for analysis and optimization, ensuring your resume remains authentic while being tailored for ATS systems."
     },
     "howToSignup": {
-      "title": "How do I sign up?",
-      "description": "You can sign up by clicking the \"Create Your Resume\" button above or the \"Sign In\" button in the top right corner. Currently we support Google Sign In."
+      "title": "How Do I Sign Up?",
+      "description": "Click 'Create Your Resume' or 'Sign In' at the top right. We currently support Google Sign-In."
     }
   },
   "signin": {
-    "title": "Sign in to resugenie.",
-    "description": "To use resugenie, you'll have to sign in first",
+    "title": "Sign In to ResuGenie",
+    "description": "Sign in to access ResuGenie and create your AI-powered resume.",
     "google": "Sign in with Google",
     "discord": "Sign in with Discord",
-    "alreadyRegistered": "An account with this email address already exists. Did you log in using a different provider last time?"
+    "alreadyRegistered": "An account with this email already exists. Did you use a different provider last time?"
   },
   "dashboard": {
     "title": "My Resumes"
   },
   "newResumeCard": {
-    "title": "Create New Resume",
-    "description": "Click to get started"
+    "title": "Create a New Resume",
+    "description": "Click to start building your resume."
   },
   "resumePreview": {
-    "unnamedResume": "Unnamed Resume",
+    "unnamedResume": "Untitled Resume",
     "unknownJobTitle": "Unknown Job Title",
-    "lastUpdated": "Last updated",
-    "noSkillsListed": "No Skills listed",
+    "lastUpdated": "Last Updated",
+    "noSkillsListed": "No skills listed",
     "deleteError": {
-      "title": "Error deleting resume",
-      "description": "Please try again"
+      "title": "Error Deleting Resume",
+      "description": "Something went wrong. Please try again."
     },
     "deleteSuccess": {
-      "title": "Resume deleted",
-      "description": "Your resume has been deleted"
+      "title": "Resume Deleted",
+      "description": "Your resume has been successfully deleted."
     },
     "deletePending": {
       "title": "Deleting Resume",
-      "description": "Please wait"
+      "description": "Please wait while we delete your resume."
     },
     "deleteDialog": {
-      "title": "Are you absolutely sure?",
-      "description": "This action cannot be undone. This will permanently delete your resume."
+      "title": "Are You Sure?",
+      "description": "This action is irreversible. Your resume will be permanently deleted."
     }
   },
   "jobAdvertisement": {
     "title": "Job Advertisement",
-    "description": "Paste a link to a job advertisement or enter the job details manually",
+    "description": "Paste a job advertisement link or enter the details manually.",
     "jobUrl": "Job URL",
-    "jobUrlDescription": "Paste a link to the job advertisement you want to create a resume for",
+    "jobUrlDescription": "Paste the job advertisement link to generate a matching resume.",
     "submitUrl": "Submit URL",
-    "clearAndRetry": "Clear & Try another",
+    "clearAndRetry": "Clear & Try Another",
     "manualEntry": "Manual Entry",
-    "manualDescription": "Enter the complete job description including requirements, responsibilities, and any other details",
-    "crawlError": "Could not fetch job advertisement",
-    "crawlSuccess": "Job advertisement successfully fetched!"
+    "manualDescription": "Enter the full job description, including requirements and responsibilities.",
+    "crawlError": "Failed to fetch job advertisement.",
+    "crawlSuccess": "Job advertisement retrieved successfully!"
   },
   "personalInformation": {
     "title": "Personal Information",
-    "description": "Enter your Contact Information to start"
+    "description": "Enter your contact details to get started."
   },
   "skills": {
     "title": "Skills",
-    "description": "Enter the Skills you have that are relevant to the job advertisement",
+    "description": "List your relevant skills for the job.",
     "addASkill": "Add a Skill",
     "add": "Add",
-    "noSkillsAdded": "No Skills added",
+    "noSkillsAdded": "No skills added yet",
     "remove": "Remove",
-    "atLeastOneSkill": "You need to add at least one skill"
+    "atLeastOneSkill": "Please add at least one skill."
+  },
+  "workExperience": {
+    "title": "Work Experience",
+    "description": "List your previous jobs and roles.",
+    "addWorkExperience": "Add Work Experience",
+    "noWorkExperienceYet": "No work experience added yet.",
+    "atLeastOneWorkExperience": "Please add at least one work experience entry."
+  },
+  "education": {
+    "title": "Education",
+    "description": "List your academic background.",
+    "addEducation": "Add Education",
+    "noEducationYet": "No education added yet.",
+    "atLeastOneEducation": "Please add at least one education entry."
+  },
+  "summary": {
+    "title": "Summary"
+  },
+  "downloadResume": {
+    "chooseTemplate": "Choose Template",
+    "templates": {
+      "minimalistic": {
+        "title": "Minimalistic",
+        "description": "Clean & Simple"
+      },
+      "professional": {
+        "title": "Professional",
+        "description": "Traditional Business Style"
+      },
+      "modernCreative": {
+        "title": "Modern & Creative",
+        "description": "Coming Soon"
+      }
+    },
+    "purchaseNow": "Purchase Now (2,99€)",
+    "download": "Download Resume",
+    "preparingPdf": "Preparing PDF",
+    "checkout": {
+      "title": "Checkout",
+      "description": "By purchasing, you will unlock the PDF download for this resume. After purchasing, you can still change the layout if you want to."
+    }
   }
 }
