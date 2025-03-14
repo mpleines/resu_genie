@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Summary } from '@/types/types';
 import { FileText, Loader2 } from 'lucide-react';
 import { Session } from 'next-auth';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 export function SubmitResume(props: {
@@ -12,6 +13,7 @@ export function SubmitResume(props: {
   data: Summary;
   user: Session['user'];
 }) {
+  const t = useTranslations('global');
   const [isLoading, setIsLoading] = useState(false);
   async function handleResumeGeneration() {
     setIsLoading(true);
@@ -26,7 +28,7 @@ export function SubmitResume(props: {
       ) : (
         <FileText className="h-6 w-6 mr-2" />
       )}
-      Generate Resume
+      {t('generateResume')}
     </Button>
   );
 }

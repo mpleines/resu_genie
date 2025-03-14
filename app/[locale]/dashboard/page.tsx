@@ -1,11 +1,13 @@
 import supabaseClient from '@/lib/supabase/server';
-import ResumePreview from '../components/ResumePreview';
-import { NewResume } from '../components/NewResumeCard';
+import ResumePreview from '../../components/ResumePreview';
+import { NewResume } from '../../components/NewResumeCard';
 import { auth } from '@/auth';
+import { getTranslations } from 'next-intl/server';
 
 export default async function DashboardPage() {
   const session = await auth();
   const userId = session?.user?.id;
+  const t = await getTranslations('dashboard');
 
   const supabase = supabaseClient();
   const { data: resumes } = await supabase
@@ -25,7 +27,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-3xl font-bold">My Resumes</h1>
+      <h1 className="text-3xl font-bold">{t('title')}</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 lg:auto-cols-auto auto-cols-auto gap-4">
         <NewResume />
         {resumes?.map((resume) => (

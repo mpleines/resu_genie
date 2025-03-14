@@ -27,6 +27,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
+import { useTranslations } from 'next-intl';
 
 interface ResumePreviewProps {
   resumeId: string;
@@ -42,6 +43,7 @@ const ResumePreview: FunctionComponent<ResumePreviewProps> = ({
   last_updated,
 }) => {
   const router = useRouter();
+  const t = useTranslations('resumePreview');
 
   const onClick = () => {
     router.push(`/resume/${resumeId}/job-advertisement`);
@@ -58,13 +60,13 @@ const ResumePreview: FunctionComponent<ResumePreviewProps> = ({
       <CardContent className="p-4 flex flex-col items-center justify-center h-full">
         <FileText className="w-12 h-12 text-primary mb-2" />
         <h3 className="text-lg font-semibold text-center mb-1">
-          {name ? name : 'Unnamed Resume'}
+          {name ? name : t('unnamedResume')}
         </h3>
         <p className="text-sm text-muted-foreground text-center">
-          {'Unknown Job Title'}
+          {t('unknownJobTitle')}
         </p>
         <span className="text-sm text-muted-foreground mb-4">
-          Last updated:{' '}
+          {t('lastUpdated')}:{' '}
           {formatDate(new Date(last_updated), {
             displayTodayAndYesterdayAsString: true,
           })}
@@ -85,7 +87,7 @@ const ResumePreview: FunctionComponent<ResumePreviewProps> = ({
             </>
           ) : (
             <span className="text-xs text-muted-foreground">
-              No skills listed
+              {t('noSkillsListed')}
             </span>
           )}
         </div>
@@ -104,6 +106,7 @@ const ResumePreviewActions = ({ resumeId }: ResumePreviewActionsProps) => {
   const supabase = createClient();
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const t = useTranslations();
 
   const deleteResume = async () => {
     startTransition(async () => {
@@ -127,8 +130,8 @@ const ResumePreviewActions = ({ resumeId }: ResumePreviewActionsProps) => {
 
       if (deletedRecordsResponse.some((response) => response.error)) {
         toast({
-          title: 'Error deleting resume',
-          description: 'Please try again',
+          title: t('resumePreview.deleteError.title'),
+          description: t('resumePreview.deleteError.description'),
           variant: 'destructive',
         });
 
@@ -142,15 +145,15 @@ const ResumePreviewActions = ({ resumeId }: ResumePreviewActionsProps) => {
 
       if (response.error) {
         toast({
-          title: 'Error deleting resume',
-          description: 'Please try again',
+          title: t('resumePreview.deleteError.title'),
+          description: t('resumePreview.deleteError.description'),
           variant: 'destructive',
         });
       }
 
       toast({
-        title: 'Resume deleted',
-        description: 'Your resume has been deleted',
+        title: t('resumePreview.deleteSuccess.title'),
+        description: t('resumePreview.deleteSuccess.description'),
       });
 
       router.refresh();
@@ -160,11 +163,13 @@ const ResumePreviewActions = ({ resumeId }: ResumePreviewActionsProps) => {
   useEffect(() => {
     if (isPending) {
       toast({
-        title: 'Deleting resume',
+        title: t('resumePreview.deletePending.title'),
         description: (
           <div className="flex items-center space-x-2">
             <Loader2 className="h-4 w-4 animate-spin" />
-            <span className="text-sm">Please wait</span>
+            <span className="text-sm">
+              {t('resumePreview.deletePending.description')}
+            </span>
           </div>
         ),
       });
@@ -183,20 +188,21 @@ const ResumePreviewActions = ({ resumeId }: ResumePreviewActionsProps) => {
           <AlertDialogTrigger asChild>
             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
               <Trash2 className="mr-2 h-4 w-4" />
-              <span>Delete</span>
+              <span>{t('global.delete')}</span>
             </DropdownMenuItem>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogTitle>
+                {t('resumePreview.deleteDialog.title')}
+              </AlertDialogTitle>
               <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete your
-                resume.
+                {t('resumePreview.deleteDialog.description')}
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel onClick={(e) => e.stopPropagation()}>
-                Cancel
+                {t('global.cancel')}
               </AlertDialogCancel>
               <AlertDialogAction
                 onClick={(e) => {
@@ -204,7 +210,7 @@ const ResumePreviewActions = ({ resumeId }: ResumePreviewActionsProps) => {
                   deleteResume();
                 }}
               >
-                Delete
+                {t('global.delete')}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

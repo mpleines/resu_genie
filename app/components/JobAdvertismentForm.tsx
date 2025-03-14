@@ -9,7 +9,6 @@ import {
 } from '@/components/ui/card';
 import { createClient } from '@/lib/supabase/client';
 import { useSession } from 'next-auth/react';
-import { useStepper } from '../(steps)/useStepper';
 import { useParams } from 'next/navigation';
 import { useScrollToTop } from '@/lib/useScrollToTop';
 import { z } from 'zod';
@@ -33,14 +32,31 @@ import { FileTextIcon, LinkIcon, Loader2 } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { AlertDestructive } from './AlertDestructive';
 import AlertSuccess from './AlertSuccess';
+import { useTranslations } from 'next-intl';
+import { useStepper } from '@/hooks/useStepper';
 
-const formSchema = z.object({
-  jobAdvertisement: z.string().min(1, { message: 'This field is required' }),
-});
+const useFormSchema = () => {
+  const t = useTranslations('error');
 
-const crawlerFormSchema = z.object({
-  jobUrl: z.string().min(1).url(),
-});
+  const schema = z.object({
+    jobAdvertisement: z.string().min(1, { message: t('required') }),
+  });
+
+  return schema;
+};
+
+const useCrawlerSchema = () => {
+  const t = useTranslations('error');
+
+  const crawlerFormSchema = z.object({
+    jobUrl: z
+      .string()
+      .min(1, { message: t('required') })
+      .url({ message: t('invalidUrl') }),
+  });
+
+  return crawlerFormSchema;
+};
 
 type InputMethod = 'url' | 'manual';
 
@@ -51,12 +67,16 @@ type Props = {
 export default function JobAdvertisementForm({ initialData }: Props) {
   useScrollToTop();
 
+  const crawlerFormSchema = useCrawlerSchema();
+  const formSchema = useFormSchema();
+
   const session = useSession();
   const userId = session?.data?.user?.id;
   const supabase = createClient();
   const stepper = useStepper();
   const params = useParams();
   const resumeId = Number(params['resumeId'] as string);
+  const t = useTranslations('jobAdvertisement');
 
   const [crawlStatus, setCrawlStatus] = useState<
     'not-started' | 'pending' | 'success' | 'failed'
@@ -144,11 +164,8 @@ export default function JobAdvertisementForm({ initialData }: Props) {
     <>
       <Card>
         <CardHeader>
-          <CardTitle>Job Advertisement</CardTitle>
-          <CardDescription>
-            Paste a link to a job advertisement or enter the job details
-            manually
-          </CardDescription>
+          <CardTitle>{t('title')}</CardTitle>
+          <CardDescription>{t('description')}</CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs
@@ -159,16 +176,16 @@ export default function JobAdvertisementForm({ initialData }: Props) {
             <TabsList className="grid w-full grid-cols-2 mb-6">
               <TabsTrigger value="url" className="flex items-center gap-2">
                 <LinkIcon className="h-4 w-4" />
-                <span>Job URL</span>
+                <span>{t('jobUrl')}</span>
               </TabsTrigger>
               <TabsTrigger value="text" className="flex items-center gap-2">
                 <FileTextIcon className="h-4 w-4" />
-                <span>Manual Entry</span>
+                <span>{t('manualEntry')}</span>
               </TabsTrigger>
             </TabsList>
             <TabsContent value="url" className="space-y-4">
               <div className="space-y-2 flex flex-col">
-                <Label htmlFor="job-url">Job Advertisement URL</Label>
+                <Label htmlFor="job-url">{t('jobUrl')}</Label>
                 <Form {...crawlerForm}>
                   <form
                     onSubmit={crawlerForm.handleSubmit(crawlJobAd)}
@@ -201,7 +218,7 @@ export default function JobAdvertisementForm({ initialData }: Props) {
                         {crawlStatus === 'pending' && (
                           <Loader2 className="animate-spin" />
                         )}
-                        Submit URL
+                        {t('submitUrl')}
                       </Button>
                     </div>
                   </form>
@@ -212,25 +229,24 @@ export default function JobAdvertisementForm({ initialData }: Props) {
                   </span>
                 )}
                 <p className="text-sm text-muted-foreground">
-                  Paste a link to the job advertisement you want to create a
-                  resume for
+                  {t('jobUrlDescription')}
                 </p>
               </div>
 
               {crawlStatus === 'success' && (
-                <AlertSuccess message="Job advertisement successfully fetched!" />
+                <AlertSuccess message={t('crawlSuccess')} />
               )}
 
               {crawlStatus === 'failed' && (
-                <AlertDestructive message="Could not fetch job advertisement" />
+                <AlertDestructive message={t('crawlError')} />
               )}
 
               {(crawlStatus === 'success' ||
                 submitForm.getValues().jobAdvertisement) && (
                 <div className="mt-4">
                   <div className="flex items-center justify-between flex-wrap py-2 ">
-                    <h3 className="text-lg">Job Advertisement</h3>
-                    <Button onClick={clear}>Clear & Try another</Button>
+                    <h3 className="text-lg">{t('title')}</h3>
+                    <Button onClick={clear}>{t('clearAndRetry')}</Button>
                   </div>
                   <Form {...submitForm}>
                     <form
@@ -276,14 +292,13 @@ export default function JobAdvertisementForm({ initialData }: Props) {
                             className="min-h-[250px]"
                             {...field}
                             disabled={submitForm.formState.isSubmitting}
-                            placeholder="Paste in the job advertisement here manually"
+                            placeholder={t('description')}
                           />
                         </FormControl>
                         <FormMessage />
 
                         <p className="text-sm text-muted-foreground">
-                          Enter the complete job description including
-                          requirements, responsibilities, and any other details
+                          {t('manualDescription')}
                         </p>
                       </FormItem>
                     )}

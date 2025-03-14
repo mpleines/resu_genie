@@ -1,10 +1,10 @@
 'use client';
 import React, { FunctionComponent, useMemo } from 'react';
-import { Step, useStepper } from '../(steps)/useStepper';
-import { usePathname } from 'next/navigation';
 import { Check, Circle, Dot } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useIsSmallScreen } from '@/hooks/useIsSmallScreen';
+import { Step, useStepper } from '@/hooks/useStepper';
+import { usePathname } from '@/i18n/navigation';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface StepperProps {
@@ -141,7 +141,7 @@ const StepComponent: FunctionComponent<StepProps> = ({
           <span className="block truncate">{step.label}</span>
         </div>
         <div className="text-muted-foreground text-sm w-full text-center flex-grow">
-          <span className="block truncate">{step?.description}</span>
+          <span className="block truncate max-w-48">{step?.description}</span>
         </div>
       </div>
     </div>

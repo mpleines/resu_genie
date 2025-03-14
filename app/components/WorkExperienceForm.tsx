@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { DatePicker } from '@/app/components/DatePicker';
@@ -17,7 +17,6 @@ import { Trash } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { createClient } from '@/lib/supabase/client';
 import { useParams } from 'next/navigation';
-import { useStepper } from '../(steps)/useStepper';
 import { useScrollToTop } from '@/lib/useScrollToTop';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -25,7 +24,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -39,14 +37,21 @@ import { fetchWorkExperiences } from '@/lib/supabase/queries';
 import { WorkExperience } from '@/types/types';
 import useScrollToElement from '@/hooks/useScrollToElement';
 import { formatDate } from '@/lib/utils';
+import { useStepper } from '@/hooks/useStepper';
+import { useTranslations } from 'use-intl';
 
-const formSchema = z.object({
-  organisation_name: z.string().min(1, { message: 'This field is required' }),
-  profile: z.string().min(1, { message: 'This field is required' }),
-  job_description: z.string(),
-  start_date: z.date(),
-  end_date: z.date().optional(),
-});
+const useFormSchema = () => {
+  const t = useTranslations('error');
+  const schema = z.object({
+    organisation_name: z.string().min(1, { message: t('required') }),
+    profile: z.string().min(1, { message: t('required') }),
+    job_description: z.string(),
+    start_date: z.date(),
+    end_date: z.date().optional(),
+  });
+
+  return schema;
+};
 
 export default function WorkExperienceForm() {
   const supabase = createClient();
@@ -55,6 +60,9 @@ export default function WorkExperienceForm() {
   const stepper = useStepper();
   const params = useParams();
   const resumeId = Number(params['resumeId'] as string);
+  const t = useTranslations();
+
+  const formSchema = useFormSchema();
 
   useScrollToTop();
 
@@ -148,7 +156,7 @@ export default function WorkExperienceForm() {
 
     if (workExperiences.length === 0) {
       submitForm.setError('root', {
-        message: 'Please add at least one work experience',
+        message: t('workExperience.atLeastOneWorkExperience'),
       });
 
       scrollToError();
@@ -172,9 +180,9 @@ export default function WorkExperienceForm() {
         <form onSubmit={form.handleSubmit(addExperience)} className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Add Work Experience</CardTitle>
+              <CardTitle>{t('workExperience.title')}</CardTitle>
               <CardDescription>
-                Add your previous work experience.
+                {t('workExperience.description')}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -184,11 +192,11 @@ export default function WorkExperienceForm() {
                 render={({ field }) => {
                   return (
                     <FormItem>
-                      <FormLabel>Company</FormLabel>
+                      <FormLabel>{t('global.company')}</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
-                          placeholder="Company Name"
+                          placeholder={t('placeholder.company')}
                           disabled={form.formState.isSubmitting}
                         />
                       </FormControl>
@@ -204,12 +212,12 @@ export default function WorkExperienceForm() {
                 render={({ field }) => {
                   return (
                     <FormItem>
-                      <FormLabel>Job Title</FormLabel>
+                      <FormLabel>{t('global.jobTitle')}</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
                           disabled={form.formState.isSubmitting}
-                          placeholder="e.g. Software Engineer, Data Scientist, Salesman, Plumber,... "
+                          placeholder={t('placeholder.jobTitle')}
                         />
                       </FormControl>
                       <FormMessage />
@@ -224,15 +232,12 @@ export default function WorkExperienceForm() {
                 render={({ field }) => {
                   return (
                     <FormItem>
-                      <FormLabel>Job Description</FormLabel>
-                      <FormDescription>
-                        Briefly describe what you did at the company here
-                      </FormDescription>
+                      <FormLabel>{t('global.jobDescription')}</FormLabel>
                       <FormControl>
                         <Textarea
                           {...field}
                           disabled={form.formState.isSubmitting}
-                          placeholder="e.g. Built a website for the company, managed the team at the company, created a new product for the company"
+                          placeholder={t('placeholder.jobDescription')}
                         />
                       </FormControl>
                       <FormMessage />
@@ -248,7 +253,7 @@ export default function WorkExperienceForm() {
                   render={({ field }) => {
                     return (
                       <FormItem>
-                        <FormLabel>Start Date</FormLabel>
+                        <FormLabel>{t('global.startDate')}</FormLabel>
 
                         <FormControl>
                           <div>
@@ -274,7 +279,7 @@ export default function WorkExperienceForm() {
                     render={({ field }) => {
                       return (
                         <FormItem>
-                          <FormLabel>End Date</FormLabel>
+                          <FormLabel>{t('global.endDate')}</FormLabel>
                           <FormControl>
                             <div>
                               <DatePicker
@@ -296,7 +301,7 @@ export default function WorkExperienceForm() {
 
               <div className="flex justify-end mt-6">
                 <Button disabled={form.formState.isSubmitting}>
-                  Add Work Experience
+                  {t('workExperience.addWorkExperience')}
                 </Button>
               </div>
             </CardContent>
@@ -305,7 +310,7 @@ export default function WorkExperienceForm() {
       </Form>
       <Card className="mt-4">
         <CardHeader>
-          <CardTitle>Work Experience</CardTitle>
+          <CardTitle>{t('global.workExperience')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           {workexperiencesLoading && (
@@ -317,7 +322,7 @@ export default function WorkExperienceForm() {
 
           {!workexperiencesLoading && workExperiences?.length === 0 && (
             <p className="text-sm opacity-70 h-24">
-              No work experience added yet
+              {t('workExperience.noWorkExperienceYet')}
             </p>
           )}
 

@@ -1,47 +1,50 @@
 import { ReactNode } from 'react';
-import { StepperProvider, Steps } from '../../useStepper';
-import Stepper from '../../../components/Stepper';
+import { StepperProvider, Steps } from '../../../../../hooks/useStepper';
 import supabaseClient from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import ProtectedPaidLayout from '@/app/components/ProtectedPaidLayout';
 import { auth } from '@/auth';
+import Stepper from '@/app/components/Stepper';
+import { getTranslations } from 'next-intl/server';
 
-const resumeSteps = (resumeId: string): Steps => {
+const getResumeSteps = async (resumeId: string): Promise<Steps> => {
+  const t = await getTranslations();
+
   return [
     {
-      label: 'Job Advertisement',
+      label: t('jobAdvertisement.title'),
       path: `/resume/${resumeId}/job-advertisement`,
-      description: 'Enter the job advertisement for your resume.',
+      description: t('jobAdvertisement.description'),
     },
     {
-      label: 'Personal Information',
+      label: t('personalInformation.title'),
       path: `/resume/${resumeId}/personal-information`,
-      description: 'Enter your personal information.',
+      description: t('personalInformation.description'),
     },
     {
-      label: 'Skills',
+      label: t('skills.title'),
       path: `/resume/${resumeId}/skills`,
-      description: 'Enter your skills.',
+      description: t('skills.description'),
     },
     {
-      label: 'Work Experience',
+      label: t('workExperience.title'),
       path: `/resume/${resumeId}/work-experience`,
-      description: 'Enter your work experience.',
+      description: t('workExperience.description'),
     },
     {
-      label: 'Education',
+      label: t('education.title'),
       path: `/resume/${resumeId}/education`,
-      description: 'Enter your education.',
+      description: t('education.description'),
     },
     {
-      label: 'Summary',
+      label: t('summary.title'),
       path: `/resume/${resumeId}/summary`,
-      description: 'A summary of your resume.',
+      description: t('summary.description'),
     },
     {
-      label: 'Download Resume',
+      label: t('downloadResume.title'),
       path: `/resume/${resumeId}/download-resume`,
-      description: 'Download your resume.',
+      description: t('downloadResume.description'),
     },
   ];
 };
@@ -68,7 +71,7 @@ export default async function DashboardLayout(props: {
     notFound();
   }
 
-  const steps = resumeSteps(params.resumeId);
+  const steps = await getResumeSteps(params.resumeId);
 
   return (
     <div className="min-h-screen flex flex-col">

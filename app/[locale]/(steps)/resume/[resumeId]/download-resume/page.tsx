@@ -18,11 +18,13 @@ import { useIsSmallScreen } from '@/hooks/useIsSmallScreen';
 import { CheckoutDialog } from '@/app/components/Checkout';
 import { Database } from '@/types/supabase';
 import { useToast } from '@/hooks/use-toast';
+import { useTranslations } from 'next-intl';
 
 export default function Page() {
   const session = useSession();
   const userId = session?.data?.user?.id;
   const supabase = createClient();
+  const t = useTranslations('downloadResume');
 
   const [resume, setResume] =
     useState<Database['public']['Tables']['resume']['Row']>();
@@ -53,7 +55,7 @@ export default function Page() {
     if (error) {
       toast({
         title: 'Error',
-        description: 'Failed to fetch resume. Please try again',
+        description: t('errorLoadingResume'),
         className: 'bg-error',
       });
     }
@@ -81,7 +83,7 @@ export default function Page() {
     if (error) {
       toast({
         title: 'Error',
-        description: 'Failed to fetch resume. Please try again',
+        description: t('errorLoadingResume'),
         className: 'bg-error',
       });
     }
@@ -104,8 +106,8 @@ export default function Page() {
 
     if (localStorage.getItem(paymentSuccessId) == null) {
       toast({
-        title: 'Payment successful',
-        description: 'You are now able to download your resume as PDF',
+        title: t('paymentSuccessful.title'),
+        description: t('paymentSuccessful.description'),
         className: 'bg-success',
       });
 
@@ -155,7 +157,7 @@ export default function Page() {
           >
             {({ loading }) => (
               <Button className="w-full h-full mt-2">
-                {loading ? 'Preparing PDF' : 'Download PDF'}
+                {loading ? t('preparingPdf') : t('download')}
               </Button>
             )}
           </PDFDownloadLink>
@@ -191,7 +193,7 @@ export default function Page() {
     >
       {/* Left Sidebar */}
       <div className="w-64 border-r bg-muted/30 p-4 hidden md:block">
-        <h2 className="font-semibold mb-4">Choose Template</h2>
+        <h2 className="font-semibold mb-4">{t('chooseTemplate')}</h2>
         <TabsList className="flex flex-col h-auto bg-transparent gap-2">
           <TabsTrigger
             onClick={() => setSelectedDocument('minimalistic')}
@@ -199,9 +201,11 @@ export default function Page() {
             className="w-full justify-start px-4 py-6 data-[state=active]:bg-background"
           >
             <div className="text-left">
-              <div className="font-medium">Minimalistic</div>
+              <div className="font-medium">
+                {t('templates.minimalistic.title')}
+              </div>
               <div className="text-xs text-muted-foreground">
-                Clean and simple design
+                {t('templates.minimalistic.description')}
               </div>
             </div>
           </TabsTrigger>
@@ -211,9 +215,11 @@ export default function Page() {
             className="w-full justify-start px-4 py-6 data-[state=active]:bg-background"
           >
             <div className="text-left">
-              <div className="font-medium">Professional</div>
+              <div className="font-medium">
+                {t('templates.professional.title')}
+              </div>
               <div className="text-xs text-muted-foreground">
-                Traditional business style
+                {t('templates.professional.description')}
               </div>
             </div>
           </TabsTrigger>
@@ -223,14 +229,18 @@ export default function Page() {
             className="w-full justify-start px-4 py-6 data-[state=active]:bg-background"
           >
             <div className="text-left">
-              <div className="font-medium">Modern & Creative</div>
-              <div className="text-xs text-muted-foreground">coming soon</div>
+              <div className="font-medium">
+                {t('templates.modernCreative.title')}
+              </div>
+              <div className="text-xs text-muted-foreground">
+                {t('templates.modernCreative.description')}
+              </div>
             </div>
           </TabsTrigger>
         </TabsList>
 
         <div className="mt-4">
-          <h2 className="font-semibold mb-4">Download Resume</h2>
+          <h2 className="font-semibold mb-4">{t('download')}</h2>
 
           {resume?.payment_successful ? (
             <PDFDownloadLink
@@ -255,10 +265,10 @@ export default function Page() {
                   {loading ? (
                     <div className="flex items-center gap-2">
                       <Loader2 className="mr-2 animate-spin" />
-                      Preparing PDF
+                      {t('preparingPdf')}
                     </div>
                   ) : (
-                    'Download PDF'
+                    t('download')
                   )}
                 </Button>
               )}
