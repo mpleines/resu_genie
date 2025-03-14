@@ -18,7 +18,9 @@
     "degree": "Abschluss",
     "email": "E-Mail",
     "generateResume": "Lebenslauf erstellen",
-    "signOut": "Abmelden"
+    "signOut": "Abmelden",
+    "next": "Weiter",
+    "previous": "Zurück"
   },
   "error": {
     "required": "Dieses Feld ist erforderlich",

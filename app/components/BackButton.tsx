@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { FunctionComponent } from 'react';
 import { ChevronLeft } from 'lucide-react';
 import { useStepper } from '../../hooks/useStepper';
+import { useTranslations } from 'next-intl';
 
 type Props = {
   disabled?: boolean;
@@ -11,6 +12,7 @@ type Props = {
 
 const BackButton: FunctionComponent<Props> = ({ disabled }) => {
   const stepper = useStepper();
+  const t = useTranslations('global');
 
   return (
     <Button
@@ -21,7 +23,7 @@ const BackButton: FunctionComponent<Props> = ({ disabled }) => {
       disabled={disabled}
     >
       <ChevronLeft />
-      Prev
+      {t('previous')}
     </Button>
   );
 };

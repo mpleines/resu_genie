@@ -18,7 +18,9 @@
     "degree": "Degree",
     "email": "E-Mail",
     "generateResume": "Generate Resume",
-    "signOut": "Sign Out"
+    "signOut": "Sign Out",
+    "next": "Next",
+    "previous": "Previous"
   },
   "error": {
     "required": "This field is required",
