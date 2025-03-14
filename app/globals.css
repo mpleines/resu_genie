@@ -4,6 +4,8 @@
 
 body {
   font-family: Arial, Helvetica, sans-serif;
+  /*this fixes a layout shift caused by shadcn dropdown (scrollbar disappears and causes CLS)  */
+  @apply !min-w-full;
 }
 
 html {
