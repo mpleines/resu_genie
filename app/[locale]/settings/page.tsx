@@ -15,7 +15,7 @@ export default function Page() {
   const t = useTranslations('settings');
 
   return (
-    <main className="max-w-screen-2xl w-full p-4 flex-1 overflow-y-auto">
+    <main className="mx-auto max-w-screen-2xl w-full p-4 flex-1 overflow-y-auto">
       <Card className="mt-4">
         <CardHeader>
           <CardTitle className="text-2xl">{t('title')}</CardTitle>
