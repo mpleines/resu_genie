@@ -41,7 +41,10 @@ const HeaderContent: FunctionComponent = () => {
     }
 
     return (
-      <div>
+      <div className="flex">
+        <div className="md:hidden">
+          <LocaleSwitch />
+        </div>
         <Sheet>
           <SheetTrigger>
             <Button className="md:hidden">
