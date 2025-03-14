@@ -3,9 +3,17 @@ import { auth } from './auth';
 import createMiddleware from 'next-intl/middleware';
 import { routing } from './i18n/routing';
 
-export const locales = ['en', 'de'];
-export const defaultLocale = 'en';
 const intlMiddleware = createMiddleware(routing);
+
+// Publicly accessible routes
+const publicPaths = [
+  '/',
+  '/legal',
+  '/privacy-policy',
+  '/signin',
+  '/about',
+  '/sitemap.xml',
+];
 
 export default async function middleware(req: NextRequest) {
   const { pathname } = new URL(req.url);
@@ -15,46 +23,14 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // Exclude NextAuth API routes from locale redirection
   if (pathname.startsWith('/api/auth')) {
     return NextResponse.next();
   }
 
-  const hasLocale = locales.some(
-    (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
-  );
-
-  // If no locale is present, detect preferred locale and redirect
-  if (!hasLocale) {
-    const acceptLanguage = req.headers.get('accept-language');
-    const preferredLocale =
-      acceptLanguage?.split(',')[0].split('-')[0] || defaultLocale;
-    const detectedLocale = locales.includes(preferredLocale)
-      ? preferredLocale
-      : defaultLocale;
-
-    return NextResponse.redirect(
-      new URL(`/${detectedLocale}${pathname}`, req.url)
-    );
-  }
-
-  // Extract the locale and path without locale
-  const locale = pathname.split('/')[1];
-  const pathWithoutLocale = pathname.replace(/^\/[^\/]+/, '') || '/';
-
-  // Publicly accessible routes
-  const publicPaths = [
-    '/',
-    '/legal',
-    '/privacy-policy',
-    '/signin',
-    '/about',
-    '/sitemap.xml',
-  ];
+  const path = pathname.replace(/^\/[^\/]+/, '') || '/';
 
   const isPublic = publicPaths.some(
-    (path) =>
-      pathWithoutLocale === path || pathWithoutLocale.startsWith(path + '/')
+    (publicPath) => path === publicPath || path.startsWith(publicPath + '/')
   );
 
   // For public routes, just apply the intl middleware without auth check
@@ -65,7 +41,7 @@ export default async function middleware(req: NextRequest) {
   // Check user session only for protected routes
   const session = await auth();
   if (!session?.user) {
-    const loginUrl = new URL(`/${locale}/signin`, req.url);
+    const loginUrl = new URL(`/signin`, req.url);
     loginUrl.searchParams.set('callbackUrl', req.url); // Redirect after login
     return NextResponse.redirect(loginUrl);
   }
