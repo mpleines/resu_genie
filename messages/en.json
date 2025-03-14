@@ -17,7 +17,8 @@
     "institution": "Institution",
     "degree": "Degree",
     "email": "E-Mail",
-    "generateResume": "Generate Resume"
+    "generateResume": "Generate Resume",
+    "signOut": "Sign Out"
   },
   "error": {
     "required": "This field is required",
@@ -207,5 +208,16 @@
       "title": "Payment successful",
       "description": "You are now able to download your resume as PDF"
     }
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Manage your account settings and preferences.",
+    "locale": {
+      "title": "Language",
+      "description": "Choose your preferred language for the app"
+    }
+  },
+  "userDropdown": {
+    "title": "My Account"
   }
 }

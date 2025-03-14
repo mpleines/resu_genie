@@ -10,8 +10,10 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useIsSmallScreen } from '@/hooks/useIsSmallScreen';
-import { LogOut } from 'lucide-react';
+import { LogOut, Settings } from 'lucide-react';
 import { signOut } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 interface UserDropdownProps {
   username: string;
   avatarUrl?: string;
@@ -19,6 +21,8 @@ interface UserDropdownProps {
 
 export function UserDropdown({ username, avatarUrl }: UserDropdownProps) {
   const isSmallScreen = useIsSmallScreen();
+  const router = useRouter();
+  const t = useTranslations();
 
   const getInitials = (name: string) => {
     return name
@@ -47,14 +51,18 @@ export function UserDropdown({ username, avatarUrl }: UserDropdownProps) {
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuLabel>{t('userDropdown.title')}</DropdownMenuLabel>
         <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={() => router.push('/settings')}>
+          <Settings className="mr-2 h4- w-4" />
+          <span>{t('settings.title')}</span>
+        </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => signOut({ callbackUrl: '/' })}
           className="text-red-600 focus:text-red-600 focus:bg-red-100"
         >
           <LogOut className="mr-2 h-4 w-4" />
-          <span>Sign out</span>
+          <span>{t('global.signOut')}</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

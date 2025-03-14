@@ -17,7 +17,8 @@
     "institution": "Institution",
     "degree": "Abschluss",
     "email": "E-Mail",
-    "generateResume": "Lebenslauf erstellen"
+    "generateResume": "Lebenslauf erstellen",
+    "signOut": "Abmelden"
   },
   "error": {
     "required": "Dieses Feld ist erforderlich",
@@ -207,5 +208,16 @@
       "title": "Zahlung erfolgreich",
       "description": "Du kannst nun den Lebenslauf herunterladen"
     }
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "description": "Verwalte deine Kontoeinstellungen und Präferenzen.",
+    "locale": {
+      "title": "Sprache",
+      "description": "Wähle deine bevorzugte Sprache für die App."
+    }
+  },
+  "userDropdown": {
+    "title": "Mein Konto"
   }
 }

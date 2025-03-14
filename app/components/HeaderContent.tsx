@@ -32,7 +32,6 @@ const HeaderContent: FunctionComponent = () => {
     if (session?.data?.user != null) {
       return (
         <div className="flex gap-2 items-center">
-          <LocaleSwitch />
           <UserDropdown
             username={session.data?.user.name ?? 'Unknown User'}
             avatarUrl={session.data?.user.image ?? undefined}
