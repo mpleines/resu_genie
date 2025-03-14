@@ -7,19 +7,22 @@ import { FunctionComponent } from 'react';
 type ResumeImageCardProps =
   | {
       imgUrl: string;
-      alt: string;
+      title: string;
+      description?: string;
       placeholder?: never;
     }
   | {
       placeholder: string;
-      alt?: never;
+      title?: never;
+      description?: never;
       imgUrl?: never;
     };
 
 const ResumeImageCard: FunctionComponent<ResumeImageCardProps> = ({
   placeholder,
   imgUrl,
-  alt,
+  title,
+  description,
 }) => {
   return (
     <div className="group relative">
@@ -37,7 +40,7 @@ const ResumeImageCard: FunctionComponent<ResumeImageCardProps> = ({
         {imgUrl != null && (
           <Image
             src={imgUrl}
-            alt={alt}
+            alt={title}
             className="h-full w-full object-cover"
             width={400}
             height={600}
@@ -53,11 +56,9 @@ const ResumeImageCard: FunctionComponent<ResumeImageCardProps> = ({
           <div className="absolute bottom-6 left-6">
             <Badge className="mb-2 gap-1">
               <FileIcon className="h-3 w-3" />
-              Minimalistic Template
+              {title}
             </Badge>
-            <p className="text-sm text-white">
-              For those who prefer a clean and simple design.
-            </p>
+            <p className="text-sm text-white">{description}</p>
           </div>
         </div>
       </div>

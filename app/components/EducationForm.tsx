@@ -15,7 +15,6 @@ import { Trash } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useCallback, useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import { useStepper } from '../(steps)/useStepper';
 import { useParams } from 'next/navigation';
 import { useScrollToTop } from '@/lib/useScrollToTop';
 import { z } from 'zod';
@@ -36,13 +35,20 @@ import { fetchEducation } from '@/lib/supabase/queries';
 import { Education } from '@/types/types';
 import useScrollToElement from '@/hooks/useScrollToElement';
 import { formatDate } from '@/lib/utils';
+import { useStepper } from '@/hooks/useStepper';
+import { useTranslations } from 'next-intl';
 
-const formSchema = z.object({
-  institute_name: z.string().min(1, { message: 'This field is required' }),
-  degree: z.string(),
-  start_date: z.date(),
-  end_date: z.date(),
-});
+const useFormSchema = () => {
+  const t = useTranslations('error');
+  const schema = z.object({
+    institute_name: z.string().min(1, { message: t('required') }),
+    degree: z.string(),
+    start_date: z.date(),
+    end_date: z.date(),
+  });
+
+  return schema;
+};
 
 export default function EducationForm() {
   useScrollToTop();
@@ -52,6 +58,9 @@ export default function EducationForm() {
   const stepper = useStepper();
   const params = useParams();
   const resumeId = Number(params['resumeId'] as string);
+  const t = useTranslations();
+
+  const formSchema = useFormSchema();
 
   const [educationLoading, setEducationLoading] = useState(true);
   const [educations, setEducations] = useState<Education[]>([]);
@@ -124,7 +133,7 @@ export default function EducationForm() {
   async function submitEducation() {
     if (educations.length < 1) {
       submitForm.setError('root', {
-        message: 'Please add at least one education',
+        message: t('education.atLeastOneEducation'),
       });
       scrollToError();
       return;
@@ -146,8 +155,8 @@ export default function EducationForm() {
         <form onSubmit={form.handleSubmit(addEducation)} className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Add Education</CardTitle>
-              <CardDescription>Add your previous education.</CardDescription>
+              <CardTitle>{t('education.title')}</CardTitle>
+              <CardDescription>{t('education.description')}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <FormField
@@ -156,12 +165,12 @@ export default function EducationForm() {
                 render={({ field }) => {
                   return (
                     <FormItem>
-                      <FormLabel>Institution Name</FormLabel>
+                      <FormLabel>{t('global.institution')}</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
                           disabled={form.formState.isSubmitting}
-                          placeholder="Institution Name"
+                          placeholder={t('placeholder.institution')}
                         />
                       </FormControl>
                       <FormMessage />
@@ -176,12 +185,12 @@ export default function EducationForm() {
                 render={({ field }) => {
                   return (
                     <FormItem>
-                      <FormLabel>Degree</FormLabel>
+                      <FormLabel>{t('global.degree')}</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
                           disabled={form.formState.isSubmitting}
-                          placeholder="e.g. Associate in digital photography, Bachelor of Arts, ..."
+                          placeholder={t('placeholder.degree')}
                         />
                       </FormControl>
                       <FormMessage />
@@ -196,7 +205,7 @@ export default function EducationForm() {
                 render={({ field }) => {
                   return (
                     <FormItem>
-                      <FormLabel>Start Date</FormLabel>
+                      <FormLabel>{t('global.startDate')}</FormLabel>
                       <FormControl>
                         <div>
                           <DatePicker
@@ -221,7 +230,7 @@ export default function EducationForm() {
                   render={({ field }) => {
                     return (
                       <FormItem>
-                        <FormLabel>End Date</FormLabel>
+                        <FormLabel>{t('global.endDate')}</FormLabel>
                         <FormControl>
                           <div>
                             <DatePicker
@@ -242,14 +251,14 @@ export default function EducationForm() {
 
               <div className="flex justify-end mt-6">
                 <Button disabled={form.formState.isSubmitting}>
-                  Add Education
+                  {t('education.addEducation')}
                 </Button>
               </div>
             </CardContent>
           </Card>
           <Card className="mt-4">
             <CardHeader>
-              <CardTitle>Education</CardTitle>
+              <CardTitle>{t('global.education')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
               {educationLoading && (
@@ -261,7 +270,7 @@ export default function EducationForm() {
 
               {!educationLoading && educations?.length === 0 && (
                 <p className="text-sm opacity-70 h-24">
-                  No Education added yet
+                  {t('education.noEducationYet')}
                 </p>
               )}
 

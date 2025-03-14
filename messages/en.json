@@ -1,0 +1,225 @@
+{
+  "global": {
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "name": "Name",
+    "phone": "Phone",
+    "street": "Street",
+    "city": "City",
+    "professionalExperienceInYears": "Years of Professional Experience",
+    "company": "Company",
+    "jobTitle": "Job Title",
+    "jobDescription": "Job Description",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "workExperience": "Work Experience",
+    "education": "Education",
+    "institution": "Institution",
+    "degree": "Degree",
+    "email": "E-Mail",
+    "generateResume": "Generate Resume",
+    "signOut": "Sign Out",
+    "next": "Next",
+    "previous": "Previous"
+  },
+  "error": {
+    "required": "This field is required",
+    "invalidUrl": "Invalid URL",
+    "nameTooShort": "Name must be at least 2 characters"
+  },
+  "errorBoundary": {
+    "title": "Something went wrong!",
+    "description": "We've encountered a critical error. Our team has been notified.",
+    "tryAgain": "Try again",
+    "goToDashboard": "Go to Dashboard"
+  },
+  "locales": {
+    "en": "English",
+    "de": "Deutsch"
+  },
+  "placeholder": {
+    "name": "Enter your name",
+    "phone": "Enter your phone number",
+    "street": "Enter your street",
+    "city": "Enter your city",
+    "professionalExperienceInYears": "Enter your years of professional experience",
+    "company": "Enter company name",
+    "jobTitle": "e.g., Software Engineer, Data Scientist, Plumber",
+    "jobDescription": "e.g., Developed a company website, led a team, created a new product",
+    "institution": "Enter institution name",
+    "degree": "e.g., Associate Degree in Digital Photography, Bachelor of Arts"
+  },
+  "header": {
+    "switchTo": {
+      "en": "Switch to English",
+      "de": "Auf Deutsch wechseln"
+    }
+  },
+  "landing": {
+    "heroNormal": "Build Your Resume with AI",
+    "heroShade": "Fast, Easy & Effective",
+    "subhero": "Generate a professional AI-enhanced resume in under 10 minutes – tailored and job-winning!",
+    "createResume": "Create Your Resume",
+    "templates": {
+      "minimalistic": {
+        "title": "Minimalist Template",
+        "description": "A clean and simple design for a professional look."
+      },
+      "professional": {
+        "title": "Professional Template",
+        "description": "A structured and polished design for a corporate feel."
+      },
+      "comingSoon": {
+        "title": "Coming Soon",
+        "description": "Stay tuned for new templates!"
+      }
+    },
+    "howItWorks": "How It Works",
+    "inputDetails": {
+      "title": "Enter Your Details",
+      "description": "Provide your professional background and experience with our easy-to-use interface."
+    },
+    "aiOptimization": {
+      "title": "AI Optimization",
+      "description": "Our advanced AI enhances your resume to maximize your job prospects."
+    },
+    "downloadAndApply": {
+      "title": "Download & Apply",
+      "description": "Get an ATS-optimized resume instantly and start applying with confidence."
+    },
+    "faq": "FAQ",
+    "isDataSecure": {
+      "title": "Is My Data Secure?",
+      "description": "Absolutely! We prioritize your privacy and work with trusted third-party services like ChatGPT and Supabase to ensure top-tier security."
+    },
+    "howDoesAiWork": {
+      "title": "How Does the AI Work?",
+      "description": "We send your details to ChatGPT for analysis and optimization, ensuring your resume remains authentic while being tailored for ATS systems."
+    },
+    "howToSignup": {
+      "title": "How Do I Sign Up?",
+      "description": "Click 'Create Your Resume' or 'Sign In' at the top right. We currently support Google Sign-In."
+    }
+  },
+  "signin": {
+    "title": "Sign In to ResuGenie",
+    "description": "Sign in to access ResuGenie and create your AI-powered resume.",
+    "google": "Sign in with Google",
+    "discord": "Sign in with Discord",
+    "alreadyRegistered": "An account with this email already exists. Did you use a different provider last time?"
+  },
+  "dashboard": {
+    "title": "My Resumes"
+  },
+  "newResumeCard": {
+    "title": "Create a New Resume",
+    "description": "Click to start building your resume."
+  },
+  "resumePreview": {
+    "unnamedResume": "Untitled Resume",
+    "unknownJobTitle": "Unknown Job Title",
+    "lastUpdated": "Last Updated",
+    "noSkillsListed": "No skills listed",
+    "deleteError": {
+      "title": "Error Deleting Resume",
+      "description": "Something went wrong. Please try again."
+    },
+    "deleteSuccess": {
+      "title": "Resume Deleted",
+      "description": "Your resume has been successfully deleted."
+    },
+    "deletePending": {
+      "title": "Deleting Resume",
+      "description": "Please wait while we delete your resume."
+    },
+    "deleteDialog": {
+      "title": "Are You Sure?",
+      "description": "This action is irreversible. Your resume will be permanently deleted."
+    }
+  },
+  "jobAdvertisement": {
+    "title": "Job Advertisement",
+    "description": "Paste a job advertisement link or enter the details manually.",
+    "jobUrl": "Job URL",
+    "jobUrlDescription": "Paste the job advertisement link to generate a matching resume.",
+    "submitUrl": "Submit URL",
+    "clearAndRetry": "Clear & Try Another",
+    "manualEntry": "Manual Entry",
+    "manualDescription": "Enter the full job description, including requirements and responsibilities.",
+    "crawlError": "Failed to fetch job advertisement.",
+    "crawlSuccess": "Job advertisement retrieved successfully!"
+  },
+  "personalInformation": {
+    "title": "Personal Information",
+    "description": "Enter your contact details to get started."
+  },
+  "skills": {
+    "title": "Skills",
+    "description": "List your relevant skills for the job.",
+    "addASkill": "Add a Skill",
+    "add": "Add",
+    "noSkillsAdded": "No skills added yet",
+    "remove": "Remove",
+    "atLeastOneSkill": "Please add at least one skill."
+  },
+  "workExperience": {
+    "title": "Work Experience",
+    "description": "List your previous jobs and roles.",
+    "addWorkExperience": "Add Work Experience",
+    "noWorkExperienceYet": "No work experience added yet.",
+    "atLeastOneWorkExperience": "Please add at least one work experience entry."
+  },
+  "education": {
+    "title": "Education",
+    "description": "List your academic background.",
+    "addEducation": "Add Education",
+    "noEducationYet": "No education added yet.",
+    "atLeastOneEducation": "Please add at least one education entry."
+  },
+  "summary": {
+    "title": "Summary",
+    "description": "Summary of your Inputs"
+  },
+  "downloadResume": {
+    "title": "Pay & Download",
+    "description": "Purchase the PDF Download of your Resume",
+    "chooseTemplate": "Choose Template",
+    "templates": {
+      "minimalistic": {
+        "title": "Minimalistic",
+        "description": "Clean & Simple"
+      },
+      "professional": {
+        "title": "Professional",
+        "description": "Traditional Business Style"
+      },
+      "modernCreative": {
+        "title": "Modern & Creative",
+        "description": "Coming Soon"
+      }
+    },
+    "purchaseNow": "Purchase Now (2,99€)",
+    "download": "Download Resume",
+    "preparingPdf": "Preparing PDF",
+    "checkout": {
+      "title": "Checkout",
+      "description": "By purchasing, you will unlock the PDF download for this resume. After purchasing, you can still change the layout if you want to."
+    },
+    "errorLoadingResume": "Failed to fetch resume. Please try again",
+    "paymentSuccessfull": {
+      "title": "Payment successful",
+      "description": "You are now able to download your resume as PDF"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Manage your account settings and preferences.",
+    "locale": {
+      "title": "Language",
+      "description": "Choose your preferred language for the app"
+    }
+  },
+  "userDropdown": {
+    "title": "My Account"
+  }
+}

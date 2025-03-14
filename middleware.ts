@@ -1,40 +1,55 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { auth } from './auth';
+import createMiddleware from 'next-intl/middleware';
+import { routing } from './i18n/routing';
 
-export default auth(async (req) => {
+const intlMiddleware = createMiddleware(routing);
+
+// Publicly accessible routes
+const publicPaths = [
+  '/',
+  '/legal',
+  '/privacy-policy',
+  '/signin',
+  '/about',
+  '/sitemap.xml',
+];
+
+export default async function middleware(req: NextRequest) {
   const { pathname } = new URL(req.url);
 
-  // Exclude the Stripe webhook route from authentication checks
+  // Exclude Stripe webhook from all middleware processing
   if (pathname.startsWith('/api/stripe-webhook')) {
     return NextResponse.next();
   }
 
-  // Allow public access to `/` and `/api/auth` (NextAuth routes)
-  if (
-    pathname === '/' ||
-    pathname.startsWith('/api/auth') ||
-    pathname === '/legal' ||
-    pathname === '/privacy-policy' ||
-    pathname === '/signin' ||
-    pathname === '/about' ||
-    pathname === '/sitemap.xml'
-  ) {
+  if (pathname.startsWith('/api/auth')) {
     return NextResponse.next();
   }
 
-  const session = await auth();
+  const path = pathname.replace(/^\/[^\/]+/, '') || '/';
 
-  // Redirect unauthenticated users to the login page
+  const isPublic = publicPaths.some(
+    (publicPath) => path === publicPath || path.startsWith(publicPath + '/')
+  );
+
+  // For public routes, just apply the intl middleware without auth check
+  if (isPublic) {
+    return intlMiddleware(req);
+  }
+
+  // Check user session only for protected routes
+  const session = await auth();
   if (!session?.user) {
-    const loginUrl = new URL('/api/auth/signin', req.url);
-    loginUrl.searchParams.set('callbackUrl', req.url); // Save redirect after login
+    const loginUrl = new URL(`/signin`, req.url);
+    loginUrl.searchParams.set('callbackUrl', req.url); // Redirect after login
     return NextResponse.redirect(loginUrl);
   }
 
-  return NextResponse.next();
-});
+  // Apply next-intl middleware for locale handling
+  return intlMiddleware(req);
+}
 
-// Ensure middleware runs for all routes
 export const config = {
-  matcher: '/((?!_next|favicon.ico|public).*)', // Exclude assets and public files
+  matcher: ['/', '/((?!_next|api|static|favicon.ico).*)'],
 };

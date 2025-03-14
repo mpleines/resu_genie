@@ -17,9 +17,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import { LocaleSwitch } from './LocaleSwitch';
+import { useTranslations } from 'next-intl';
 
 const HeaderContent: FunctionComponent = () => {
   const session = useSession();
+  const t = useTranslations('landing');
 
   const renderSessionContent = () => {
     if (session.status === 'loading') {
@@ -28,7 +31,7 @@ const HeaderContent: FunctionComponent = () => {
 
     if (session?.data?.user != null) {
       return (
-        <div className="flex gap-6 items-center">
+        <div className="flex gap-2 items-center">
           <UserDropdown
             username={session.data?.user.name ?? 'Unknown User'}
             avatarUrl={session.data?.user.image ?? undefined}
@@ -61,7 +64,7 @@ const HeaderContent: FunctionComponent = () => {
                   href="#how-it-works"
                   className="text-muted-foreground font-semibold"
                 >
-                  How it works
+                  {t('howItWorks')}
                 </Link>
               </SheetClose>
 
@@ -70,7 +73,7 @@ const HeaderContent: FunctionComponent = () => {
                   href="#faq"
                   className="text-muted-foreground font-semibold"
                 >
-                  FAQ
+                  {t('faq')}
                 </Link>
               </SheetClose>
               <SheetClose className="flex" asChild>
@@ -85,12 +88,13 @@ const HeaderContent: FunctionComponent = () => {
             href="#how-it-works"
             className="text-muted-foreground font-semibold"
           >
-            How it works
+            {t('howItWorks')}
           </Link>
 
           <Link href="#faq" className="text-muted-foreground font-semibold">
-            FAQ
+            {t('faq')}
           </Link>
+          <LocaleSwitch />
           <SignInButton />
         </div>
       </div>

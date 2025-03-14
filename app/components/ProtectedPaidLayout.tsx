@@ -2,8 +2,8 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useStepper } from '../(steps)/useStepper';
 import { Database } from '@/types/supabase';
+import { useStepper } from '@/hooks/useStepper';
 
 const ProtectedPaidLayout = ({
   children,

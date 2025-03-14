@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
-import '../globals.css';
-import Providers from '../components/Providers';
+import '../../globals.css';
+import '/node_modules/flag-icons/css/flag-icons.min.css';
+import Providers from '../../components/Providers';
 import { redirect } from 'next/navigation';
 import { auth } from '@/auth';
-import Footer from '../components/Footer';
+import Footer from '../../components/Footer';
 
 export const metadata: Metadata = {
   title:
