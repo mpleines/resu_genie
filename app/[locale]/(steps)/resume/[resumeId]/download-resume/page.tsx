@@ -4,21 +4,46 @@ import { Button } from '@/components/ui/button';
 import { ResumeResponse } from '@/lib/promptHelper';
 import { createClient } from '@/lib/supabase/client';
 import { useScrollToTop } from '@/lib/useScrollToTop';
-import { Loader2 } from 'lucide-react';
+import { Download, Loader2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useParams } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { ReactElement, useCallback, useEffect, useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   MinimalisticResumeTemplate,
   ProfessionalResumeTemplate,
 } from '@/app/components/PdfTemplates';
-import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
+import { PDFViewer } from '@react-pdf/renderer';
 import { useIsSmallScreen } from '@/hooks/useIsSmallScreen';
 import { CheckoutDialog } from '@/app/components/Checkout';
 import { Database } from '@/types/supabase';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslations } from 'next-intl';
+import { pdf } from '@react-pdf/renderer';
+
+const handlePdfDownload = async (
+  pdfTemplate: ReactElement<any>,
+  fileName: string
+) => {
+  let url = '';
+  try {
+    const blob = await pdf(pdfTemplate).toBlob();
+    url = URL.createObjectURL(blob);
+
+    const response = await fetch(url);
+    const blobData = await response.blob();
+    const blobUrl = window.URL.createObjectURL(blobData);
+
+    const link = document.createElement('a');
+    link.href = blobUrl;
+    link.download = `${fileName}.pdf`;
+    link.click();
+  } catch (error) {
+    console.error('Error in download process:', error);
+  } finally {
+    if (url) URL.revokeObjectURL(url);
+  }
+};
 
 export default function Page() {
   const session = useSession();
@@ -91,6 +116,31 @@ export default function Page() {
     setResume(resume!);
   }, [resumeId, supabase, userId]);
 
+  const downloadPdf = async () => {
+    const filename = `resume-${session?.data?.user?.name}-${Date.now()}}`;
+
+    if (selectedDocument === 'minimalistic') {
+      const doc = (
+        <MinimalisticResumeTemplate
+          data={optimizedResume}
+          email={session.data?.user?.email ?? ''}
+        />
+      );
+      handlePdfDownload(doc, filename);
+    }
+
+    if (selectedDocument === 'professional') {
+      const doc = (
+        <ProfessionalResumeTemplate
+          data={optimizedResume}
+          email={session?.data?.user?.email ?? ''}
+        />
+      );
+
+      handlePdfDownload(doc, filename);
+    }
+  };
+
   useEffect(() => {
     getResume();
     getOptimizedResumeData();
@@ -138,29 +188,10 @@ export default function Page() {
           </TabsTrigger>
         </TabsList>
         {resume?.payment_successful ? (
-          <PDFDownloadLink
-            className="w-full mt-2"
-            document={
-              selectedDocument === 'minimalistic' ? (
-                <MinimalisticResumeTemplate
-                  data={optimizedResume}
-                  email={session.data?.user?.email ?? ''}
-                />
-              ) : (
-                <ProfessionalResumeTemplate
-                  data={optimizedResume}
-                  email={session?.data?.user?.email ?? ''}
-                />
-              )
-            }
-            fileName={`${session?.data?.user?.name ?? ''}-resume.pdf`}
-          >
-            {({ loading }) => (
-              <Button className="w-full h-full mt-2">
-                {loading ? t('preparingPdf') : t('download')}
-              </Button>
-            )}
-          </PDFDownloadLink>
+          <Button onClick={downloadPdf}>
+            <Download />
+            <div>{t('download')}</div>
+          </Button>
         ) : (
           <CheckoutDialog resumeId={resumeId} />
         )}
@@ -243,36 +274,10 @@ export default function Page() {
           <h2 className="font-semibold mb-4">{t('download')}</h2>
 
           {resume?.payment_successful ? (
-            <PDFDownloadLink
-              className="w-full mt-2"
-              document={
-                selectedDocument === 'minimalistic' ? (
-                  <MinimalisticResumeTemplate
-                    data={optimizedResume}
-                    email={session.data?.user?.email ?? ''}
-                  />
-                ) : (
-                  <ProfessionalResumeTemplate
-                    data={optimizedResume}
-                    email={session?.data?.user?.email ?? ''}
-                  />
-                )
-              }
-              fileName={`${session?.data?.user?.name ?? ''}-resume.pdf`}
-            >
-              {({ loading }) => (
-                <Button className="w-full h-full mt-2">
-                  {loading ? (
-                    <div className="flex items-center gap-2">
-                      <Loader2 className="mr-2 animate-spin" />
-                      {t('preparingPdf')}
-                    </div>
-                  ) : (
-                    t('download')
-                  )}
-                </Button>
-              )}
-            </PDFDownloadLink>
+            <Button onClick={downloadPdf}>
+              <Download />
+              <div>{t('download')}</div>
+            </Button>
           ) : (
             <CheckoutDialog resumeId={resumeId} />
           )}
