@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export const MinimalisticResumeTemplate = (props, ref) => {
+export const MinimalisticResumeTemplate = (props) => {
   const {
     data: { personal_information, work_experience, summary, skills, education },
     email,
