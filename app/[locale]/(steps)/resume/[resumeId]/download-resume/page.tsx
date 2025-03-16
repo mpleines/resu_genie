@@ -20,6 +20,7 @@ import { Database } from '@/types/supabase';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslations } from 'next-intl';
 import { pdf } from '@react-pdf/renderer';
+import MobilePdfPreview from '@/app/components/MobilePdfPreview';
 
 const handlePdfDownload = async (
   pdfTemplate: ReactElement<any>,
@@ -188,7 +189,7 @@ export default function Page() {
           </TabsTrigger>
         </TabsList>
         {resume?.payment_successful ? (
-          <Button onClick={downloadPdf}>
+          <Button onClick={downloadPdf} className="w-full mt-2">
             <Download />
             <div>{t('download')}</div>
           </Button>
@@ -196,20 +197,24 @@ export default function Page() {
           <CheckoutDialog resumeId={resumeId} />
         )}
         <TabsContent value="minimalistic" className="w-full mt-2">
-          <PDFViewer width="100%" height="500px" showToolbar={false}>
-            <MinimalisticResumeTemplate
-              data={optimizedResume}
-              email={session.data?.user?.email ?? ''}
-            />
-          </PDFViewer>
+          <MobilePdfPreview
+            document={
+              <MinimalisticResumeTemplate
+                data={optimizedResume}
+                email={session.data?.user?.email ?? ''}
+              />
+            }
+          />
         </TabsContent>
         <TabsContent value="professional" className="mt-0">
-          <PDFViewer width="100%" height="500px" showToolbar={false}>
-            <ProfessionalResumeTemplate
-              data={optimizedResume}
-              email={session?.data?.user?.email ?? ''}
-            />
-          </PDFViewer>
+          <MobilePdfPreview
+            document={
+              <ProfessionalResumeTemplate
+                data={optimizedResume}
+                email={session?.data?.user?.email ?? ''}
+              />
+            }
+          />
         </TabsContent>
         <TabsContent value="modern_creative" className="mt-0"></TabsContent>
       </Tabs>
