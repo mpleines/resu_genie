@@ -26,23 +26,22 @@ const handlePdfDownload = async (
   pdfTemplate: ReactElement<any>,
   fileName: string
 ) => {
-  let url = '';
   try {
     const blob = await pdf(pdfTemplate).toBlob();
-    url = URL.createObjectURL(blob);
-
-    const response = await fetch(url);
-    const blobData = await response.blob();
-    const blobUrl = window.URL.createObjectURL(blobData);
+    const url = URL.createObjectURL(blob);
 
     const link = document.createElement('a');
-    link.href = blobUrl;
+    link.href = url;
     link.download = `${fileName}.pdf`;
+
+    // Append to body to ensure it works on mobile
+    document.body.appendChild(link);
     link.click();
+
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   } catch (error) {
     console.error('Error in download process:', error);
-  } finally {
-    if (url) URL.revokeObjectURL(url);
   }
 };
 
