@@ -177,10 +177,18 @@ export default function Page() {
     return (
       <Tabs orientation="horizontal" defaultValue="minimalistic">
         <TabsList className="mt-2 flex flex-row justify-between">
-          <TabsTrigger value="minimalistic" className="w-full">
+          <TabsTrigger
+            value="minimalistic"
+            className="w-full"
+            onClick={() => setSelectedDocument('minimalistic')}
+          >
             Minimalistic
           </TabsTrigger>
-          <TabsTrigger value="professional" className="w-full">
+          <TabsTrigger
+            value="professional"
+            className="w-full"
+            onClick={() => setSelectedDocument('professional')}
+          >
             Professional
           </TabsTrigger>
           <TabsTrigger disabled value="modern_creative" className="w-full">
