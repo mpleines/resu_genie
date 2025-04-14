@@ -246,7 +246,9 @@ export default function JobAdvertisementForm({ initialData }: Props) {
                 <div className="mt-4">
                   <div className="flex items-center justify-between flex-wrap py-2 ">
                     <h3 className="text-lg">{t('title')}</h3>
-                    <Button onClick={clear}>{t('clearAndRetry')}</Button>
+                    <Button variant="destructive" onClick={clear}>
+                      {t('clearAndRetry')}
+                    </Button>
                   </div>
                   <Form {...submitForm}>
                     <form
