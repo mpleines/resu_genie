@@ -27,7 +27,7 @@ const ResumeImageCard: FunctionComponent<ResumeImageCardProps> = ({
   return (
     <div className="group relative">
       <div
-        className="absolute inset-0 rounded-xl bg-gradient-to-r from-primary/50 to-primary blur-lg transition-all group-hover:blur-xl"
+        className="absolute inset-0 rounded-xl bg-gradient-to-r from-white to-gray-100 blur-lg transition-all group-hover:blur-xl"
         aria-hidden="true"
       />
       <div
@@ -54,7 +54,7 @@ const ResumeImageCard: FunctionComponent<ResumeImageCardProps> = ({
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent p-6">
           <div className="absolute bottom-6 left-6">
-            <Badge className="mb-2 gap-1">
+            <Badge className="mb-2 gap-1 ">
               <FileIcon className="h-3 w-3" />
               {title}
             </Badge>

@@ -67,7 +67,7 @@ const HeaderContent: FunctionComponent = () => {
                   href="#how-it-works"
                   className="text-muted-foreground font-semibold"
                 >
-                  {t('howItWorks')}
+                  {t('howItWorks.title')}
                 </Link>
               </SheetClose>
 
@@ -76,7 +76,7 @@ const HeaderContent: FunctionComponent = () => {
                   href="#faq"
                   className="text-muted-foreground font-semibold"
                 >
-                  {t('faq')}
+                  {t('faq.title')}
                 </Link>
               </SheetClose>
               <SheetClose className="flex" asChild>
@@ -91,11 +91,11 @@ const HeaderContent: FunctionComponent = () => {
             href="#how-it-works"
             className="text-muted-foreground font-semibold"
           >
-            {t('howItWorks')}
+            {t('howItWorks.title')}
           </Link>
 
           <Link href="#faq" className="text-muted-foreground font-semibold">
-            {t('faq')}
+            {t('faq.title')}
           </Link>
           <LocaleSwitch />
           <SignInButton />

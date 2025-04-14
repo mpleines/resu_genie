@@ -60,6 +60,10 @@
     "heroShade": "Fast, Easy & Effective",
     "subhero": "Generate a professional AI-enhanced resume in under 10 minutes – tailored and job-winning!",
     "createResume": "Create Your Resume",
+    "features": {
+      "title": "Professional Resume Templates",
+      "description": "Choose from our collection of professionally designed templates to make your resume stand out."
+    },
     "templates": {
       "minimalistic": {
         "title": "Minimalist Template",
@@ -74,7 +78,10 @@
         "description": "Stay tuned for new templates!"
       }
     },
-    "howItWorks": "How It Works",
+    "howItWorks": {
+      "title": "How it works",
+      "description": "Our simple three-step process helps you create a professional resume in minutes"
+    },
     "inputDetails": {
       "title": "Enter Your Details",
       "description": "Provide your professional background and experience with our easy-to-use interface."
@@ -87,7 +94,10 @@
       "title": "Download & Apply",
       "description": "Get an ATS-optimized resume instantly and start applying with confidence."
     },
-    "faq": "FAQ",
+    "faq": {
+      "title": "FAQ",
+      "description": "Answers to frequently asked questions about resugenie"
+    },
     "isDataSecure": {
       "title": "Is My Data Secure?",
       "description": "Absolutely! We prioritize your privacy and work with trusted third-party services like ChatGPT and Supabase to ensure top-tier security."
@@ -99,7 +109,12 @@
     "howToSignup": {
       "title": "How Do I Sign Up?",
       "description": "Click 'Create Your Resume' or 'Sign In' at the top right. We currently support Google Sign-In."
-    }
+    },
+    "readyToLandDreamJob": {
+      "title": "Ready to land your dream job?",
+      "description": "Create your Resume in under 10 minutes now."
+    },
+    "learnMore": "Learn More"
   },
   "signin": {
     "title": "Sign In to ResuGenie",
