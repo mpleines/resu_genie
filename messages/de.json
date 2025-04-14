@@ -56,10 +56,14 @@
     }
   },
   "landing": {
-    "heroNormal": "Erstellen Sie Ihren Lebenslauf mit KI",
+    "heroNormal": "Lebenslauf mit KI erstellen",
     "heroShade": "Schnell, Einfach & Effektiv",
     "subhero": "Erstellen Sie in weniger als 10 Minuten einen professionellen, KI-optimierten Lebenslauf – maßgeschneidert und jobgewinnend!",
     "createResume": "Lebenslauf erstellen",
+    "features": {
+      "title": "Professionelle Lebenslauf Vorlagen",
+      "description": "Wählen Sie aus unserer Sammlung professionell gestalteter Vorlagen, um Ihren Lebenslauf hervorstechen zu lassen."
+    },
     "templates": {
       "minimalistic": {
         "title": "Minimalistisches Template",
@@ -74,7 +78,10 @@
         "description": "Neue Templates folgen bald!"
       }
     },
-    "howItWorks": "So funktioniert es",
+    "howItWorks": {
+      "title": "So funktioniert es",
+      "description": "Unser einfacher Drei-Schritte-Prozess hilft Ihnen, einen professionellen Lebenslauf in nur wenigen Minuten zu erstellen."
+    },
     "inputDetails": {
       "title": "Geben Sie Ihre Daten ein",
       "description": "Tragen Sie Ihre beruflichen Informationen und Erfahrungen mit unserer benutzerfreundlichen Oberfläche ein."
@@ -87,7 +94,10 @@
       "title": "Herunterladen & Bewerben",
       "description": "Erhalten Sie sofort einen ATS-optimierten Lebenslauf und bewerben Sie sich mit Selbstvertrauen."
     },
-    "faq": "Häufig gestellte Fragen",
+    "faq": {
+      "title": "Häufig gestellte Fragen",
+      "description": "Antworten zu häufig gestellten Fragen über resugenie"
+    },
     "isDataSecure": {
       "title": "Sind meine Daten sicher?",
       "description": "Ja! Wir legen großen Wert auf Datenschutz und arbeiten mit vertrauenswürdigen Drittanbietern wie ChatGPT und Supabase zusammen, um höchste Sicherheit zu gewährleisten."
@@ -99,7 +109,12 @@
     "howToSignup": {
       "title": "Wie melde ich mich an?",
       "description": "Klicken Sie auf 'Lebenslauf erstellen' oder 'Anmelden' oben rechts. Derzeit unterstützen wir Google-Anmeldung."
-    }
+    },
+    "readyToLandDreamJob": {
+      "title": "Bist du bereit deinen Traumjob zu bekommen? ",
+      "description": "Dann erstelle jetzt in unter 10 Minuten einen Lebenslauf."
+    },
+    "learnMore": "Mehr erfahren"
   },
   "signin": {
     "title": "Bei ResuGenie anmelden",
