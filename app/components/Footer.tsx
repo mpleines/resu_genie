@@ -1,5 +1,4 @@
-import { Badge } from '@/components/ui/badge';
-import { Copyright, Dot } from 'lucide-react';
+import { Copyright } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Footer() {
@@ -7,7 +6,7 @@ export default function Footer() {
     <footer className="p-4 border-t">
       <div className="max-w-screen-2xl mx-auto flex flex-col space-y-2 md:flex-row md:justify-between md:space-y-0">
         <div className="flex items-center gap-2">
-          ResuGenie by{' '}
+          resugenie by{' '}
           <Link href="https://maikpleines.com" className="underline">
             Maik Pleines
           </Link>
