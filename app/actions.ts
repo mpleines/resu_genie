@@ -1,11 +1,12 @@
 'use server';
 
-import openAiClient from '@/lib/openaiClient';
-import { createResumePrompt, ResumeResponse } from '@/lib/promptHelper';
+import { createResumePrompt, ResumeResponseSchema } from '@/lib/promptHelper';
 import supabaseClient from '@/lib/supabase/server';
 import { Summary } from '@/types/types';
 import { Session } from 'next-auth';
 import { redirect } from 'next/navigation';
+import { generateObject } from 'ai';
+import openAiClient from '@/lib/openaiClient';
 
 export async function generateResume(
   resumeId: string,
@@ -14,27 +15,40 @@ export async function generateResume(
 ) {
   const supabase = supabaseClient();
   // FIXME: type errors
+
+  if (user?.email == null) {
+    throw new Error('user email is null');
+  }
+
+  if (user?.id == null) {
+    throw new Error('user id is null');
+  }
+
   const resumePromptData = {
     // Job advertisement
     job_advertisement: data?.job_advertisement.text ?? '',
     // Personal information
     personal_information: {
-      ...data?.personal_information!,
+      ...data.personal_information,
       // User's email is required
-      email: user?.email!,
+      email: user.email,
     },
     // Skills
-    skills: data?.skills?.map((skill) => skill.skill_name) ?? [],
+    skills: data?.skills?.map((skill) => skill.skill_name),
     // Work experience
-    work_experience: data?.work_experience!,
+    work_experience: data.work_experience,
     // Education
-    education: data?.education ?? [],
+    education: data.education,
   };
 
   const prompt = createResumePrompt(resumePromptData);
-  const response = await openAiClient.completions(prompt);
-  const resumeResponseStr = response.data.choices[0].message.content;
-  const resumeData: ResumeResponse = JSON.parse(resumeResponseStr);
+  const response = await generateObject({
+    model: openAiClient.chat('gpt-4o-mini'),
+    schema: ResumeResponseSchema,
+    messages: [{ role: 'user', content: prompt }],
+  });
+
+  const resumeData = response.object;
 
   // save resume data to supabase
   try {
@@ -45,7 +59,7 @@ export async function generateResume(
         last_updated: new Date().toISOString(),
       })
       .eq('id', resumeId)
-      .eq('user_id', user?.id!);
+      .eq('user_id', user.id);
   } catch (error) {
     console.error(error);
   } finally {
