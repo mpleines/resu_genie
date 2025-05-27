@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 export type ResumeData = {
   personal_information: {
     name: string;
@@ -35,6 +37,38 @@ export type ResumeResponse = Omit<ResumeData, 'work_experience'> & {
   improvement_tips: string[];
   summary: string;
 };
+
+export const ResumeResponseSchema = z.object({
+  job_advertisement: z.string(),
+  summary: z.string(),
+  personal_information: z.object({
+    name: z.string(),
+    email: z.string(),
+    phone_1: z.string(),
+    address: z.string(),
+    city: z.string(),
+    professional_experience_in_years: z.number(),
+  }),
+  skills: z.array(z.string()),
+  education: z.array(
+    z.object({
+      institute_name: z.string(),
+      degree: z.string().optional(),
+      start_date: z.string(),
+      end_date: z.string(),
+    })
+  ),
+  work_experience: z.array(
+    z.object({
+      organisation_name: z.string(),
+      job_description: z.array(z.string()).optional(),
+      start_date: z.string(),
+      end_date: z.string(),
+      profile: z.string(),
+    })
+  ),
+  improvement_tips: z.array(z.string()),
+});
 
 export const resumeResponseTemplate: ResumeResponse = {
   job_advertisement: 'Job description',

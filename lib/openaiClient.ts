@@ -1,18 +1,8 @@
-import axios from "axios";
+import { createOpenAI } from '@ai-sdk/openai';
 
-axios.defaults.headers.common[
-  "Authorization"
-] = `Bearer ${process.env.NEXT_PUBLIC_OPENAI_API_KEY}`;
-
-const completions = async (prompt: string) => {
-  return axios.post("https://api.openai.com/v1/chat/completions", {
-    model: "gpt-4o-mini",
-    messages: [{ role: "user", content: prompt }],
-  });
-};
-
-const openAiClient = {
-  completions,
-};
+const openAiClient = createOpenAI({
+  compatibility: 'strict', // strict mode, enable when using the OpenAI API
+  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+});
 
 export default openAiClient;
