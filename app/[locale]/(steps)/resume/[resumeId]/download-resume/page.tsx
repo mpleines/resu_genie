@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/client';
 import { useScrollToTop } from '@/lib/useScrollToTop';
 import { Download, Loader2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { ReactElement, useCallback, useEffect, useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
@@ -61,6 +61,9 @@ export default function Page() {
 
   const params = useParams();
   const resumeId = Number(params['resumeId'] as string);
+
+  const searchParams = useSearchParams();
+  const jobId = searchParams?.get('jobId') ?? null;
 
   const isSmallScreen = useIsSmallScreen();
 
