@@ -117,8 +117,8 @@
     "learnMore": "Learn More"
   },
   "signin": {
-    "title": "Sign In to ResuGenie",
-    "description": "Sign in to access ResuGenie and create your AI-powered resume.",
+    "title": "Sign In to resugenie.",
+    "description": "Sign in to access resugenie and create your AI-powered resume.",
     "google": "Sign in with Google",
     "discord": "Sign in with Discord",
     "alreadyRegistered": "An account with this email already exists. Did you use a different provider last time?"

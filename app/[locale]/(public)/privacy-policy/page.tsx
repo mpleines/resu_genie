@@ -157,7 +157,7 @@ export default function Page() {
             </ul>
             <p className="mt-4">
               To exercise these rights, contact us at
-              mpleines.service@gmail.com.
+              service.mpleines@gmail.com.
             </p>
           </CardContent>
         </Card>
