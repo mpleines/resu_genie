@@ -1,8 +1,8 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { generateObject } from "https://esm.sh/ai";
-import { createOpenAI } from "https://esm.sh/@ai-sdk/openai";
-import { z } from "https://esm.sh/zod";
-import type { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { generateObject } from 'https://esm.sh/ai';
+import { createOpenAI } from 'https://esm.sh/@ai-sdk/openai';
+import { z } from 'https://esm.sh/zod';
+import type { SupabaseClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 // TODO: move this to a shared folder to avoid duplicating from /types/types.ts
 type Summary = {
@@ -46,57 +46,57 @@ export const ResumeResponseSchema = z.object({
     professional_experience_in_years: z.number(),
   }),
   skills: z.array(z.string()),
-  education: z.array(z.object({
-    institute_name: z.string(),
-    degree: z.string().optional(),
-    start_date: z.string(),
-    end_date: z.string(),
-  })),
-  work_experience: z.array(z.object({
-    organisation_name: z.string(),
-    job_description: z.array(z.string()).optional(),
-    start_date: z.string(),
-    end_date: z.string(),
-    profile: z.string(),
-  })),
+  education: z.array(
+    z.object({
+      institute_name: z.string(),
+      degree: z.string().optional(),
+      start_date: z.string(),
+      end_date: z.string(),
+    })
+  ),
+  work_experience: z.array(
+    z.object({
+      organisation_name: z.string(),
+      job_description: z.array(z.string()).optional(),
+      start_date: z.string(),
+      end_date: z.string(),
+      profile: z.string(),
+    })
+  ),
   improvement_tips: z.array(z.string()),
 });
 
 const resumeResponseTemplate = {
-  job_advertisement: "Job description",
-  summary: "A concise professional summary tailored to the job description.",
+  job_advertisement: 'Job description',
+  summary: 'A concise professional summary tailored to the job description.',
   personal_information: {
-    name: "Full Name",
-    phone_1: "Phone Number",
-    email: "Email Address",
-    address: "Address",
-    city: "City",
+    name: 'Full Name',
+    phone_1: 'Phone Number',
+    email: 'Email Address',
+    address: 'Address',
+    city: 'City',
     professional_experience_in_years: 0,
   },
-  skills: [
-    "List of relevant skills based on job description and resume data",
-  ],
+  skills: ['List of relevant skills based on job description and resume data'],
   education: [
     {
-      institute_name: "Institution Name",
-      degree: "Degree",
-      start_date: "Start Date",
-      end_date: "End Date",
+      institute_name: 'Institution Name',
+      degree: 'Degree',
+      start_date: 'Start Date',
+      end_date: 'End Date',
     },
   ],
   work_experience: [
     {
-      profile: "Job Title",
-      job_description: [
-        "List of responsibilities and achievements",
-      ],
-      organisation_name: "Company Name",
-      start_date: "Start Date",
-      end_date: "End Date",
+      profile: 'Job Title',
+      job_description: ['List of responsibilities and achievements'],
+      organisation_name: 'Company Name',
+      start_date: 'Start Date',
+      end_date: 'End Date',
     },
   ],
   improvement_tips: [
-    "List any tips for improving the resume, including any missing information or areas that could be strengthened.",
+    'List any tips for improving the resume, including any missing information or areas that could be strengthened.',
   ],
 };
 
@@ -107,12 +107,10 @@ const createResumePrompt = (resumePromptData: Summary) => `
   ${resumePromptData.job_advertisement}
 
   Resume Data:
-  ${
-  JSON.stringify({
+  ${JSON.stringify({
     ...resumePromptData,
     job_advertisement: undefined,
-  })
-}
+  })}
 
   Instructions:
   1. Analyze the job description and resume data carefully.
@@ -130,34 +128,43 @@ const createResumePrompt = (resumePromptData: Summary) => `
   10. If calculating dates or durations, ensure the correct year is {datetime.datetime.now().year}.
 `;
 const openAiClient = createOpenAI({
-  compatibility: "strict",
-  apiKey: Deno.env.get("NEXT_PUBLIC_OPENAI_API_KEY"),
+  compatibility: 'strict',
+  apiKey: Deno.env.get('NEXT_PUBLIC_OPENAI_API_KEY'),
 });
 
-async function fetchSummary(
-  { supabaseClient, userId, resumeId }: {
-    supabaseClient: SupabaseClient;
-    userId: string;
-    resumeId: string;
-  },
-) {
-  return await supabaseClient.from("resume").select(`
+async function fetchSummary({
+  supabaseClient,
+  userId,
+  resumeId,
+}: {
+  supabaseClient: SupabaseClient;
+  userId: string;
+  resumeId: string;
+}) {
+  return await supabaseClient
+    .from('resume')
+    .select(
+      `
         job_advertisement (text),
         personal_information (name, phone_1, address, city, professional_experience_in_years),
         skills (skill_name),
         work_experience (organisation_name, profile, job_description ,start_date, end_date),
         education (institute_name, degree, start_date, end_date)
-      `).eq("id", resumeId).eq("user_id", userId).single();
+      `
+    )
+    .eq('id', resumeId)
+    .eq('user_id', userId)
+    .single();
 }
 
 Deno.serve(async (req) => {
-  try {
-    const { resumeJobId, resumeId, userId, userEmail } = await req.json();
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-    );
+  const { resumeJobId, resumeId, userId, userEmail } = await req.json();
+  const supabase = createClient(
+    Deno.env.get('SUPABASE_URL')!,
+    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+  );
 
+  try {
     const { data, error: summaryError } = await fetchSummary({
       supabaseClient: supabase,
       userId,
@@ -167,11 +174,11 @@ Deno.serve(async (req) => {
       throw new Error(
         `Error fetching summary data: ${
           summaryError?.message ?? JSON.stringify(summaryError)
-        }`,
+        }`
       );
     }
     const resumePromptData = {
-      job_advertisement: data?.job_advertisement?.text ?? "",
+      job_advertisement: data?.job_advertisement?.text ?? '',
       personal_information: {
         ...data.personal_information,
         email: userEmail,
@@ -182,28 +189,41 @@ Deno.serve(async (req) => {
     };
     const prompt = createResumePrompt(resumePromptData);
     const response = await generateObject({
-      model: openAiClient.chat("gpt-4o-mini"),
+      model: openAiClient.chat('gpt-4o-mini'),
       schema: ResumeResponseSchema,
       messages: [
         {
-          role: "user",
+          role: 'user',
           content: prompt,
         },
       ],
     });
     const resumeData = response.object;
-    await supabase.from("resume").update({
-      chat_gpt_response_raw: resumeData,
-      last_updated: new Date().toISOString(),
-    }).eq("id", resumeId).eq("user_id", userId);
-    await supabase.from("resume_job").update({
-      status: "done",
-    }).eq("id", resumeJobId);
+    await supabase
+      .from('resume')
+      .update({
+        chat_gpt_response_raw: resumeData,
+        last_updated: new Date().toISOString(),
+      })
+      .eq('id', resumeId)
+      .eq('user_id', userId);
+    await supabase
+      .from('resume_job')
+      .update({
+        status: 'done',
+      })
+      .eq('id', resumeJobId);
     return new Response(null, {
       status: 200,
     });
   } catch (error) {
-    console.error("Function error:", error);
+    console.error('Function error:', error);
+    await supabase
+      .from('resume_job')
+      .update({
+        status: 'failed',
+      })
+      .eq('id', resumeJobId);
     return new Response(
       JSON.stringify({
         error: error.message,
@@ -211,9 +231,9 @@ Deno.serve(async (req) => {
       {
         status: 500,
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
-      },
+      }
     );
   }
 });

@@ -20,9 +20,13 @@ export function SubmitResume(props: {
 
   async function handleResumeGeneration() {
     setIsLoading(true);
-    const { jobId } = await generateResumeJob(props.resumeId, props.user);
-    router.push(`/resume/${props.resumeId}/generating?jobId=${jobId}`);
-    setIsLoading(false);
+    try {
+      const { jobId } = await generateResumeJob(props.resumeId, props.user);
+      router.push(`/resume/${props.resumeId}/generating?jobId=${jobId}`);
+      setIsLoading(false);
+    } catch (error: any) {
+      setIsLoading(false);
+    }
   }
 
   return (

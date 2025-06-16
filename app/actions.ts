@@ -19,7 +19,7 @@ export async function generateResumeJob(
       .from('resume_job')
       .select()
       .eq('resume_id', Number(resumeId))
-      .single();
+      .maybeSingle();
 
     // if the job is still pending or already done, return
     if (existingJob?.status === 'pending' || existingJob?.status === 'done') {
@@ -41,27 +41,15 @@ export async function generateResumeJob(
       return { jobId: null };
     }
 
-    const { error: edgeFnError } = await supabase.functions.invoke(
-      'generate_resume',
-      {
-        body: {
-          name: 'Functions',
-          resumeJobId: job.id,
-          resumeId,
-          userId: user.id,
-          userEmail: user.email,
-        },
-      }
-    );
-
-    if (edgeFnError) {
-      console.error('Error invoking generate_resume function:', edgeFnError);
-      await supabase
-        .from('resume_job')
-        .update({ status: 'failed' })
-        .eq('id', job.id);
-      throw new Error('Failed to invoke generate_resume function');
-    }
+    supabase.functions.invoke('generate_resume', {
+      body: {
+        name: 'Functions',
+        resumeJobId: job.id,
+        resumeId,
+        userId: user.id,
+        userEmail: user.email,
+      },
+    });
 
     return { jobId: job.id };
   } catch (error: any) {

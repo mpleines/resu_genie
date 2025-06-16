@@ -2,7 +2,7 @@
 
 import { createClient } from '@/lib/supabase/client';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Loader2 } from 'lucide-react';
 
 export default function Page() {
@@ -11,6 +11,7 @@ export default function Page() {
   const searchParams = useSearchParams();
   const jobId = searchParams.get('jobId');
   const router = useRouter();
+  const [jobFailed, setJobFailed] = useState<boolean>(false);
 
   useEffect(() => {
     if (!jobId) return;
@@ -25,6 +26,10 @@ export default function Page() {
 
       if (data?.status === 'done') {
         router.push(`/resume/${resumeId}/download-resume/`);
+      }
+
+      if (data?.status === 'failed') {
+        setJobFailed(true);
       }
     };
 
@@ -45,6 +50,10 @@ export default function Page() {
           if (payload.new.status === 'done') {
             router.push(`/resume/${resumeId}/download-resume/`);
           }
+
+          if (payload.new.status === 'failed') {
+            setJobFailed(true);
+          }
         }
       )
       .subscribe();
@@ -53,6 +62,21 @@ export default function Page() {
       supabase.removeChannel(channel);
     };
   }, [jobId, supabase, router, resumeId]);
+
+  // TODO: add re-generate button
+  if (jobFailed) {
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '60vh',
+      }}
+    >
+      Error generating Resume.
+    </div>;
+  }
 
   // TODO: improve page content
   return (
