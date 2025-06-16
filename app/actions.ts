@@ -1,68 +1,65 @@
-'use server';
+"use server";
 
-import { createResumePrompt, ResumeResponseSchema } from '@/lib/promptHelper';
-import supabaseClient from '@/lib/supabase/server';
-import { Summary } from '@/types/types';
-import { Session } from 'next-auth';
-import { redirect } from 'next/navigation';
-import { generateObject } from 'ai';
-import openAiClient from '@/lib/openaiClient';
+import supabaseClient from "@/lib/supabase/server";
+import { Session } from "next-auth";
 
-export async function generateResume(
+export async function generateResumeJob(
   resumeId: string,
-  data: Summary,
-  user: Session['user']
+  user: Session["user"],
 ) {
   const supabase = supabaseClient();
-  // FIXME: type errors
 
-  if (user?.email == null) {
-    throw new Error('user email is null');
+  if (user?.email == null || user?.id == null) {
+    throw new Error("user email or id is null");
   }
 
-  if (user?.id == null) {
-    throw new Error('user id is null');
-  }
-
-  const resumePromptData = {
-    // Job advertisement
-    job_advertisement: data?.job_advertisement.text ?? '',
-    // Personal information
-    personal_information: {
-      ...data.personal_information,
-      // User's email is required
-      email: user.email,
-    },
-    // Skills
-    skills: data?.skills?.map((skill) => skill.skill_name),
-    // Work experience
-    work_experience: data.work_experience,
-    // Education
-    education: data.education,
-  };
-
-  const prompt = createResumePrompt(resumePromptData);
-  const response = await generateObject({
-    model: openAiClient.chat('gpt-4o-mini'),
-    schema: ResumeResponseSchema,
-    messages: [{ role: 'user', content: prompt }],
-  });
-
-  const resumeData = response.object;
-
-  // save resume data to supabase
   try {
-    await supabase
-      .from('resume')
-      .update({
-        chat_gpt_response_raw: resumeData,
-        last_updated: new Date().toISOString(),
+    // Check if there's already a job for this resume
+    const { data: existingJob } = await supabase
+      .from("resume_job")
+      .select()
+      .eq("resume_id", Number(resumeId))
+      .single();
+
+    // if the job is still pending or already done, return
+    if (existingJob?.status === "pending" || existingJob?.status === "done") {
+      return { jobId: existingJob.id };
+    }
+
+    const { data: job, error } = await supabase
+      .from("resume_job")
+      .insert({
+        created_at: new Date().toISOString(),
+        status: "pending",
+        resume_id: Number(resumeId),
       })
-      .eq('id', resumeId)
-      .eq('user_id', user.id);
-  } catch (error) {
+      .select()
+      .single();
+
+    if (error) {
+      console.error(error);
+      return { jobId: null };
+    }
+
+    const { error: edgeFnError } = await supabase
+      .functions.invoke("generate_resume", {
+        body: {
+          name: "Functions",
+          resumeJobId: job.id,
+          resumeId,
+          userId: user.id,
+          userEmail: user.email,
+        },
+      });
+
+    if (edgeFnError) {
+      console.error("Error invoking generate_resume function:", edgeFnError);
+      throw new Error("Failed to invoke generate_resume function");
+    }
+
+    return { jobId: job.id };
+  } catch (error: any) {
     console.error(error);
-  } finally {
-    redirect(`/resume/${resumeId}/download-resume`);
+    throw new Error(error);
   }
 }

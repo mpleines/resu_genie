@@ -1,11 +1,12 @@
 'use client';
 
-import { generateResume } from '@/app/actions';
+import { generateResumeJob } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import { Summary } from '@/types/types';
 import { FileText, Loader2 } from 'lucide-react';
 import { Session } from 'next-auth';
 import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export function SubmitResume(props: {
@@ -15,9 +16,12 @@ export function SubmitResume(props: {
 }) {
   const t = useTranslations('global');
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
   async function handleResumeGeneration() {
     setIsLoading(true);
-    await generateResume(props.resumeId, props.data, props.user);
+    const { jobId } = await generateResumeJob(props.resumeId, props.user);
+    router.push(`/resume/${props.resumeId}/generating?jobId=${jobId}`);
     setIsLoading(false);
   }
 
